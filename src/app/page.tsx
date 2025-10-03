@@ -1,29 +1,29 @@
 export default async function Home() {
-  const title = 'Fullstack Developer'
-  const role = await fetchEngineerRole(title);
+  const name = 'Rachel'
+  const user = await fetchUser(name);
 
   return (
     <>
-      <div>{`The main skill of a ${role.title} is ${role.mainskill}.`}</div>
+      <div>{`${user.username} lives at ${user.address}, ${user.postal_code} ${user.country}.`}</div>
     </>
   );
 }
 
-async function fetchEngineerRole(t: string) {
+async function fetchUser(username: string) {
  
-  const baseUrl = "http://localhost:3000";
+  const baseUrl = 'http://127.0.0.1:8000';
 
   try {
     const response = await fetch(
-      `${baseUrl}/api/py/engineer-roles?title=${t}`
+      `${baseUrl}/get-user/${username}`
     );
     if (!response.ok) {
       throw new Error("Failed to fetch data");
     }
-    const role = await response.json();
-    return role;
+    const user = await response.json();
+    return user;
   } catch (error) {
-    console.error("Error fetching engineer role:", error);
+    console.error("Error fetching user:", error);
     return null;
   }
 }
