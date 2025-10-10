@@ -18,6 +18,7 @@ async function fetchUser(username: string) {
       `${baseUrl}/get-user/${username}`
     );
     if (!response.ok) {
+      console.log('⛔️ Response:', response) // TO DO: get error code 
       throw new Error("Failed to fetch data");
     }
     const user = await response.json();
@@ -27,3 +28,5 @@ async function fetchUser(username: string) {
     return null;
   }
 }
+
+// TO DO: if 404, user not found
