@@ -1,7 +1,8 @@
+import os
 from sqlmodel import SQLModel, create_engine
 from api import models
 
-DATABASE_URL = 'postgresql+psycopg2://booqloop:booqloop@localhost:5432/booqloop'
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 engine = create_engine(DATABASE_URL)
 
