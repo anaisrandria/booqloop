@@ -2,5 +2,7 @@ fastapi==0.115.5
 uvicorn==0.32.1
 sqlmodel
 psycopg2-binary
-alembic
+python-jose[cryptography]==3.5.0
+bcrypt==4.0.1
 python-dotenv
+alembic

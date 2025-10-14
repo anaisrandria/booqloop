@@ -6,16 +6,18 @@ from sqlmodel import SQLModel, Field, Relationship
 # -----------------------------
 # USERS
 # -----------------------------
-class User(SQLModel, table=True):
-    __tablename__ = "users"
-
-    id: int = Field(primary_key=True)
+class UserBase(SQLModel):
     username: str = Field(max_length=255, unique=True, nullable=False)
     email: str = Field(max_length=255, unique=True, nullable=False)
-    password: str = Field(max_length=255, nullable=False)
     address: str = Field(max_length=255, nullable=False)
     postal_code: int
     country: str = Field(max_length=255, nullable=False)
+
+class User(UserBase, table=True):
+    __tablename__ = "users"
+
+    id: int = Field(primary_key=True)
+    hashed_password: str = Field(max_length=255, nullable=False)
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = None
 
@@ -25,6 +27,11 @@ class User(SQLModel, table=True):
     reviews: List["Review"] = Relationship(back_populates="user")
     messages: List["Message"] = Relationship(back_populates="author")
 
+class UserCreate(UserBase):
+    password: str = Field(max_length=255, nullable=False)
+
+class UserRead(UserBase):
+    id: int
 
 # -----------------------------
 # BOOKS
