@@ -5,6 +5,7 @@ from jose import jwt
 from dotenv import load_dotenv
 from api.models import User
 import bcrypt
+import binascii
 
 load_dotenv()
 
@@ -19,7 +20,6 @@ engine = create_engine(DATABASE_URL)
 def init_db():
     SQLModel.metadata.create_all(engine)
 
-# Hash password
 def get_password_hash(password: str):
     # converting password to array of bytes
     bytes = password.encode('utf-8')
@@ -31,8 +31,15 @@ def get_password_hash(password: str):
     hash = bcrypt.hashpw(bytes, salt)
     return hash
 
-# def verify_password(password, hashed_password):
-#     return pwd_context.verify(password, hashed_password)
+def verify_password(password: str, hashed_password: str):
+    # converting password to array of bytes
+    user_bytes = password.encode('utf-8')
+
+    # converting hash from hexadecimal to array of bytes
+    hashed_bytes = binascii.unhexlify(hashed_password[2:])
+    
+    result = bcrypt.checkpw(user_bytes, hashed_bytes)
+    return result
 
 def create_access_token(data: dict):
     to_encode = data.copy()
