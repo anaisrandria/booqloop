@@ -13,7 +13,6 @@ def register(user_data: UserCreate):
             raise HTTPException(status_code=400, detail="Username already registered")
         
         hashed_password = get_password_hash(user_data.password)
-        print("🐤🐤🐤", hashed_password)
         new_user = User(username=user_data.username, email=user_data.email, hashed_password=hashed_password, address=user_data.address, postal_code=user_data.postal_code, country=user_data.country)
         session.add(new_user)
         session.commit()
@@ -21,5 +20,4 @@ def register(user_data: UserCreate):
 
         token = create_access_token({"sub": new_user.username})
         return {"access_token": token, "token_type": "bearer"}
-    
     
