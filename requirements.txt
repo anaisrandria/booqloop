@@ -3,3 +3,4 @@ uvicorn==0.32.1
 sqlmodel
 psycopg2-binary
 alembic
+python-dotenv
