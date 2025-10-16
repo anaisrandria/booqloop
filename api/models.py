@@ -33,6 +33,10 @@ class UserCreate(UserBase):
 class UserRead(UserBase):
     id: int
 
+class UserLogin(SQLModel):
+    email: str
+    password: str
+
 # -----------------------------
 # BOOKS
 # -----------------------------

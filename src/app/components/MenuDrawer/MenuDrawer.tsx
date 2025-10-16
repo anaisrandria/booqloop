@@ -32,6 +32,7 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             sx={{
               flexGrow: 1,
               textAlign: 'center',
+              fontFamily: 'Poppins',
             }}
           >
             booqloop
@@ -45,13 +46,13 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             gap: '2em',
           }}
         >
-          <Button variant='text' color='inherit'>
+          <Button variant='text' color='inherit' sx={{ fontFamily: 'Poppins' }}>
             Accueil
           </Button>
-          <Button variant='text' color='inherit'>
+          <Button variant='text' color='inherit' sx={{ fontFamily: 'Poppins' }}>
             Messagerie
           </Button>
-          <Button variant='text' color='inherit'>
+          <Button variant='text' color='inherit' sx={{ fontFamily: 'Poppins' }}>
             Profil
           </Button>
         </Stack>

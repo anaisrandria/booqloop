@@ -9,11 +9,11 @@ import {
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
 
   const handleRedirect = () => {
-    router.push('/register');
+    router.push('/login');
   };
 
   return (
@@ -34,7 +34,7 @@ const Login = () => {
           justifyContent: 'center',
           alignItems: 'center',
           gap: 5,
-          paddingBottom: 15,
+          paddingBottom: 6,
         }}
       >
         <Stack
@@ -55,9 +55,17 @@ const Login = () => {
             },
           }}
         >
-          <Stack>
+          <Stack spacing={1}>
+            <TextField
+              label="Nom d'utilisateur"
+              variant='standard'
+              type='search'
+            />
             <TextField label='Email' variant='standard' type='search' />
             <TextField label='Mot de passe' variant='standard' type='search' />
+            <TextField label='Adresse' variant='standard' type='search' />
+            <TextField label='Code postal' variant='standard' type='search' />
+            <TextField label='Pays' variant='standard' type='search' />
           </Stack>
           <Button
             variant='contained'
@@ -68,7 +76,7 @@ const Login = () => {
               borderRadius: '10px',
             }}
           >
-            Se connecter
+            Créer un compte
           </Button>
           <Stack
             spacing={0.5}
@@ -81,7 +89,7 @@ const Login = () => {
                 textAlign: 'center',
               }}
             >
-              {"Vous n'avez pas encore de compte\u00A0? "}
+              {'Vous avez déjà un compte\u00A0? '}
               <Box
                 component='span'
                 sx={{
@@ -90,7 +98,7 @@ const Login = () => {
                 }}
                 onClick={handleRedirect}
               >
-                {"S'inscrire"}
+                {'Se\u00A0connecter'}
               </Box>
             </Typography>
           </Stack>
@@ -100,4 +108,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

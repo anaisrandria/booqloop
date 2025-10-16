@@ -47,5 +47,5 @@ def create_access_token(data: dict):
     to_encode.update({"exp": expire}) # add expiration date to payload
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-def get_user_by_username(session: Session, username: str):
-    return session.exec(select(User).where(User.username == username)).first()
+def get_user_by_email(session: Session, email: str):
+    return session.exec(select(User).where(User.email == email)).first()

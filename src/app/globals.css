@@ -2,7 +2,6 @@
 
 :root {
   background-color: #f7f2ec;
-  padding: 1.5em;
 }
 
 * {
@@ -13,6 +12,8 @@
 
 body {
   font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  padding: 1.5em;
 }
 
 /* :root {
