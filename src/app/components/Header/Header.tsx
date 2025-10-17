@@ -1,22 +1,31 @@
-'use client';
+"use client";
 
 import {
   Button,
-  Drawer,
   IconButton,
   InputAdornment,
+  Menu,
+  MenuItem,
   Stack,
   TextField,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { useState } from 'react';
-import { MenuDrawer } from '../MenuDrawer';
+} from "@mui/material";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import { useState } from "react";
+import { MenuDrawer } from "../MenuDrawer";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
+  const { isLoggedIn, logout } = useAuth();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [profileMenu, setProfileMenu] = useState<null | HTMLElement>(null);
+  const open = Boolean(profileMenu);
+
+  const handleCloseProfile = () => {
+    setProfileMenu(null);
+  };
 
   const toggleOpenMenu = (newState: boolean) => () => {
     setIsMenuOpen(newState);
@@ -24,42 +33,42 @@ const Header = () => {
 
   return (
     <Stack
-      direction='row'
+      direction="row"
       sx={{
-        width: '100%',
-        height: '2em',
-        marginBottom: '3em',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        width: "100%",
+        height: "2em",
+        marginBottom: "3em",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}
     >
       <Stack
         sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '20px',
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "20px",
           display: {
-            xs: 'none',
-            sm: 'block',
+            xs: "none",
+            sm: "block",
           },
         }}
       >
         booqloop
       </Stack>
       <TextField
-        placeholder='Rechercher un livre'
+        placeholder="Rechercher un livre"
         sx={{
           width: {
-            xs: '100%',
-            sm: '50vw',
+            xs: "100%",
+            sm: "50vw",
           },
-          marginRight: '1.5em',
+          marginRight: "1.5em",
         }}
-        variant='standard'
+        variant="standard"
         slotProps={{
           input: {
             endAdornment: (
-              <InputAdornment position='end'>
+              <InputAdornment position="end">
                 <SearchRoundedIcon />
               </InputAdornment>
             ),
@@ -68,11 +77,11 @@ const Header = () => {
       />
       <Stack
         sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
           display: {
-            xs: 'block',
-            md: 'none',
+            xs: "block",
+            md: "none",
           },
         }}
       >
@@ -81,24 +90,92 @@ const Header = () => {
         </IconButton>
       </Stack>
       <Stack
-        direction='row'
+        direction="row"
         sx={{
           display: {
-            xs: 'none',
-            md: 'block',
+            xs: "none",
+            md: "block",
           },
-          whiteSpace: 'nowrap',
+          whiteSpace: "nowrap",
         }}
       >
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
-          Accueil
-        </Button>
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
-          Messagerie
-        </Button>
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
-          Profil
-        </Button>
+        {isLoggedIn ? (
+          <>
+            <Button
+              variant="text"
+              color="inherit"
+              sx={{ textTransform: "none" }}
+            >
+              {"Accueil"}
+            </Button>
+            <Button
+              variant="text"
+              color="inherit"
+              sx={{ textTransform: "none" }}
+            >
+              {"Messagerie"}
+            </Button>
+            <Button
+              variant="text"
+              color="inherit"
+              sx={{ textTransform: "none" }}
+              id="profile-button"
+              aria-controls={open ? "profile-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={(e) => setProfileMenu(e.currentTarget)}
+            >
+              {"Profil"}
+            </Button>
+            <Menu
+              id="profile-menu"
+              anchorEl={profileMenu}
+              open={open}
+              onClose={handleCloseProfile}
+              slotProps={{
+                list: {
+                  "aria-labelledby": "profile-button",
+                },
+              }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "right",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              sx={{
+                "& .MuiMenuItem-root": {
+                  fontSize: "14px",
+                  fontFamily: "Poppins",
+                },
+              }}
+            >
+              <MenuItem>{"Ma bibliothèque"}</MenuItem>
+              <MenuItem onClick={logout}>{"Déconnexion"}</MenuItem>
+            </Menu>
+          </>
+        ) : (
+          <>
+            <Button
+              variant="text"
+              color="inherit"
+              sx={{ textTransform: "none" }}
+              onClick={() => router.push("/login")}
+            >
+              {"Se connecter"}
+            </Button>
+            <Button
+              variant="text"
+              color="inherit"
+              sx={{ textTransform: "none" }}
+              onClick={() => router.push("/register")}
+            >
+              {"S'inscrire"}
+            </Button>
+          </>
+        )}
       </Stack>
       <MenuDrawer
         isMenuOpen={isMenuOpen}
