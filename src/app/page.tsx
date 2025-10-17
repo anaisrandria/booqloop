@@ -1,5 +1,5 @@
 export default async function Home() {
-  const name = 'Rachel'
+  const name = "Rachel";
   const user = await fetchUser(name);
 
   return (
@@ -10,15 +10,12 @@ export default async function Home() {
 }
 
 async function fetchUser(username: string) {
- 
-  const baseUrl = 'http://127.0.0.1:8000';
+  const baseUrl = "http://127.0.0.1:8000";
 
   try {
-    const response = await fetch(
-      `${baseUrl}/get-user/${username}`
-    );
+    const response = await fetch(`${baseUrl}/users/get-user/${username}`);
     if (!response.ok) {
-      console.log('⛔️ Response:', response) // TO DO: get error code 
+      console.error("⛔️ Response:", response); // TO DO: get error code
       throw new Error("Failed to fetch data");
     }
     const user = await response.json();

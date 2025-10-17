@@ -1,7 +1,9 @@
+"use client";
+
+import LoginForm from "./LoginForm";
+
 const Login = () => {
-    return (
-        <div>Voici la login.</div>
-    )
-} 
+  return <LoginForm />;
+};
 
 export default Login;

@@ -3,9 +3,13 @@ from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
 from api.services import engine, init_db
 from api.models import *
+from api.routers import users, auth
 
 #We create an instance of FastAPI
 app = FastAPI(docs_url="/api/py/docs")
+
+app.include_router(users.router)
+app.include_router(auth.router)
 
 #We define authorizations for middleware components
 app.add_middleware(
@@ -21,29 +25,3 @@ app.add_middleware(
 @app.on_event('startup')
 def on_startup():
     init_db()
-
-@app.post('/add-user/')
-def add_user(user: User):
-    with Session(engine) as session:
-
-        exist = session.query(User).filter(
-            User.email == user.email).first()
-        if exist:
-            raise HTTPException(
-                status_code=400, detail='Email address already exists')
-
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-        return user
-    
-
-@app.get('/get-user/{username}')
-def get_user(username: str):
-    with Session(engine) as session:
-        statement = select(User).where(User.username == username)
-        user = session.exec(statement).first()
-        if not user: 
-            raise HTTPException(status_code=404, detail="User not found") 
-        return user
-    
