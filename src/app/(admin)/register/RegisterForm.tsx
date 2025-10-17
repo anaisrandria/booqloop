@@ -24,10 +24,6 @@ const RegisterForm = () => {
   });
   const [error, setError] = useState<string>();
 
-  if (error !== undefined) {
-    console.log("ERROR:", error);
-  }
-
   const handleRedirect = () => {
     router.push("/login");
   };
@@ -39,10 +35,8 @@ const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     try {
       const response = await registerUser(registerForm);
-      setError(undefined);
       localStorage.setItem("access_token", response.access_token);
       router.push("/home");
-      console.log("Inscription réussie:", response);
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
