@@ -76,7 +76,7 @@ const RegisterForm = () => {
             fontSize: "20px",
           }}
         >
-          booqloop
+          {"booqloop"}
         </Stack>
         <Stack
           spacing={5}
@@ -142,7 +142,7 @@ const RegisterForm = () => {
               }}
               onClick={handleSubmit}
             >
-              Créer un compte
+              {"Créer un compte"}
             </Button>
             {error && (
               <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>

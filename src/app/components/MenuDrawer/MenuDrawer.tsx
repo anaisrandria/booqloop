@@ -40,7 +40,7 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               fontFamily: "Poppins",
             }}
           >
-            booqloop
+            {"booqloop"}
           </Typography>
         </Stack>
         <Stack
@@ -78,7 +78,10 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 variant="text"
                 color="inherit"
                 sx={{ fontFamily: "Poppins" }}
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Déconnexion"}
               </Button>

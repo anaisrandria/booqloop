@@ -72,7 +72,7 @@ const LoginForm = () => {
             fontSize: "20px",
           }}
         >
-          booqloop
+          {"booqloop"}
         </Stack>
         <Stack
           spacing={5}
@@ -109,7 +109,7 @@ const LoginForm = () => {
             }}
             onClick={handleSubmit}
           >
-            Se connecter
+            {"Se connecter"}
           </Button>
           {error && (
             <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
