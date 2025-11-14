@@ -40,17 +40,19 @@ class UserLogin(SQLModel):
 # -----------------------------
 # BOOKS
 # -----------------------------
-class Book(SQLModel, table=True):
-    __tablename__ = "books"
-
-    id: int = Field(primary_key=True)
-    user_id: int = Field(foreign_key="users.id")
+class BookBase(SQLModel):
     title: str = Field(max_length=255)
     author: str = Field(max_length=255)
     description: str
     published_year: Optional[int] = None
-    category_id: int = Field(foreign_key="book_categories.id")
     image_url: str = Field(max_length=255)
+
+class Book(BookBase, table=True):
+    __tablename__ = "books"
+
+    id: int = Field(primary_key=True)
+    user_id: int = Field(foreign_key="users.id")
+    category_id: int = Field(foreign_key="book_categories.id")
     availability_status_id: int = Field(foreign_key="book_availabilities.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
     updated_at: Optional[datetime] = None
@@ -62,6 +64,10 @@ class Book(SQLModel, table=True):
     requests: List["Request"] = Relationship(back_populates="book")
     reviews: List["Review"] = Relationship(back_populates="book")
 
+class BookCreate(BookBase):
+    user_id: int
+    category_id: Optional[int] = None
+    availability_status_id: Optional[int] = None
 
 # -----------------------------
 # REQUESTS
@@ -127,6 +133,8 @@ class BookCategory(SQLModel, table=True):
     # Relations
     books: List[Book] = Relationship(back_populates="category")
 
+class BookCategoryCreate(SQLModel):
+    name: str
 
 # -----------------------------
 # BOOK AVAILABILITIES
@@ -140,6 +148,8 @@ class BookAvailability(SQLModel, table=True):
     # Relations
     books: List[Book] = Relationship(back_populates="availability")
 
+class BookAvailabilityCreate(SQLModel):
+    name: str
 
 # -----------------------------
 # REQUEST STATUSES
