@@ -8,17 +8,16 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
+import { Book, Category } from '../../types';
 
 const Home = async () => {
-  // Fetching all books
-  const fetchBooks = async () => {
-    const baseUrl = 'http://127.0.0.1:8000';
+  const baseUrl = 'http://127.0.0.1:8000';
 
+  const fetchBooks = async () => {
     try {
       const response = await fetch(`${baseUrl}/books/get-books`);
       if (!response.ok) {
-        console.error('⛔️ Response:', response);
-        throw new Error('Failed to fetch data');
+        throw new Error('Failed to fetch books data');
       }
       const books = await response.json();
       return books;
@@ -28,15 +27,22 @@ const Home = async () => {
     }
   };
 
-  const books = await fetchBooks();
+  const fetchCategories = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/books/get-categories`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch categories data');
+      }
+      const categories = await response.json();
+      return categories;
+    } catch (error) {
+      console.error('Error fetching all categories:', error);
+      return null;
+    }
+  };
 
-  const filters = [
-    { label: 'Localisation', variant: 'contained' },
-    { label: 'Littérature et Fiction', variant: 'contained' },
-    { label: 'Arts, Culture et Société', variant: 'outlined' },
-    { label: 'BD & Jeunesse', variant: 'outlined' },
-    { label: 'Vie pratique', variant: 'outlined' },
-  ];
+  const books = await fetchBooks();
+  const categories = await fetchCategories();
 
   return (
     <Container maxWidth='lg'>
@@ -60,20 +66,21 @@ const Home = async () => {
             paddingBottom: 1,
           }}
         >
-          {filters.map((filter, index) => (
-            <Button
-              key={index}
-              size='small'
-              variant={filter.variant}
-              sx={{
-                whiteSpace: 'nowrap',
-                minWidth: '150px',
-                flexShrink: 0,
-              }}
-            >
-              {filter.label}
-            </Button>
-          ))}
+          {categories &&
+            categories.map((category: Category, index: number) => (
+              <Button
+                key={index}
+                size='small'
+                variant='contained'
+                sx={{
+                  whiteSpace: 'nowrap',
+                  minWidth: '150px',
+                  flexShrink: 0,
+                }}
+              >
+                {category.name}
+              </Button>
+            ))}
         </Stack>
       </Box>
 
@@ -82,21 +89,22 @@ const Home = async () => {
       </Typography>
 
       <ImageList sx={{ width: '100%', height: '100%' }} cols={6}>
-        {books.map((book, index) => (
-          <ImageListItem key={index} sx={{ height: 140, width: 150 }}>
-            <img
-              srcSet={book.image_url}
-              src={book.image_url}
-              alt={book.title}
-              loading='lazy'
-            />
-            <ImageListItemBar
-              title={book.title}
-              subtitle={book.author}
-              position='below'
-            />
-          </ImageListItem>
-        ))}
+        {books &&
+          books.map((book: Book, index: number) => (
+            <ImageListItem key={index} sx={{ height: 140, width: 150 }}>
+              <img
+                srcSet={book.image_url}
+                src={book.image_url}
+                alt={book.title}
+                loading='lazy'
+              />
+              <ImageListItemBar
+                title={book.title}
+                subtitle={book.author}
+                position='below'
+              />
+            </ImageListItem>
+          ))}
       </ImageList>
     </Container>
   );

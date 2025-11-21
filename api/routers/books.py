@@ -5,24 +5,6 @@ from api.services import engine
 
 router = APIRouter(prefix='/books', tags=['books'])   
 
-# @router.post('/add-category')
-# def add_category(category: BookCategoryCreate):
-#     with Session(engine) as session:
-#         category = BookCategory(name=category.name)
-#         session.add(category)
-#         session.commit()
-#         session.refresh(category)
-#         return category
-    
-# @router.post('/add-availability')
-# def add_category(availability: BookAvailabilityCreate):
-#     with Session(engine) as session:
-#         availability = BookAvailability(name=availability.name)
-#         session.add(availability)
-#         session.commit()
-#         session.refresh(availability)
-#         return availability
-
 @router.post('/add-book')
 def add_book(book: BookCreate):
     with Session(engine) as session:
@@ -47,3 +29,10 @@ def get_books():
         statement = select(Book)
         books = session.exec(statement).all()
         return books
+    
+@router.get('/get-categories')
+def get_categories():
+    with Session(engine) as session:
+        statement = select(BookCategory)
+        categories = session.exec(statement).all()
+        return categories
