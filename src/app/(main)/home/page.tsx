@@ -9,57 +9,27 @@ import {
   Typography,
 } from '@mui/material';
 
-const Home = () => {
-  const books = [
-    {
-      title: 'Les quatre filles du Docteur March',
-      author: 'Louisa May Alcott',
-      published_year: '1868',
-      image_url:
-        'https://media.hachette.fr/fit-in/500x500/imgArticle/LAROUSSE/2023/9782036028968-001-X.jpeg?source=web',
-    },
-    {
-      title: 'Mon vrai nom est Aneth',
-      author: 'Adèle Yon',
-      published_year: '2023',
-      image_url:
-        'https://editions-du-sous-sol.com/wp-content/uploads/cache/2024/12/9782364689572ORI-1/2079426607.jpg',
-    },
-    {
-      title: 'La couleur tombée du ciel',
-      author: 'H. P. Lovecraft',
-      published_year: '1927',
-      image_url: 'https://m.media-amazon.com/images/I/8178Z6NMtcL._SL1500_.jpg',
-    },
-    {
-      title: 'Les quatre filles du Docteur March',
-      author: 'Louisa May Alcott',
-      published_year: '1868',
-      image_url:
-        'https://media.hachette.fr/fit-in/500x500/imgArticle/LAROUSSE/2023/9782036028968-001-X.jpeg?source=web',
-    },
-    {
-      title: 'Les quatre filles du Docteur March',
-      author: 'Louisa May Alcott',
-      published_year: '1868',
-      image_url:
-        'https://media.hachette.fr/fit-in/500x500/imgArticle/LAROUSSE/2023/9782036028968-001-X.jpeg?source=web',
-    },
-    {
-      title: 'Les quatre filles du Docteur March',
-      author: 'Louisa May Alcott',
-      published_year: '1868',
-      image_url:
-        'https://media.hachette.fr/fit-in/500x500/imgArticle/LAROUSSE/2023/9782036028968-001-X.jpeg?source=web',
-    },
-    {
-      title: 'Les quatre filles du Docteur March',
-      author: 'Louisa May Alcott',
-      published_year: '1868',
-      image_url:
-        'https://media.hachette.fr/fit-in/500x500/imgArticle/LAROUSSE/2023/9782036028968-001-X.jpeg?source=web',
-    },
-  ];
+const Home = async () => {
+  // Fetching all books
+  const fetchBooks = async () => {
+    const baseUrl = 'http://127.0.0.1:8000';
+
+    try {
+      const response = await fetch(`${baseUrl}/books/get-books`);
+      if (!response.ok) {
+        console.error('⛔️ Response:', response);
+        throw new Error('Failed to fetch data');
+      }
+      const books = await response.json();
+      return books;
+    } catch (error) {
+      console.error('Error fetching all books:', error);
+      return null;
+    }
+  };
+
+  const books = await fetchBooks();
+
   const filters = [
     { label: 'Localisation', variant: 'contained' },
     { label: 'Littérature et Fiction', variant: 'contained' },
