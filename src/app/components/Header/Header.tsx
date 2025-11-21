@@ -90,7 +90,7 @@ const Header = () => {
           whiteSpace: 'nowrap',
         }}
       >
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
+        <Button variant='text' sx={{ textTransform: 'none' }}>
           Accueil
         </Button>
         <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
