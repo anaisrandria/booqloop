@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -9,13 +10,17 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginFormData } from "./LoginForm.types";
+import { loginUser } from "@/lib/services/admin/login";
+import { useAuth } from "@/hooks/useAuth";
 
 const LoginForm = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [loginForm, setLoginForm] = useState<LoginFormData>({
     email: "",
     password: "",
   });
+  const [error, setError] = useState<string>();
 
   const handleRedirect = () => {
     router.push("/register");
@@ -23,6 +28,20 @@ const LoginForm = () => {
 
   const handleChange = (key: string, value: string) => {
     setLoginForm((prev) => ({ ...prev, [key]: value }));
+  };
+
+  const handleSubmit = async () => {
+    try {
+      const response = await loginUser(loginForm);
+      login(response.access_token);
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
+      }
+    }
   };
 
   return (
@@ -53,7 +72,7 @@ const LoginForm = () => {
             fontSize: "20px",
           }}
         >
-          booqloop
+          {"booqloop"}
         </Stack>
         <Stack
           spacing={5}
@@ -80,17 +99,25 @@ const LoginForm = () => {
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
           </Stack>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "black",
-              textTransform: "none",
-              borderRadius: "10px",
-            }}
-          >
-            Se connecter
-          </Button>
+          <Stack>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                backgroundColor: "black",
+                textTransform: "none",
+                borderRadius: "10px",
+              }}
+              onClick={handleSubmit}
+            >
+              {"Se connecter"}
+            </Button>
+            {error && (
+              <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
+                {error}
+              </Alert>
+            )}
+          </Stack>
           <Stack direction="row" sx={{ justifyContent: "center" }}>
             <Typography
               sx={{

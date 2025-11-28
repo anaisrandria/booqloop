@@ -18,7 +18,7 @@ const { postalCode, ...rest } = data;
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.detail || "Erreur lors de l'inscription");
+    throw new Error(error.detail || "Registration error");
   }
 
   return res.json();

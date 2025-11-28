@@ -11,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { RegisterFormData } from "./RegisterForm.types";
 import { useState } from "react";
 import { registerUser } from "@/lib/services/admin/register";
+import { useAuth } from "@/hooks/useAuth";
 
 const RegisterForm = () => {
   const router = useRouter();
+  const { login } = useAuth();
   const [registerForm, setRegisterForm] = useState<RegisterFormData>({
     username: "",
     email: "",
@@ -32,10 +34,10 @@ const RegisterForm = () => {
     setRegisterForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async () => {
     try {
       const response = await registerUser(registerForm);
-      localStorage.setItem("access_token", response.access_token);
+      login(response.access_token);
       router.push("/home");
     } catch (err: unknown) {
       if (err instanceof Error) {
@@ -74,7 +76,7 @@ const RegisterForm = () => {
             fontSize: "20px",
           }}
         >
-          booqloop
+          {"booqloop"}
         </Stack>
         <Stack
           spacing={5}
@@ -140,7 +142,7 @@ const RegisterForm = () => {
               }}
               onClick={handleSubmit}
             >
-              Créer un compte
+              {"Créer un compte"}
             </Button>
             {error && (
               <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>

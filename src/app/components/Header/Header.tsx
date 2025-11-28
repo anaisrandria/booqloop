@@ -1,21 +1,16 @@
-'use client';
+"use client";
 
-import {
-  Button,
-  Drawer,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from '@mui/material';
-import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
-import MenuRoundedIcon from '@mui/icons-material/MenuRounded';
-import { useState } from 'react';
-import { MenuDrawer } from '../MenuDrawer';
+import { IconButton, InputAdornment, Stack, TextField } from "@mui/material";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import MenuRoundedIcon from "@mui/icons-material/MenuRounded";
+import { useState } from "react";
+import { MenuDrawer } from "../MenuDrawer";
+import { useAuth } from "@/hooks/useAuth";
+import { NavigationMenu } from "../NavigationMenu";
+import { AuthMenu } from "../AuthMenu";
 
 const Header = () => {
+  const { isLoggedIn } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const toggleOpenMenu = (newState: boolean) => () => {
@@ -24,42 +19,42 @@ const Header = () => {
 
   return (
     <Stack
-      direction='row'
+      direction="row"
       sx={{
-        width: '100%',
-        height: '2em',
-        marginBottom: '3em',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+        width: "100%",
+        height: "2em",
+        marginBottom: "3em",
+        justifyContent: "space-between",
+        alignItems: "center",
       }}
     >
       <Stack
         sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '20px',
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "20px",
           display: {
-            xs: 'none',
-            sm: 'block',
+            xs: "none",
+            sm: "block",
           },
         }}
       >
-        booqloop
+        {"booqloop"}
       </Stack>
       <TextField
-        placeholder='Rechercher un livre'
+        placeholder="Rechercher un livre"
         sx={{
           width: {
-            xs: '100%',
-            sm: '50vw',
+            xs: "100%",
+            sm: "50vw",
           },
-          marginRight: '1.5em',
+          marginRight: "1.5em",
         }}
-        variant='standard'
+        variant="standard"
         slotProps={{
           input: {
             endAdornment: (
-              <InputAdornment position='end'>
+              <InputAdornment position="end">
                 <SearchRoundedIcon />
               </InputAdornment>
             ),
@@ -68,11 +63,11 @@ const Header = () => {
       />
       <Stack
         sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
+          justifyContent: "center",
+          alignItems: "center",
           display: {
-            xs: 'block',
-            md: 'none',
+            xs: "block",
+            md: "none",
           },
         }}
       >
@@ -81,24 +76,16 @@ const Header = () => {
         </IconButton>
       </Stack>
       <Stack
-        direction='row'
+        direction="row"
         sx={{
           display: {
-            xs: 'none',
-            md: 'block',
+            xs: "none",
+            md: "block",
           },
-          whiteSpace: 'nowrap',
+          whiteSpace: "nowrap",
         }}
       >
-        <Button variant='text' sx={{ textTransform: 'none' }}>
-          Accueil
-        </Button>
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
-          Messagerie
-        </Button>
-        <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
-          Profil
-        </Button>
+        {isLoggedIn ? <NavigationMenu /> : <AuthMenu />}
       </Stack>
       <MenuDrawer
         isMenuOpen={isMenuOpen}
