@@ -27,6 +27,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoggedIn(false);
   };
 
+  // empêche le rendu des enfants du Provider tant que la vérification du token n’est pas terminée
   if (!isTokenVerified) return null;
 
   return (
