@@ -9,6 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Book, Category } from '../../types';
+import { logger } from '../../../lib/logger';
 
 const Home = async () => {
   const baseUrl = 'http://127.0.0.1:8000';
@@ -43,6 +44,14 @@ const Home = async () => {
 
   const books = await fetchBooks();
   const categories = await fetchCategories();
+
+  // Test log levels
+  logger.trace('Trace test');
+  logger.debug('Debug test');
+  logger.info('Info test');
+  logger.warn('Warn test');
+  logger.error('Error test');
+  logger.fatal('Fatal test');
 
   return (
     <Container maxWidth='lg'>
