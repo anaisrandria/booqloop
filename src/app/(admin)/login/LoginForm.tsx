@@ -99,23 +99,25 @@ const LoginForm = () => {
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
           </Stack>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "black",
-              textTransform: "none",
-              borderRadius: "10px",
-            }}
-            onClick={handleSubmit}
-          >
-            {"Se connecter"}
-          </Button>
-          {error && (
-            <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
-              {error}
-            </Alert>
-          )}
+          <Stack>
+            <Button
+              variant="contained"
+              color="primary"
+              sx={{
+                backgroundColor: "black",
+                textTransform: "none",
+                borderRadius: "10px",
+              }}
+              onClick={handleSubmit}
+            >
+              {"Se connecter"}
+            </Button>
+            {error && (
+              <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
+                {error}
+              </Alert>
+            )}
+          </Stack>
           <Stack direction="row" sx={{ justifyContent: "center" }}>
             <Typography
               sx={{
