@@ -98,12 +98,11 @@ const Home = async () => {
             container
             columns={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 6 }}
             rowSpacing={3}
-            columnSpacing={3}
-            justifyContent="space-between"
+            columnSpacing={2.5}
           >
             {books &&
               books.map((book: Book, index: number) => (
-                <Grid key={index} size={1} maxWidth={150}>
+                <Grid key={index} size={1}>
                   <BookCard book={book} />
                 </Grid>
               ))}

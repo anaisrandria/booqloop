@@ -7,7 +7,10 @@ const BookCard = ({ book }: BookCardProps) => {
       <Stack
         spacing={1}
         sx={{
-          maxWidth: "150px",
+          cursor: "pointer",
+          "&:hover": {
+            opacity: 0.8,
+          },
         }}
       >
         <Stack
@@ -30,6 +33,7 @@ const BookCard = ({ book }: BookCardProps) => {
               fontsize: "10px",
               fontWeight: "600",
               fontFamily: "Poppins",
+              lineHeight: "1.3",
             }}
           >
             {book.title}
@@ -41,6 +45,7 @@ const BookCard = ({ book }: BookCardProps) => {
               whiteSpace: "nowrap",
               fontsize: "10px",
               fontFamily: "Poppins",
+              lineHeight: "1.3",
             }}
           >
             {book.author}
