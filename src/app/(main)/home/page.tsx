@@ -1,5 +1,6 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Book, Category } from "../../types";
+import { BookCard } from "@/app/components/BookCard";
 
 const Home = async () => {
   const baseUrl = "http://127.0.0.1:8000";
@@ -36,65 +37,79 @@ const Home = async () => {
   const categories = await fetchCategories();
 
   return (
-    <Container maxWidth="lg">
-      <Box
-        sx={{
-          width: "100%",
-          height: "2em",
-          marginBottom: "3em",
-          justifyContent: "center",
-          alignItems: "center",
-          overflow: "scroll",
-          justifyItems: "center",
-          scrollbarWidth: "none",
-          "&::-webkit-scrollbar": {
-            display: "none",
-          },
-        }}
-      >
-        <Stack
-          direction="row"
-          spacing={2}
+    <Container maxWidth="md">
+      <Stack spacing={4}>
+        <Box
           sx={{
-            display: "flex",
-            justifyContent: "flex-start",
-            alignItems: "flex-start",
             width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "scroll",
+            justifyItems: "center",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
+            },
           }}
         >
-          {categories &&
-            categories.map((category: Category, index: number) => (
-              <Button
-                key={index}
-                size="small"
-                variant="outlined"
-                sx={{
-                  whiteSpace: "nowrap",
-                  minWidth: "150px",
-                  textTransform: "none",
-                  fontFamily: "Poppins",
-                  fontWeight: 600,
-                  borderRadius: "10px",
-                  flexShrink: 0,
-                }}
-              >
-                {category.name}
-              </Button>
-            ))}
-        </Stack>
-      </Box>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              width: "100%",
+            }}
+          >
+            {categories &&
+              categories.map((category: Category, index: number) => (
+                <Button
+                  key={index}
+                  size="small"
+                  variant="outlined"
+                  sx={{
+                    whiteSpace: "nowrap",
+                    minWidth: "150px",
+                    textTransform: "none",
+                    fontFamily: "Poppins",
+                    fontWeight: 600,
+                    borderRadius: "10px",
+                    flexShrink: 0,
+                  }}
+                >
+                  {category.name}
+                </Button>
+              ))}
+          </Stack>
+        </Box>
 
-      <Typography sx={{ fontWeight: "bold", my: 2 }}>
-        Récemment ajoutés
-      </Typography>
-      <Grid container columns={3}>
-        {books &&
-          books.map((book: Book, index: number) => (
-            <Grid key={index} size={1}>
-              {book.title}
-            </Grid>
-          ))}
-      </Grid>
+        <Stack spacing={2}>
+          <Typography
+            sx={{
+              fontsize: "14px",
+              fontWeight: "600",
+              fontFamily: "Poppins",
+            }}
+          >
+            Récemment ajoutés
+          </Typography>
+          <Grid
+            container
+            columns={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 6 }}
+            rowSpacing={3}
+            columnSpacing={3}
+            justifyContent="space-between"
+          >
+            {books &&
+              books.map((book: Book, index: number) => (
+                <Grid key={index} size={1} maxWidth={150}>
+                  <BookCard book={book} />
+                </Grid>
+              ))}
+          </Grid>
+        </Stack>
+      </Stack>
     </Container>
   );
 };
