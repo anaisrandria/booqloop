@@ -1,20 +1,10 @@
-import {
-  Box,
-  Button,
-  Container,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Book, Category } from "../../types";
-import { logger } from "../../../lib/logger";
 
 const Home = async () => {
   const baseUrl = "http://127.0.0.1:8000";
 
-  const fetchBooks = async () => {
+  const fetchBooks = async (): Promise<Book[] | null> => {
     try {
       const response = await fetch(`${baseUrl}/books/get-books`);
       if (!response.ok) {
@@ -97,46 +87,14 @@ const Home = async () => {
       <Typography sx={{ fontWeight: "bold", my: 2 }}>
         Récemment ajoutés
       </Typography>
-
-      <ImageList
-        sx={{
-          width: "100%",
-          height: "100%",
-        }}
-        cols={6}
-        gap={8}
-      >
+      <Grid container columns={3}>
         {books &&
           books.map((book: Book, index: number) => (
-            <ImageListItem
-              key={index}
-              sx={{
-                aspectRatio: "4 / 5",
-                maxWidth: "185px",
-                mx: "auto",
-              }}
-            >
-              <img
-                srcSet={book.image_url}
-                src={book.image_url}
-                alt={book.title}
-                loading="lazy"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "10px",
-                  border: "1px solid black",
-                }}
-              />
-              <ImageListItemBar
-                title={book.title}
-                subtitle={book.author}
-                position="below"
-              />
-            </ImageListItem>
+            <Grid key={index} size={1}>
+              {book.title}
+            </Grid>
           ))}
-      </ImageList>
+      </Grid>
     </Container>
   );
 };
