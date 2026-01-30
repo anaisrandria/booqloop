@@ -23,9 +23,9 @@ class User(UserBase, table=True):
 
     # Relations
     books: List["Book"] = Relationship(back_populates="user")
-    requests: List["Request"] = Relationship(back_populates="user")
+    conversations: List["Conversation"] = Relationship(back_populates="user")
     reviews: List["Review"] = Relationship(back_populates="user")
-    messages: List["Message"] = Relationship(back_populates="author")
+    messages: List["Message"] = Relationship(back_populates="sender")
 
 class UserCreate(UserBase):
     password: str = Field(max_length=255, nullable=False)
@@ -61,7 +61,7 @@ class Book(BookBase, table=True):
     user: User = Relationship(back_populates="books")
     category: "BookCategory" = Relationship(back_populates="books")
     availability: "BookAvailability" = Relationship(back_populates="books")
-    requests: List["Request"] = Relationship(back_populates="book")
+    conversations: List["Conversation"] = Relationship(back_populates="book")
     reviews: List["Review"] = Relationship(back_populates="book")
 
 class BookCreate(BookBase):
@@ -70,10 +70,10 @@ class BookCreate(BookBase):
     availability_status_id: Optional[int] = None
 
 # -----------------------------
-# REQUESTS
+# CONVERSATIONS
 # -----------------------------
-class Request(SQLModel, table=True):
-    __tablename__ = "requests"
+class Conversation(SQLModel, table=True):
+    __tablename__ = "conversations"
 
     id: int = Field(primary_key=True)
     user_id: int = Field(foreign_key="users.id")
@@ -81,10 +81,10 @@ class Request(SQLModel, table=True):
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relations
-    user: User = Relationship(back_populates="requests")
-    book: Book = Relationship(back_populates="requests")
-    messages: List["Message"] = Relationship(back_populates="request")
-    statuses: List["RequestStatus"] = Relationship(back_populates="request")
+    user: User = Relationship(back_populates="conversations")
+    book: Book = Relationship(back_populates="conversations")
+    messages: List["Message"] = Relationship(back_populates="conversations")
+    statuses: List["ConversationStatus"] = Relationship(back_populates="conversations")
 
 
 # -----------------------------
@@ -111,14 +111,14 @@ class Message(SQLModel, table=True):
     __tablename__ = "messages"
 
     id: int = Field(primary_key=True)
-    request_id: int = Field(foreign_key="requests.id")
-    user_author_id: int = Field(foreign_key="users.id")
+    conversation_id: int = Field(foreign_key="conversations.id")
+    sender_id: int = Field(foreign_key="users.id")
     content: str
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relations
-    request: Request = Relationship(back_populates="messages")
-    author: User = Relationship(back_populates="messages")
+    conversation: Conversation = Relationship(back_populates="messages")
+    sender: User = Relationship(back_populates="messages")
 
 
 # -----------------------------
@@ -152,15 +152,15 @@ class BookAvailabilityCreate(SQLModel):
     name: str
 
 # -----------------------------
-# REQUEST STATUSES
+# CONVERSATION STATUSES
 # -----------------------------
-class RequestStatus(SQLModel, table=True):
-    __tablename__ = "request_statuses"
+class ConversationStatus(SQLModel, table=True):
+    __tablename__ = "conversation_statuses"
 
     id: int = Field(primary_key=True)
-    request_id: int = Field(foreign_key="requests.id")
+    conversation_id: int = Field(foreign_key="conversations.id")
     status: str = Field(max_length=255)
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relations
-    request: Request = Relationship(back_populates="statuses")
+    conversation: Conversation = Relationship(back_populates="statuses")
