@@ -1,7 +1,8 @@
+import { Stack } from "@mui/material";
 import { BookDetailProps } from "./BookDetail.types";
 
 const BookDetail = ({ book }: BookDetailProps) => {
-  return book && <h6>{book.title}</h6>;
+  return book && <Stack sx={{ flexGrow: 1 }}></Stack>;
 };
 
 export default BookDetail;
