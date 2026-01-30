@@ -30,6 +30,17 @@ def get_books():
         books = session.exec(statement).all()
         return books
     
+
+@router.get("/get-book/{book_id}")
+def get_book(book_id: int):
+    with Session(engine) as session:
+        book = session.get(Book, book_id)
+
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+
+        return book
+    
 @router.get('/get-categories')
 def get_categories():
     with Session(engine) as session:
