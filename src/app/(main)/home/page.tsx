@@ -1,40 +1,25 @@
+"use client";
+
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Book, Category } from "../../types";
 import { BookCard } from "@/app/components/BookCard";
+import { getCategories } from "@/lib/services/admin/getCategories";
+import { useEffect, useState } from "react";
+import { getBooks } from "@/lib/services/admin/getBooks";
 
-const Home = async () => {
-  const baseUrl = "http://127.0.0.1:8000";
+const Home = () => {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [books, setBooks] = useState<Book[] | null>([]);
 
-  const fetchBooks = async (): Promise<Book[] | null> => {
-    try {
-      const response = await fetch(`${baseUrl}/books/get-books`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch books data");
-      }
-      const books = await response.json();
-      return books;
-    } catch (error) {
-      console.error("Error fetching all books:", error);
-      return null;
-    }
-  };
-
-  const fetchCategories = async () => {
-    try {
-      const response = await fetch(`${baseUrl}/books/get-categories`);
-      if (!response.ok) {
-        throw new Error("Failed to fetch categories data");
-      }
-      const categories = await response.json();
-      return categories;
-    } catch (error) {
-      console.error("Error fetching all categories:", error);
-      return null;
-    }
-  };
-
-  const books = await fetchBooks();
-  const categories = await fetchCategories();
+  useEffect(() => {
+    const loadData = async () => {
+      const categoryData = await getCategories();
+      setCategories(categoryData);
+      const bookData = await getBooks();
+      setBooks(bookData);
+    };
+    loadData();
+  }, []);
 
   return (
     <Container maxWidth="md">
@@ -92,7 +77,7 @@ const Home = async () => {
               fontFamily: "Poppins",
             }}
           >
-            Récemment ajoutés
+            {"Récemment ajoutés"}
           </Typography>
           <Grid
             container
