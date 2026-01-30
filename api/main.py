@@ -3,7 +3,7 @@ from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
 from api.services import engine, init_db
 from api.models import *
-from api.routers import users, auth, books
+from api.routers import users, auth, books, messages
 
 #We create an instance of FastAPI
 app = FastAPI(docs_url="/api/py/docs")
@@ -11,6 +11,7 @@ app = FastAPI(docs_url="/api/py/docs")
 # app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(books.router)
+app.include_router(messages.router)
 
 
 #We define authorizations for middleware components

@@ -83,8 +83,8 @@ class Conversation(SQLModel, table=True):
     # Relations
     user: User = Relationship(back_populates="conversations")
     book: Book = Relationship(back_populates="conversations")
-    messages: List["Message"] = Relationship(back_populates="conversations")
-    statuses: List["ConversationStatus"] = Relationship(back_populates="conversations")
+    messages: List["Message"] = Relationship(back_populates="conversation")
+    statuses: List["ConversationStatus"] = Relationship(back_populates="conversation")
 
 
 # -----------------------------
@@ -120,6 +120,10 @@ class Message(SQLModel, table=True):
     conversation: Conversation = Relationship(back_populates="messages")
     sender: User = Relationship(back_populates="messages")
 
+class MessageCreate(SQLModel):
+    conversation_id: int
+    sender_id: int
+    content: str
 
 # -----------------------------
 # BOOK CATEGORIES
