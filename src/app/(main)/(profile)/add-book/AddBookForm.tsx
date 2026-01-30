@@ -10,31 +10,11 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddBookFormData } from "./AddBookForm.types";
 import { useRouter } from "next/navigation";
-
-const mockCategories = [
-  { id: 1, name: "Littérature" },
-  { id: 2, name: "Science fiction" },
-  { id: 3, name: "Fantasy" },
-  { id: 4, name: "Romance" },
-  { id: 5, name: "Jeunesse" },
-  { id: 6, name: "Bande dessinée / Manga" },
-  { id: 7, name: "Développement personnel" },
-  { id: 8, name: "Histoire" },
-  { id: 9, name: "Sciences et Technologies" },
-  { id: 10, name: "Philosophie" },
-  { id: 11, name: "Économie et Gestion" },
-  { id: 12, name: "Art et Culture" },
-  { id: 13, name: "Cuisine" },
-  { id: 14, name: "Santé et Bien-être" },
-  { id: 15, name: "Voyage" },
-  { id: 16, name: "Policier / Thriller" },
-  { id: 17, name: "Documentaire / Essai" },
-  { id: 18, name: "Éducation / Pédagogie" },
-  { id: 19, name: "Pratique / Loisirs" },
-];
+import { getCategories } from "@/lib/services/admin/getCategories";
+import { Category } from "@/app/types";
 
 const AddBookForm = () => {
   const router = useRouter();
@@ -47,6 +27,15 @@ const AddBookForm = () => {
     category_id: 1,
     image_url: "",
   });
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      const categoryData: Category[] = await getCategories();
+      setCategories(categoryData);
+    };
+    loadCategories();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -162,7 +151,7 @@ const AddBookForm = () => {
             size="small"
             type="search"
           >
-            {mockCategories.map((cat) => (
+            {categories.map((cat) => (
               <MenuItem key={cat.id} value={cat.id}>
                 {cat.name}
               </MenuItem>
@@ -174,7 +163,6 @@ const AddBookForm = () => {
             name="image_url"
             value={bookForm.image_url}
             onChange={(e) => {
-              // setImageError(false);
               handleChange(e);
             }}
             size="small"

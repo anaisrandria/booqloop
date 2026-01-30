@@ -1,6 +1,6 @@
 import { RegisterFormData } from "@/app/(admin)/register/RegisterForm.types";
 
-export async function registerUser(data: RegisterFormData) {
+export const registerUser = async (data: RegisterFormData) => {
 
 const { postalCode, ...rest } = data;
 

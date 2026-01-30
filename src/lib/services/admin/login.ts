@@ -1,6 +1,6 @@
 import { LoginFormData } from "@/app/(admin)/login/LoginForm.types";
 
-export async function loginUser(data: LoginFormData) {
+export const loginUser = async (data: LoginFormData) => {
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",

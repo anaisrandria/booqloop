@@ -8,11 +8,9 @@ import { MenuDrawer } from "../MenuDrawer";
 import { useAuth } from "@/hooks/useAuth";
 import { NavigationMenu } from "../NavigationMenu";
 import { AuthMenu } from "../AuthMenu";
-import { useRouter } from "next/navigation";
 import { HomeLogo } from "../HomeLogo";
 
 const Header = () => {
-  const router = useRouter();
   const { isLoggedIn } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
