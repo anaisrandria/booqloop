@@ -57,6 +57,10 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 variant="text"
                 color="inherit"
                 sx={{ fontFamily: "Poppins" }}
+                onClick={() => {
+                  router.push("/home");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Accueil"}
               </Button>
@@ -71,8 +75,12 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 variant="text"
                 color="inherit"
                 sx={{ fontFamily: "Poppins" }}
+                onClick={() => {
+                  router.push("/add-book");
+                  toggleOpenMenu(false)();
+                }}
               >
-                {"Profil"}
+                {"Ma bibliothèque"}
               </Button>
               <Button
                 variant="text"
@@ -92,7 +100,10 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 variant="text"
                 color="inherit"
                 sx={{ fontFamily: "Poppins" }}
-                onClick={() => router.push("/login")}
+                onClick={() => {
+                  router.push("/login");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Se connecter"}
               </Button>
@@ -100,7 +111,10 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 variant="text"
                 color="inherit"
                 sx={{ fontFamily: "Poppins" }}
-                onClick={() => router.push("/register")}
+                onClick={() => {
+                  router.push("/register");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"S'inscrire"}
               </Button>

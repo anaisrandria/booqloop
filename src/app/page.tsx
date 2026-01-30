@@ -1,14 +1,24 @@
+"use client";
+
+import { Box } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+
 export const sum = (a: number, b: number) => {
   return a + b;
 };
 
-const Home = async () => {
+const Home = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.push("/home");
+  }, [router]);
   // const name = "Rachel";
   // const user = await fetchUser(name);
 
   return (
     <>
-      Voici la home.
       {/* <div>{`${user.username} lives at ${user.address}, ${user.postal_code} ${user.country}.`}</div> */}
     </>
   );

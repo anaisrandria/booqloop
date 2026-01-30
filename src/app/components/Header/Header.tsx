@@ -8,8 +8,11 @@ import { MenuDrawer } from "../MenuDrawer";
 import { useAuth } from "@/hooks/useAuth";
 import { NavigationMenu } from "../NavigationMenu";
 import { AuthMenu } from "../AuthMenu";
+import { useRouter } from "next/navigation";
+import { HomeLogo } from "../HomeLogo";
 
 const Header = () => {
+  const router = useRouter();
   const { isLoggedIn } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -28,19 +31,7 @@ const Header = () => {
         alignItems: "center",
       }}
     >
-      <Stack
-        sx={{
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "20px",
-          display: {
-            xs: "none",
-            sm: "block",
-          },
-        }}
-      >
-        {"booqloop"}
-      </Stack>
+      <HomeLogo />
       <TextField
         placeholder="Rechercher un livre"
         sx={{
