@@ -23,7 +23,7 @@ class User(UserBase, table=True):
 
     # Relations
     books: List["Book"] = Relationship(back_populates="user")
-    conversations: List["Conversation"] = Relationship(back_populates="user")
+    conversations: List["Conversation"] = Relationship(back_populates="borrower")
     reviews: List["Review"] = Relationship(back_populates="user")
     messages: List["Message"] = Relationship(back_populates="sender")
 
@@ -76,12 +76,12 @@ class Conversation(SQLModel, table=True):
     __tablename__ = "conversations"
 
     id: int = Field(primary_key=True)
-    user_id: int = Field(foreign_key="users.id")
+    borrower_id: int = Field(foreign_key="users.id")
     book_id: int = Field(foreign_key="books.id")
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
     # Relations
-    user: User = Relationship(back_populates="conversations")
+    borrower: User = Relationship(back_populates="conversations")
     book: Book = Relationship(back_populates="conversations")
     messages: List["Message"] = Relationship(back_populates="conversation")
     statuses: List["ConversationStatus"] = Relationship(back_populates="conversation")
