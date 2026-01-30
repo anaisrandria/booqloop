@@ -1,3 +1,5 @@
+"use client";
+
 import { useAuth } from "@/hooks/useAuth";
 import addBook from "@/lib/services/admin/addBook";
 import {
@@ -10,6 +12,7 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import { AddBookFormData } from "./AddBookForm.types";
+import { useRouter } from "next/navigation";
 
 const mockCategories = [
   { id: 1, name: "Littérature" },
@@ -34,6 +37,7 @@ const mockCategories = [
 ];
 
 const AddBookForm = () => {
+  const router = useRouter();
   const { userId } = useAuth();
   const [bookForm, setBookForm] = useState({
     title: "",
@@ -65,6 +69,7 @@ const AddBookForm = () => {
         availability_status_id: 1,
       };
       addBook(newBook);
+      router.push("/home");
     }
   };
 
