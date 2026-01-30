@@ -1,110 +1,161 @@
+import { useAuth } from "@/hooks/useAuth";
+import addBook from "@/lib/services/admin/addBook";
 import {
+  Box,
   Button,
   Container,
   MenuItem,
   Stack,
   TextField,
-  Typography,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
+} from "@mui/material";
+import { useState } from "react";
+import { AddBookFormData } from "./AddBookForm.types";
 
 const mockCategories = [
-  { id: 1, name: 'Littérature & Fiction' },
-  { id: 2, name: 'BD & Jeunesse' },
-  { id: 3, name: 'Arts, culture & société' },
-  { id: 4, name: 'Vie pratique' },
+  { id: 1, name: "Littérature" },
+  { id: 2, name: "Science fiction" },
+  { id: 3, name: "Fantasy" },
+  { id: 4, name: "Romance" },
+  { id: 5, name: "Jeunesse" },
+  { id: 6, name: "Bande dessinée / Manga" },
+  { id: 7, name: "Développement personnel" },
+  { id: 8, name: "Histoire" },
+  { id: 9, name: "Sciences et Technologies" },
+  { id: 10, name: "Philosophie" },
+  { id: 11, name: "Économie et Gestion" },
+  { id: 12, name: "Art et Culture" },
+  { id: 13, name: "Cuisine" },
+  { id: 14, name: "Santé et Bien-être" },
+  { id: 15, name: "Voyage" },
+  { id: 16, name: "Policier / Thriller" },
+  { id: 17, name: "Documentaire / Essai" },
+  { id: 18, name: "Éducation / Pédagogie" },
+  { id: 19, name: "Pratique / Loisirs" },
 ];
 
 const AddBookForm = () => {
-  const [formData, setFormData] = useState({
-    title: '',
-    author: '',
-    description: '',
-    published_year: '',
-    category_id: '',
-    image_url: '',
+  const { userId } = useAuth();
+  const [bookForm, setBookForm] = useState({
+    title: "",
+    author: "",
+    description: "",
+    published_year: undefined,
+    category_id: 1,
+    image_url: "",
   });
-
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageError, setImageError] = useState(false);
-
-  useEffect(() => {
-    return () => {
-      if (imagePreview) {
-        URL.revokeObjectURL(imagePreview);
-      }
-    };
-  }, [imagePreview]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setBookForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Book to create:', formData);
-
-    // TODO: fetch('/books/add', { method: 'POST', body: JSON.stringify(formData) })
+    if (userId) {
+      const newBook: AddBookFormData = {
+        title: bookForm.title,
+        author: bookForm.author,
+        description: bookForm.description,
+        published_year: bookForm.published_year,
+        category_id: bookForm.category_id,
+        image_url: bookForm.image_url,
+        user_id: userId,
+        availability_status_id: 1,
+      };
+      addBook(newBook);
+    }
   };
 
   return (
-    <Container maxWidth='sm'>
-      <Typography variant='h5' sx={{ mb: 3, fontWeight: 'bold' }}>
-        Ajouter un livre
-      </Typography>
+    <Container
+      maxWidth="sm"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 5,
+        paddingBottom: 15,
+      }}
+    >
+      <Stack
+        sx={{
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "20px",
+        }}
+      >
+        {"Ajouter un livre"}
+      </Stack>
 
-      <form onSubmit={handleSubmit}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        sx={{
+          width: {
+            xs: "75%",
+            sm: "60%",
+          },
+        }}
+      >
         <Stack spacing={2}>
           <TextField
-            label='Titre'
-            name='title'
-            value={formData.title}
+            label="Titre"
+            name="title"
+            value={bookForm.title}
             onChange={handleChange}
             required
             fullWidth
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Auteur·ice'
-            name='author'
-            value={formData.author}
+            label="Auteur·ice"
+            name="author"
+            value={bookForm.author}
             onChange={handleChange}
             required
             fullWidth
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Description'
-            name='description'
-            value={formData.description}
+            label="Description"
+            name="description"
+            value={bookForm.description}
             onChange={handleChange}
             multiline
-            rows={4}
+            rows={5}
             required
             fullWidth
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Année de publication'
-            name='published_year'
-            value={formData.published_year}
+            label="Année de publication"
+            name="published_year"
+            value={bookForm.published_year}
             onChange={handleChange}
-            type='number'
             fullWidth
+            size="small"
+            type="search"
           />
 
           <TextField
             select
-            label='Catégorie'
-            name='category_id'
-            value={formData.category_id}
+            label="Catégorie"
+            name="category_id"
+            value={bookForm.category_id}
             onChange={handleChange}
             required
             fullWidth
+            size="small"
+            type="search"
           >
             {mockCategories.map((cat) => (
               <MenuItem key={cat.id} value={cat.id}>
@@ -114,74 +165,30 @@ const AddBookForm = () => {
           </TextField>
 
           <TextField
-            label='URL de l’image'
-            name='image_url'
-            value={formData.image_url}
+            label="URL de l’image"
+            name="image_url"
+            value={bookForm.image_url}
             onChange={(e) => {
-              setImageError(false);
+              // setImageError(false);
               handleChange(e);
             }}
-            placeholder='https://...'
-            fullWidth
+            size="small"
+            type="search"
           />
-          {/* {formData.image_url && !imageError && ( */}
-          <Stack alignItems='center' spacing={1}>
-            <Typography variant='caption' color='text.secondary'>
-              Aperçu de l’image
-            </Typography>
-
-            <img
-              src={formData.image_url}
-              alt='Aperçu du livre'
-              style={{
-                maxWidth: 120,
-                maxHeight: 180,
-                objectFit: 'cover',
-                borderRadius: 8,
-                border: '1px solid #ddd',
-              }}
-              onError={() => setImageError(true)}
-            />
-          </Stack>
-          {/* )} */}
-          <Button variant='outlined' component='label'>
-            Choisir une image
-            <input
-              type='file'
-              hidden
-              accept='image/*'
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-
-                setImageFile(file);
-                setImagePreview(URL.createObjectURL(file));
-              }}
-            />
-          </Button>
-          {imagePreview && (
-            <Stack alignItems='center' spacing={1}>
-              <Typography variant='caption'>Aperçu de l’image</Typography>
-
-              <img
-                src={imagePreview}
-                alt='Aperçu du livre'
-                style={{
-                  width: 120,
-                  height: 180,
-                  objectFit: 'cover',
-                  borderRadius: 8,
-                  border: '1px solid #ddd',
-                }}
-              />
-            </Stack>
-          )}
-
-          <Button type='submit' variant='contained' size='large'>
-            Ajouter à ma bibliothèque
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{
+              backgroundColor: "black",
+              textTransform: "none",
+              borderRadius: "5px",
+            }}
+          >
+            {"Ajouter à ma bibliothèque"}
           </Button>
         </Stack>
-      </form>
+      </Box>
     </Container>
   );
 };

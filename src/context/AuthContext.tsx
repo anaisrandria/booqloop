@@ -2,6 +2,7 @@
 
 import { createContext, ReactNode, useEffect, useState } from "react";
 import { AuthContextType } from "./AuthContext.types";
+import { jwtDecode } from "jwt-decode";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -10,9 +11,14 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [isTokenVerified, setIsTokenVerified] = useState<boolean>(false);
+  const [userId, setUserId] = useState<number | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
+    if (token) {
+      const decoded = jwtDecode<{ sub: number }>(token);
+      setUserId(decoded.sub);
+    }
     setIsLoggedIn(!!token);
     setIsTokenVerified(true);
   }, []);
@@ -31,7 +37,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   if (!isTokenVerified) return null;
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, userId }}>
       {children}
     </AuthContext.Provider>
   );
