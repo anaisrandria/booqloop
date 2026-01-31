@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { Header } from "../components/Header";
+import { Stack } from "@mui/material";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -14,13 +15,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main
-      style={{
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-    >
+    <main>
       <Header />
       {children}
     </main>
