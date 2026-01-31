@@ -32,8 +32,8 @@ const BookDetail = ({ book }: BookDetailProps) => {
                 overflow: "hidden",
               }}
             />
-            <Stack>
-              <Typography fontWeight={"semibold"}>Agathe</Typography>
+            <Stack sx={{ justifyContent: "center" }}>
+              <Typography fontWeight={"bold"}>Agathe</Typography>
               <Typography>2 prêts, 3 emprunts</Typography>
             </Stack>
           </Stack>
