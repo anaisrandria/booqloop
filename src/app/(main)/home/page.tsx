@@ -1,20 +1,20 @@
-import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
-import { Book, Category } from "../../types";
-import { BookCard } from "@/app/components/BookCard";
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
+import { Book, Category } from '../../types';
+import { BookCard } from '@/app/components/BookCard';
 
 const Home = async () => {
-  const baseUrl = "http://127.0.0.1:8000";
+  const baseUrl = 'http://127.0.0.1:8000';
 
   const fetchBooks = async (): Promise<Book[] | null> => {
     try {
       const response = await fetch(`${baseUrl}/books/get-books`);
       if (!response.ok) {
-        throw new Error("Failed to fetch books data");
+        throw new Error('Failed to fetch books data');
       }
       const books = await response.json();
       return books;
     } catch (error) {
-      console.error("Error fetching all books:", error);
+      console.error('Error fetching all books:', error);
       return null;
     }
   };
@@ -23,12 +23,12 @@ const Home = async () => {
     try {
       const response = await fetch(`${baseUrl}/books/get-categories`);
       if (!response.ok) {
-        throw new Error("Failed to fetch categories data");
+        throw new Error('Failed to fetch categories data');
       }
       const categories = await response.json();
       return categories;
     } catch (error) {
-      console.error("Error fetching all categories:", error);
+      console.error('Error fetching all categories:', error);
       return null;
     }
   };
@@ -37,44 +37,44 @@ const Home = async () => {
   const categories = await fetchCategories();
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth='md'>
       <Stack spacing={4}>
         <Box
           sx={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "scroll",
-            justifyItems: "center",
-            scrollbarWidth: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'scroll',
+            justifyItems: 'center',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none',
             },
           }}
         >
           <Stack
-            direction="row"
+            direction='row'
             spacing={2}
             sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              width: "100%",
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              width: '100%',
             }}
           >
             {categories &&
               categories.map((category: Category, index: number) => (
                 <Button
                   key={index}
-                  size="small"
-                  variant="outlined"
+                  size='small'
+                  variant='outlined'
                   sx={{
-                    whiteSpace: "nowrap",
-                    minWidth: "150px",
-                    textTransform: "none",
-                    fontFamily: "Poppins",
+                    whiteSpace: 'nowrap',
+                    minWidth: '150px',
+                    textTransform: 'none',
+                    fontFamily: 'Poppins',
                     fontWeight: 600,
-                    borderRadius: "10px",
+                    borderRadius: '10px',
                     flexShrink: 0,
                   }}
                 >
@@ -87,9 +87,9 @@ const Home = async () => {
         <Stack spacing={2}>
           <Typography
             sx={{
-              fontsize: "14px",
-              fontWeight: "600",
-              fontFamily: "Poppins",
+              fontsize: '14px',
+              fontWeight: '600',
+              fontFamily: 'Poppins',
             }}
           >
             Récemment ajoutés
