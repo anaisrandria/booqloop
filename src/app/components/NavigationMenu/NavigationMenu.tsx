@@ -2,6 +2,10 @@ import { useAuth } from '@/hooks/useAuth';
 import { Button, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import { Button, Menu, MenuItem } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const NavigationMenu = () => {
   const router = useRouter();
@@ -20,7 +24,12 @@ const NavigationMenu = () => {
         color='inherit'
         sx={{ textTransform: 'none' }}
         onClick={() => router.push('/home')}
+        variant='text'
+        color='inherit'
+        sx={{ textTransform: 'none' }}
+        onClick={() => router.push('/home')}
       >
+        {'Accueil'}
         {'Accueil'}
       </Button>
       <Button
@@ -39,11 +48,20 @@ const NavigationMenu = () => {
         aria-controls={open ? 'profile-menu' : undefined}
         aria-haspopup='true'
         aria-expanded={open ? 'true' : undefined}
+        variant='text'
+        color='inherit'
+        sx={{ textTransform: 'none' }}
+        id='profile-button'
+        aria-controls={open ? 'profile-menu' : undefined}
+        aria-haspopup='true'
+        aria-expanded={open ? 'true' : undefined}
         onClick={(e) => setProfileMenu(e.currentTarget)}
       >
         {'Profil'}
+        {'Profil'}
       </Button>
       <Menu
+        id='profile-menu'
         id='profile-menu'
         anchorEl={profileMenu}
         open={open}
@@ -51,17 +69,25 @@ const NavigationMenu = () => {
         slotProps={{
           list: {
             'aria-labelledby': 'profile-button',
+            'aria-labelledby': 'profile-button',
           },
         }}
         anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
           vertical: 'bottom',
           horizontal: 'right',
         }}
         transformOrigin={{
           vertical: 'top',
           horizontal: 'right',
+          vertical: 'top',
+          horizontal: 'right',
         }}
         sx={{
+          '& .MuiMenuItem-root': {
+            fontSize: '14px',
+            fontFamily: 'Poppins',
           '& .MuiMenuItem-root': {
             fontSize: '14px',
             fontFamily: 'Poppins',
