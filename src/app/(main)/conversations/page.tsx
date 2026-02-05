@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getConversations } from '@/lib/services/conversations';
+import { Stack, Typography } from '@mui/material';
 
 type Conversation = {
   id: number;
@@ -18,22 +19,37 @@ const ConversationsPage = () => {
   }, []);
 
   return (
-    <div style={{ padding: '1rem' }}>
-      <h1>Ma messagerie</h1>
-      {conversations.length === 0 ? (
-        <p>Aucune conversation pour le moment</p>
-      ) : (
-        <ul>
-          {conversations.map((c) => (
-            <li key={c.id}>
-              <Link href={`/conversations/${c.id}`}>
-                Conversation #{c.id} — Livre {c.book_id}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+    <>
+      <Stack>
+        <Typography sx={{ fontSize: '24px', marginBottom: 2 }}>
+          Ma messagerie
+        </Typography>
+        {conversations.length === 0 ? (
+          <p>Aucune conversation pour le moment</p>
+        ) : (
+          <Stack
+            sx={{
+              border: '1px solid #000',
+              borderRadius: '5px',
+              backgroundColor: '#fff',
+            }}
+          >
+            {conversations.map((c) => (
+              <Stack
+                sx={{
+                  padding: 2,
+                  borderBottom: '1px solid #000',
+                }}
+              >
+                <Link href={`/conversations/${c.id}`}>
+                  Conversation #{c.id} — Livre {c.book_id}
+                </Link>
+              </Stack>
+            ))}
+          </Stack>
+        )}
+      </Stack>
+    </>
   );
 };
 

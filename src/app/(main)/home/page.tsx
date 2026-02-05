@@ -72,7 +72,6 @@ const Home = async () => {
                     whiteSpace: 'nowrap',
                     minWidth: '150px',
                     textTransform: 'none',
-                    fontFamily: 'Poppins',
                     fontWeight: 600,
                     borderRadius: '10px',
                     flexShrink: 0,
@@ -89,7 +88,6 @@ const Home = async () => {
             sx={{
               fontsize: '14px',
               fontWeight: '600',
-              fontFamily: 'Poppins',
             }}
           >
             Récemment ajoutés

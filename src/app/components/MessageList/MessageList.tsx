@@ -1,3 +1,6 @@
+import { Button, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
+
 type Message = {
   id: number;
   content: string;
@@ -11,30 +14,43 @@ type Props = {
 };
 
 export default function MessageList({ messages, currentUserId }: Props) {
+  const router = useRouter();
+
   return (
-    <div style={{ padding: '1rem' }}>
-      {messages.map((message) => (
-        <div
-          key={message.id}
-          style={{
-            marginBottom: '0.5rem',
-            textAlign: message.sender_id === currentUserId ? 'right' : 'left',
-          }}
-        >
-          <span
+    <>
+      <Button
+        variant='text'
+        color='inherit'
+        onClick={() => {
+          router.push('/conversations');
+        }}
+      >
+        Retour
+      </Button>
+      <div style={{ padding: '1rem' }}>
+        {messages.map((message) => (
+          <div
+            key={message.id}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '12px',
-              background:
-                message.sender_id === currentUserId ? '#1976d2' : '#e0e0e0',
-              color: message.sender_id === currentUserId ? 'white' : 'black',
-              display: 'inline-block',
+              marginBottom: '0.5rem',
+              textAlign: message.sender_id === currentUserId ? 'right' : 'left',
             }}
           >
-            {message.content}
-          </span>
-        </div>
-      ))}
-    </div>
+            <span
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '12px',
+                background:
+                  message.sender_id === currentUserId ? '#1976d2' : '#e0e0e0',
+                color: message.sender_id === currentUserId ? 'white' : 'black',
+                display: 'inline-block',
+              }}
+            >
+              {message.content}
+            </span>
+          </div>
+        ))}
+      </div>
+    </>
   );
 }

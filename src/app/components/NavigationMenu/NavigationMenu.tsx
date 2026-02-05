@@ -64,7 +64,6 @@ const NavigationMenu = () => {
         sx={{
           '& .MuiMenuItem-root': {
             fontSize: '14px',
-            fontFamily: 'Poppins',
           },
         }}
       >
