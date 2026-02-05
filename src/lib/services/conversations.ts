@@ -1,13 +1,8 @@
 // Liste des conversations
-<<<<<<< HEAD
 export async function getConversations(userId: number | null) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/conversations/${userId}`,
   );
-=======
-export async function getConversations() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conversations`);
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
   if (!res.ok) {
     throw new Error('Erreur lors du chargement des conversations');
   }

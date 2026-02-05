@@ -1,15 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from sqlmodel import SQLModel, Session, select
-<<<<<<< HEAD
 from api.models import Book, Message, Conversation, MessageCreate, User
-=======
-from api.models import Message, Conversation, MessageCreate, User
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
 from api.services import engine
 
 router = APIRouter(prefix='/conversations', tags=['conversations']) 
 
-<<<<<<< HEAD
 # --- Liste des conversations de l'utilisateur connecté ---
 @router.get("/{user_id}")
 def get_conversations(user_id: int):
@@ -25,15 +20,6 @@ def get_conversations(user_id: int):
         conversations = session.exec(statement).all()
         # if not conversations:
         #     raise HTTPException(status_code=404, detail="Conversation not found")
-=======
-# --- Liste des conversations ---
-@router.get("/")
-def get_conversations():
-    with Session(engine) as session:
-        conversations = session.exec(
-            select(Conversation).order_by(Conversation.created_at.desc())
-        ).all()
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
         return conversations
 
 # --- Messages d'une conversation ---

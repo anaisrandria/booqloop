@@ -147,7 +147,6 @@ const Home = () => {
             sx={{
               fontsize: '14px',
               fontWeight: '600',
-              fontFamily: 'Poppins',
             }}
           >
             {'Récemment ajoutés'}

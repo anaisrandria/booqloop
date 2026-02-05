@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 import { Button, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
-=======
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
 type Message = {
   id: number;
   content: string;
@@ -12,7 +9,6 @@ type Message = {
 };
 
 type Props = {
-<<<<<<< HEAD
   messages?: Message[];
   currentUserId: number | null; // Accept null if user is not logged in
 };
@@ -29,16 +25,6 @@ const MessageList = ({ messages, currentUserId }: Props) => {
       }}
     >
       {messages?.map((message) => (
-=======
-  messages: Message[];
-  currentUserId: number;
-};
-
-export default function MessageList({ messages, currentUserId }: Props) {
-  return (
-    <div style={{ padding: '1rem' }}>
-      {messages.map((message) => (
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
         <div
           key={message.id}
           style={{
@@ -60,14 +46,8 @@ export default function MessageList({ messages, currentUserId }: Props) {
           </span>
         </div>
       ))}
-<<<<<<< HEAD
     </Stack>
   );
 };
 
 export default MessageList;
-=======
-    </div>
-  );
-}
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)

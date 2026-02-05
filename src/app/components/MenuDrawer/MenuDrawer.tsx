@@ -37,7 +37,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             sx={{
               flexGrow: 1,
               textAlign: 'center',
-              fontFamily: 'Poppins',
             }}
           >
             {'booqloop'}
@@ -56,7 +55,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   router.push('/home');
                   toggleOpenMenu(false)();
@@ -67,7 +65,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   router.push('/conversations');
                   toggleOpenMenu(false)();
@@ -78,7 +75,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   router.push('/add-book');
                   toggleOpenMenu(false)();
@@ -89,7 +85,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   logout();
                   router.push('/');
@@ -104,7 +99,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   router.push('/login');
                   toggleOpenMenu(false)();
@@ -115,7 +109,6 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant='text'
                 color='inherit'
-                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   router.push('/register');
                   toggleOpenMenu(false)();

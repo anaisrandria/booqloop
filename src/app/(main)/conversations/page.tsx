@@ -1,5 +1,4 @@
 'use client';
-<<<<<<< HEAD
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
@@ -233,43 +232,6 @@ const ConversationsPage = () => {
         </Stack>
       )}
     </>
-=======
-import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { getConversations } from '@/lib/services/conversations';
-
-type Conversation = {
-  id: number;
-  book_id: number;
-  user_id: number;
-  created_at: string;
-};
-
-const ConversationsPage = () => {
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-
-  useEffect(() => {
-    getConversations().then(setConversations);
-  }, []);
-
-  return (
-    <div style={{ padding: '1rem' }}>
-      <h1>Ma messagerie</h1>
-      {conversations.length === 0 ? (
-        <p>Aucune conversation pour le moment</p>
-      ) : (
-        <ul>
-          {conversations.map((c) => (
-            <li key={c.id}>
-              <Link href={`/conversations/${c.id}`}>
-                Conversation #{c.id} — Livre {c.book_id}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
->>>>>>> 9fd174d (feat(messages): display conversations and messages list)
   );
 };
 
