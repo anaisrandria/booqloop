@@ -1,8 +1,8 @@
-import { Button, Drawer, IconButton, Stack, Typography } from "@mui/material";
-import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import { MenuDrawerProps } from "./MenuDrawer.types";
-import { useAuth } from "@/hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import { MenuDrawerProps } from './MenuDrawer.types';
+import { useAuth } from '@/hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
 const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
   const router = useRouter();
@@ -12,20 +12,20 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
     <Drawer open={isMenuOpen} onClose={toggleOpenMenu(false)}>
       <Stack
         sx={{
-          width: "100vw",
-          height: "100%",
-          backgroundColor: "#F7F2EC",
+          width: '100vw',
+          height: '100%',
+          backgroundColor: '#F7F2EC',
         }}
       >
         <Stack>
           <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="flex-end"
+            direction='row'
+            alignItems='center'
+            justifyContent='flex-end'
             sx={{
-              width: "100%",
-              paddingTop: "1em",
-              paddingRight: "1em",
+              width: '100%',
+              paddingTop: '1em',
+              paddingRight: '1em',
             }}
           >
             <IconButton onClick={toggleOpenMenu(false)}>
@@ -33,86 +33,90 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             </IconButton>
           </Stack>
           <Typography
-            fontSize="20px"
+            fontSize='20px'
             sx={{
               flexGrow: 1,
-              textAlign: "center",
-              fontFamily: "Poppins",
+              textAlign: 'center',
+              fontFamily: 'Poppins',
             }}
           >
-            {"booqloop"}
+            {'booqloop'}
           </Typography>
         </Stack>
         <Stack
           sx={{
             flexGrow: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            gap: "2em",
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '2em',
           }}
         >
           {isLoggedIn ? (
             <>
               <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
-                  router.push("/home");
+                  router.push('/home');
                   toggleOpenMenu(false)();
                 }}
               >
-                {"Accueil"}
+                {'Accueil'}
               </Button>
               <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
-              >
-                {"Messagerie"}
-              </Button>
-              <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
-                  router.push("/add-book");
+                  router.push('/conversations');
                   toggleOpenMenu(false)();
                 }}
               >
-                {"Ma bibliothèque"}
+                {'Messagerie'}
               </Button>
               <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
+                onClick={() => {
+                  router.push('/add-book');
+                  toggleOpenMenu(false)();
+                }}
+              >
+                {'Ma bibliothèque'}
+              </Button>
+              <Button
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
                   logout();
                   toggleOpenMenu(false)();
                 }}
               >
-                {"Déconnexion"}
+                {'Déconnexion'}
               </Button>
             </>
           ) : (
             <>
               <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
-                  router.push("/login");
+                  router.push('/login');
                   toggleOpenMenu(false)();
                 }}
               >
-                {"Se connecter"}
+                {'Se connecter'}
               </Button>
               <Button
-                variant="text"
-                color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                variant='text'
+                color='inherit'
+                sx={{ fontFamily: 'Poppins' }}
                 onClick={() => {
-                  router.push("/register");
+                  router.push('/register');
                   toggleOpenMenu(false)();
                 }}
               >
