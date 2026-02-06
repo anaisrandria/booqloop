@@ -16,7 +16,10 @@ const Home = () => {
       const categoryData = await getCategories();
       setCategories(categoryData);
       const bookData = await getBooks();
-      setBooks(bookData);
+      const sortedBooks = bookData
+        ? [...bookData].sort((a, b) => b.id - a.id)
+        : [];
+      setBooks(sortedBooks);
     };
     loadData();
   }, []);
