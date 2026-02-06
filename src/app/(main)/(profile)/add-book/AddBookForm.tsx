@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/hooks/useAuth";
-import addBook from "@/lib/services/admin/addBook";
+import addBook from "@/lib/services/books/addBook";
 import {
   Box,
   Button,
@@ -13,7 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import { AddBookFormData } from "./AddBookForm.types";
 import { useRouter } from "next/navigation";
-import { getCategories } from "@/lib/services/admin/getCategories";
+import { getCategories } from "@/lib/services/books/getCategories";
 import { Category } from "@/app/types";
 
 const AddBookForm = () => {
@@ -38,7 +38,7 @@ const AddBookForm = () => {
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setBookForm((prev) => ({ ...prev, [name]: value }));

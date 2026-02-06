@@ -3,9 +3,9 @@
 import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Book, Category } from "../../types";
 import { BookCard } from "@/app/components/BookCard";
-import { getCategories } from "@/lib/services/admin/getCategories";
+import { getCategories } from "@/lib/services/books/getCategories";
 import { useEffect, useState } from "react";
-import { getBooks } from "@/lib/services/admin/getBooks";
+import { getBooks } from "@/lib/services/books/getBooks";
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
