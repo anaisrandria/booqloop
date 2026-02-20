@@ -3,14 +3,20 @@ export type Category = {
   name: string;
 };
 
+export type BookUser = {
+  id: number;
+  postal_code: number;
+  country: string;
+}
+
 export type Book = {
   id: number;
   title: string;
   author: string;
-  description: string;
+  description?: string;
   published_year: number;
   image_url: string;
-  user_id: number;
   category_id: number;
   availability_status_id: number;
+  user: BookUser;
 };

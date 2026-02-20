@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from sqlmodel import SQLModel, Session, select
-from api.models import Book, BookCreate, BookAvailability, BookAvailabilityCreate, BookCategory, BookCategoryCreate
+from sqlalchemy.orm import selectinload
+from api.models import Book, BookCreate, BookCategory, BookRead
 from api.services import engine
 
 router = APIRouter(tags=['books'])   
@@ -23,13 +24,17 @@ def add_book(book: BookCreate):
         session.refresh(new_book)
         return new_book
     
-@router.get('/books')
+
+@router.get("/books", response_model=list[BookRead])
 def get_books():
     with Session(engine) as session:
-        statement = select(Book)
+        statement = (
+            select(Book)
+            .options(selectinload(Book.user))
+        )
+
         books = session.exec(statement).all()
         return books
-    
 
 @router.get("/books/{book_id}")
 def get_book(book_id: int):
