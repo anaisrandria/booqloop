@@ -1,7 +1,9 @@
 import { Stack, Typography } from "@mui/material";
 import { BookCardProps } from "./BookCard.types";
+import { useRouter } from "next/navigation";
 
 const BookCard = ({ book }: BookCardProps) => {
+  const router = useRouter();
   return (
     book && (
       <Stack
@@ -12,6 +14,7 @@ const BookCard = ({ book }: BookCardProps) => {
             opacity: 0.8,
           },
         }}
+        onClick={() => router.push(`/books/${book.id}`)}
       >
         <Stack
           sx={{
