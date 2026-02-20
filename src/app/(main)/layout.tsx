@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { Header } from "../components/Header";
-import { Stack } from "@mui/material";
+import { SearchProvider } from "@/context/SearchContext/SearchContext";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,8 +15,10 @@ export default function HomeLayout({
 }>) {
   return (
     <main>
-      <Header />
-      {children}
+      <SearchProvider>
+        <Header />
+        {children}
+      </SearchProvider>
     </main>
   );
 }

@@ -1,11 +1,11 @@
 "use client";
 
 import { createContext, ReactNode, useEffect, useState } from "react";
-import { AuthContextType } from "./AuthContext.types";
 import { jwtDecode } from "jwt-decode";
+import { AuthContextType } from "./AuthContext.types";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
