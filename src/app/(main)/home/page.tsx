@@ -1,17 +1,6 @@
 "use client";
 
-import {
-  Autocomplete,
-  Box,
-  Button,
-  CircularProgress,
-  Container,
-  Grid,
-  Popover,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
 import { Book, Category } from "../../types";
 import { BookCard } from "@/app/components/BookCard";
 import { getCategories } from "@/lib/services/books/getCategories";
@@ -30,28 +19,36 @@ const Home = () => {
 
   const postalCodes = [1, 10001, 75001, 75002, 75003, 75004, 75005];
 
-  const filteredBooks = postalCode
-    ? books?.filter((book) => book.user.postal_code === postalCode)
-    : books;
-
   const handleCategoryClick = (categoryId: number) => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
   };
 
   useEffect(() => {
-    const loadData = async () => {
-      setIsLoading(true);
+    const loadCategoryData = async () => {
       const categoryData = await getCategories();
       setCategories(categoryData);
-      const bookData = await getBooks();
+    };
+    loadCategoryData();
+  }, []);
+
+  useEffect(() => {
+    const loadBookData = async () => {
+      setIsLoading(true);
+      const filters: Record<string, number> = {};
+      if (selectedCategory !== null) filters.categoryId = selectedCategory;
+      if (postalCode !== null) filters.postalCode = postalCode;
+
+      const bookData = await getBooks(
+        Object.keys(filters).length ? filters : undefined,
+      );
       const sortedBooks = bookData
         ? [...bookData].sort((a, b) => b.id - a.id)
         : [];
       setBooks(sortedBooks);
       setIsLoading(false);
     };
-    loadData();
-  }, []);
+    loadBookData();
+  }, [selectedCategory, postalCode]);
 
   return (
     <Container maxWidth="md">
@@ -153,8 +150,8 @@ const Home = () => {
             rowSpacing={3}
             columnSpacing={2.5}
           >
-            {filteredBooks && filteredBooks.length > 0
-              ? filteredBooks.map((book: Book, index: number) => (
+            {books && books.length > 0
+              ? books.map((book: Book, index: number) => (
                   <Grid key={index} size={1}>
                     <BookCard book={book} />
                   </Grid>

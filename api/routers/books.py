@@ -1,7 +1,7 @@
-from fastapi import APIRouter, HTTPException
-from sqlmodel import SQLModel, Session, select
+from fastapi import APIRouter, HTTPException, Query
+from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
-from api.models import Book, BookCreate, BookCategory, BookRead
+from api.models import Book, BookCreate, BookCategory, BookRead, User
 from api.services import engine
 
 router = APIRouter(tags=['books'])   
@@ -26,16 +26,22 @@ def add_book(book: BookCreate):
     
 
 @router.get("/books", response_model=list[BookRead])
-def get_books():
+def get_books(
+    category_id: int | None = Query(default=None, description="Filter by category ID"),
+    postal_code: int | None = Query(default=None, description="Filter by user postal code")
+):
     with Session(engine) as session:
-        statement = (
-            select(Book)
-            .options(selectinload(Book.user))
-        )
+        statement = select(Book).options(selectinload(Book.user))
+
+        # Appliquer les filtres dynamiques
+        if category_id is not None:
+            statement = statement.where(Book.category_id == category_id)
+        if postal_code is not None:
+            statement = statement.where(Book.user.has(User.postal_code == postal_code))
 
         books = session.exec(statement).all()
         return books
-
+    
 @router.get("/books/{book_id}")
 def get_book(book_id: int):
     with Session(engine) as session:
