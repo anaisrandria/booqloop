@@ -10,27 +10,25 @@ import {
 } from "@mui/material";
 import { BookDetailProps } from "./BookDetail.types";
 import { theme } from "@/app/theme";
-import { useEffect } from "react";
 
 interface ContactButtonsProps {
-  isDesktop: boolean;
+  isMobile: boolean;
 }
 
-const ContactButtons = ({ isDesktop }: ContactButtonsProps) => {
+const ContactButtons = ({ isMobile }: ContactButtonsProps) => {
   return (
     <Stack
-      direction={isDesktop ? "column" : "row"}
+      direction={isMobile ? "row" : "column"}
       gap={2}
-      paddingX={3}
+      paddingX={isMobile ? 3 : 0}
       sx={{
-        position: isDesktop ? "relative" : "fixed",
-        bottom: isDesktop ? "auto" : 0,
-        left: isDesktop ? "auto" : 0,
-        width: "100%",
-        height: isDesktop ? "auto" : "8vh",
+        position: isMobile ? "fixed" : "relative",
+        bottom: isMobile ? 0 : "auto",
+        left: isMobile ? 0 : "auto",
+        height: isMobile ? "8vh" : "auto",
         justifyContent: "center",
         alignItems: "center",
-        flexGrow: 1,
+        width: "100%",
         backgroundColor: "#f7f2ec",
       }}
     >
@@ -65,7 +63,7 @@ const ContactButtons = ({ isDesktop }: ContactButtonsProps) => {
 };
 
 const BookDetail = ({ book }: BookDetailProps) => {
-  const isDesktop = useMediaQuery(theme.breakpoints.up("md"), {
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"), {
     noSsr: true,
   });
 
@@ -78,23 +76,28 @@ const BookDetail = ({ book }: BookDetailProps) => {
       >
         <Stack
           gap={3}
-          flexDirection={{ xs: "column", md: "row" }}
+          flexDirection={{ xs: "column", sm: "row" }}
           flex="1 1"
           height="75vh"
         >
           <Stack
             sx={{
-              flex: { md: 1 },
+              flex: { sm: 1 },
               border: "1px solid black",
               borderRadius: "10px",
               minHeight: "420px",
               backgroundImage: `url(${book.image_url})`,
               backgroundSize: "cover",
               backgroundRepeat: "no-repeat",
+              backgroundPosition: "center top",
               overflow: "hidden",
             }}
           />
-          <Stack paddingX={{ xs: 2, md: 5 }} gap={3} sx={{ flex: { md: 1 } }}>
+          <Stack
+            paddingX={{ xs: 2, sm: 0, md: 5 }}
+            gap={3}
+            sx={{ flex: { sm: 1 } }}
+          >
             <Stack direction="row" gap={2}>
               <Stack
                 sx={{
@@ -122,10 +125,10 @@ const BookDetail = ({ book }: BookDetailProps) => {
               </Typography>
               <Typography align="justify">{book.description}</Typography>
             </Stack>
-            {isDesktop && <ContactButtons isDesktop={isDesktop} />}
+            {!isMobile && <ContactButtons isMobile={isMobile} />}
           </Stack>
         </Stack>
-        {!isDesktop && <ContactButtons isDesktop={isDesktop} />}
+        {isMobile && <ContactButtons isMobile={isMobile} />}
       </Container>
     )
   );
