@@ -4,6 +4,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  CircularProgress,
   Container,
   Grid,
   Popover,
@@ -17,23 +18,29 @@ import { getCategories } from "@/lib/services/books/getCategories";
 import { useEffect, useState } from "react";
 import { getBooks } from "@/lib/services/books/getBooks";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { PostalCodePopover } from "@/app/components/PostalCodePopover";
 
 const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [books, setBooks] = useState<Book[] | null>([]);
-  const [postalCode, setPostalCode] = useState<number>();
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [postalCode, setPostalCode] = useState<number | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const postalCodes = [1, 10001, 75001, 75002, 75003, 75004, 75005];
-
-  console.log("BOOKS", books);
 
   const filteredBooks = postalCode
     ? books?.filter((book) => book.user.postal_code === postalCode)
     : books;
 
+  const handleCategoryClick = (categoryId: number) => {
+    setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
+  };
+
   useEffect(() => {
     const loadData = async () => {
+      setIsLoading(true);
       const categoryData = await getCategories();
       setCategories(categoryData);
       const bookData = await getBooks();
@@ -41,6 +48,7 @@ const Home = () => {
         ? [...bookData].sort((a, b) => b.id - a.id)
         : [];
       setBooks(sortedBooks);
+      setIsLoading(false);
     };
     loadData();
   }, []);
@@ -93,57 +101,38 @@ const Home = () => {
               >
                 {!postalCode || anchorEl ? "Localisation" : postalCode}
               </Button>
-              <Popover
-                open={!!anchorEl}
+              <PostalCodePopover
                 anchorEl={anchorEl}
-                onClose={() => setAnchorEl(null)}
-                anchorOrigin={{
-                  vertical: "bottom",
-                  horizontal: "right",
-                }}
-                transformOrigin={{
-                  vertical: "top",
-                  horizontal: "right",
-                }}
-              >
-                <Box sx={{ p: 2, width: 200 }}>
-                  <Autocomplete
-                    options={postalCodes}
-                    value={postalCode ?? null}
-                    getOptionLabel={(option) => option.toString()}
-                    onChange={(event, value) => {
-                      setPostalCode(value ?? undefined);
-                      setAnchorEl(null);
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        variant="standard"
-                        label="Code postal"
-                      />
-                    )}
-                  />
-                </Box>
-              </Popover>
+                setAnchorEl={setAnchorEl}
+                postalCodes={postalCodes}
+                postalCode={postalCode}
+                setPostalCode={setPostalCode}
+              />
               {categories &&
-                categories.map((category: Category, index: number) => (
-                  <Button
-                    key={index}
-                    size="small"
-                    variant="outlined"
-                    sx={{
-                      whiteSpace: "nowrap",
-                      minWidth: "150px",
-                      textTransform: "none",
-                      fontFamily: "Poppins",
-                      fontWeight: 600,
-                      borderRadius: "10px",
-                      flexShrink: 0,
-                    }}
-                  >
-                    {category.name}
-                  </Button>
-                ))}
+                categories.map((category: Category, index: number) => {
+                  const isSelected = category.id === selectedCategory;
+                  return (
+                    <Button
+                      key={index}
+                      size="small"
+                      variant="outlined"
+                      onClick={() => handleCategoryClick(category.id)}
+                      sx={{
+                        whiteSpace: "nowrap",
+                        minWidth: "150px",
+                        textTransform: "none",
+                        fontFamily: "Poppins",
+                        fontWeight: 600,
+                        borderRadius: "10px",
+                        flexShrink: 0,
+                        backgroundColor: isSelected ? "black" : "#f7f2ec",
+                        color: isSelected ? "#f7f2ec" : "black",
+                      }}
+                    >
+                      {category.name}
+                    </Button>
+                  );
+                })}
             </>
           </Stack>
         </Box>
@@ -164,15 +153,15 @@ const Home = () => {
             rowSpacing={3}
             columnSpacing={2.5}
           >
-            {filteredBooks && filteredBooks.length > 0 ? (
-              filteredBooks.map((book: Book, index: number) => (
-                <Grid key={index} size={1}>
-                  <BookCard book={book} />
-                </Grid>
-              ))
-            ) : (
-              <Typography paddingY={1}>Aucun livre trouvé.</Typography>
-            )}
+            {filteredBooks && filteredBooks.length > 0
+              ? filteredBooks.map((book: Book, index: number) => (
+                  <Grid key={index} size={1}>
+                    <BookCard book={book} />
+                  </Grid>
+                ))
+              : !isLoading && (
+                  <Typography paddingY={1}>Aucun livre trouvé.</Typography>
+                )}
           </Grid>
         </Stack>
       </Stack>
