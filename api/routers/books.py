@@ -3,9 +3,9 @@ from sqlmodel import SQLModel, Session, select
 from api.models import Book, BookCreate, BookAvailability, BookAvailabilityCreate, BookCategory, BookCategoryCreate
 from api.services import engine
 
-router = APIRouter(prefix='/books', tags=['books'])   
+router = APIRouter(tags=['books'])   
 
-@router.post('/add-book')
+@router.post('/books')
 def add_book(book: BookCreate):
     with Session(engine) as session:
         new_book = Book(
@@ -23,7 +23,7 @@ def add_book(book: BookCreate):
         session.refresh(new_book)
         return new_book
     
-@router.get('/get-books')
+@router.get('/books')
 def get_books():
     with Session(engine) as session:
         statement = select(Book)
@@ -31,7 +31,7 @@ def get_books():
         return books
     
 
-@router.get("/get-book/{book_id}")
+@router.get("/books/{book_id}")
 def get_book(book_id: int):
     with Session(engine) as session:
         book = session.get(Book, book_id)
@@ -41,7 +41,7 @@ def get_book(book_id: int):
 
         return book
     
-@router.get('/get-categories')
+@router.get('/categories')
 def get_categories():
     with Session(engine) as session:
         statement = select(BookCategory)
