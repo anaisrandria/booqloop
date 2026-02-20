@@ -1,93 +1,132 @@
-import { Button, Stack, Typography } from "@mui/material";
+"use client";
+
+import {
+  Box,
+  Button,
+  Container,
+  Stack,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { BookDetailProps } from "./BookDetail.types";
+import { theme } from "@/app/theme";
+import { useEffect } from "react";
+
+interface ContactButtonsProps {
+  isDesktop: boolean;
+}
+
+const ContactButtons = ({ isDesktop }: ContactButtonsProps) => {
+  return (
+    <Stack
+      direction={isDesktop ? "column" : "row"}
+      gap={2}
+      paddingX={3}
+      sx={{
+        position: isDesktop ? "relative" : "fixed",
+        bottom: isDesktop ? "auto" : 0,
+        left: isDesktop ? "auto" : 0,
+        width: "100%",
+        height: isDesktop ? "auto" : "8vh",
+        justifyContent: "center",
+        alignItems: "center",
+        flexGrow: 1,
+        backgroundColor: "#f7f2ec",
+      }}
+    >
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          backgroundColor: "black",
+          textTransform: "none",
+          borderRadius: "10px",
+          width: "100%",
+          flex: 1,
+        }}
+      >
+        Message
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          backgroundColor: "black",
+          textTransform: "none",
+          borderRadius: "10px",
+          width: "100%",
+          flex: 1,
+        }}
+      >
+        Réserver
+      </Button>
+    </Stack>
+  );
+};
 
 const BookDetail = ({ book }: BookDetailProps) => {
+  const isDesktop = useMediaQuery(theme.breakpoints.up("md"), {
+    noSsr: true,
+  });
+
   return (
     book && (
-      <Stack gap={3}>
+      <Container
+        maxWidth="md"
+        disableGutters
+        sx={{ paddingX: { xs: 0, md: 5 } }}
+      >
         <Stack
-          sx={{
-            border: "1px solid black",
-            borderRadius: "10px",
-            height: "420px",
-            backgroundImage: `url(${book.image_url})`,
-            backgroundSize: "cover",
-            backgroundRepeat: "no-repeat",
-            overflow: "hidden",
-          }}
-        />
-        <Stack paddingX={2} gap={3}>
-          <Stack direction="row" gap={2}>
-            <Stack
-              sx={{
-                border: "1px solid black",
-                borderRadius: "50px",
-                height: "50px",
-                width: "50px",
-                opacity: 0.5,
-                backgroundImage:
-                  "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPHHLCPnASW-uMU5Iun97gCckqqlm6DAh5-Q&s)",
-                backgroundSize: "cover",
-                backgroundRepeat: "no-repeat",
-                overflow: "hidden",
-              }}
-            />
-            <Stack sx={{ justifyContent: "center" }}>
-              <Typography fontWeight={"bold"}>Agathe</Typography>
-              <Typography>2 prêts, 3 emprunts</Typography>
-            </Stack>
-          </Stack>
-          <Stack gap={1}>
-            <Typography fontSize={18}>
-              <span style={{ fontWeight: "bold" }}>{book.title}</span>,{" "}
-              {book.author}
-            </Typography>
-            <Typography align="justify">{book.description}</Typography>
-          </Stack>
-        </Stack>
-
-        <Stack
-          direction="row"
-          gap={2}
-          paddingX={3}
-          sx={{
-            position: "fixed",
-            justifyContent: "center",
-            alignItems: "center",
-            flexGrow: 1,
-            height: "8vh",
-            width: "100vw",
-            bottom: -1,
-            left: 0,
-            backgroundColor: "#f7f2ec",
-          }}
+          gap={3}
+          flexDirection={{ xs: "column", md: "row" }}
+          flex="1 1"
+          height="75vh"
         >
-          <Button
-            variant="contained"
-            color="primary"
+          <Stack
             sx={{
-              backgroundColor: "black",
-              textTransform: "none",
+              flex: { md: 1 },
+              border: "1px solid black",
               borderRadius: "10px",
-              flex: 1,
+              minHeight: "420px",
+              backgroundImage: `url(${book.image_url})`,
+              backgroundSize: "cover",
+              backgroundRepeat: "no-repeat",
+              overflow: "hidden",
             }}
-          >
-            Message
-          </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              backgroundColor: "black",
-              textTransform: "none",
-              borderRadius: "10px",
-              flex: 1,
-            }}
-          >
-            Réserver
-          </Button>
+          />
+          <Stack paddingX={{ xs: 2, md: 5 }} gap={3} sx={{ flex: { md: 1 } }}>
+            <Stack direction="row" gap={2}>
+              <Stack
+                sx={{
+                  border: "1px solid black",
+                  borderRadius: "50px",
+                  height: "50px",
+                  width: "50px",
+                  opacity: 0.5,
+                  backgroundImage:
+                    "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPHHLCPnASW-uMU5Iun97gCckqqlm6DAh5-Q&s)",
+                  backgroundSize: "cover",
+                  backgroundRepeat: "no-repeat",
+                  overflow: "hidden",
+                }}
+              />
+              <Stack sx={{ justifyContent: "center" }}>
+                <Typography fontWeight={"bold"}>Agathe</Typography>
+                <Typography>2 prêts, 3 emprunts</Typography>
+              </Stack>
+            </Stack>
+            <Stack gap={1} overflow="auto">
+              <Typography fontSize={18}>
+                <span style={{ fontWeight: "bold" }}>{book.title}</span>,{" "}
+                {book.author}
+              </Typography>
+              <Typography align="justify">{book.description}</Typography>
+            </Stack>
+            {isDesktop && <ContactButtons isDesktop={isDesktop} />}
+          </Stack>
         </Stack>
-      </Stack>
+        {!isDesktop && <ContactButtons isDesktop={isDesktop} />}
+      </Container>
     )
   );
 };
