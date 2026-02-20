@@ -8,16 +8,24 @@ import { useEffect, useState } from "react";
 import { getBooks } from "@/lib/services/books/getBooks";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { PostalCodePopover } from "@/app/components/PostalCodePopover";
+import { useSearch } from "@/hooks/useSearch";
 
 const Home = () => {
+  const { searchQuery } = useSearch();
   const [categories, setCategories] = useState<Category[]>([]);
-  const [books, setBooks] = useState<Book[] | null>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [postalCode, setPostalCode] = useState<number | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const postalCodes = [1, 10001, 75001, 75002, 75003, 75004, 75005];
+
+  const filteredBooks = books?.filter(
+    (book) =>
+      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.author.toLowerCase().includes(searchQuery.toLowerCase()),
+  );
 
   const handleCategoryClick = (categoryId: number) => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
@@ -150,8 +158,8 @@ const Home = () => {
             rowSpacing={3}
             columnSpacing={2.5}
           >
-            {books && books.length > 0
-              ? books.map((book: Book, index: number) => (
+            {filteredBooks && filteredBooks.length > 0
+              ? filteredBooks.map((book: Book, index: number) => (
                   <Grid key={index} size={1}>
                     <BookCard book={book} />
                   </Grid>
