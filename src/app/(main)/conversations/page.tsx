@@ -92,59 +92,75 @@ const ConversationsPage = () => {
 
   const currentUserId = 1; // TODO: remplacer par l'utilisateur connecté
 
-  const renderConversationList = () => (
-    <Stack
-      sx={{
-        width: '100%',
-        maxHeight: '600px',
-        overflowY: 'auto',
-        borderRight: isMobile ? 'none' : '1px solid #000',
-      }}
-    >
-      {conversations.length === 0 ? (
-        <Typography sx={{ padding: 2 }}>
-          Aucune conversation pour le moment
-        </Typography>
-      ) : (
-        conversations.map((conversation) => {
-          const isSelected = conversation.id === selectedConversationId;
-          const lastMessage = lastMessages[conversation.id];
+  const renderConversationList = () => {
+    const sortedConversations = [...conversations].sort((a, b) => {
+      const lastMessageA = lastMessages[a.id];
+      const lastMessageB = lastMessages[b.id];
 
-          return (
-            <Stack
-              key={conversation.id}
-              onClick={() => setSelectedConversationId(conversation.id)}
-              sx={{
-                padding: 2,
-                cursor: 'pointer',
-                backgroundColor: isSelected ? '#E0E7FF' : 'transparent',
-                '&:hover': {
-                  backgroundColor: isSelected ? '#C7D2FE' : '#F3F4F6',
-                },
-              }}
-            >
-              <Typography fontWeight={600}>
-                Conversation #{conversation.id}
-              </Typography>
-              <Typography variant='body2' color='text.secondary'>
-                Livre {conversation.book_id}
-              </Typography>
-              <Typography
-                variant='body2'
-                color='text.secondary'
-                noWrap
-                sx={{ mt: 0.5 }}
+      const lastActivityA =
+        lastMessageA?.created_at ?? a.created_at ?? '1970-01-01T00:00:00Z';
+      const lastActivityB =
+        lastMessageB?.created_at ?? b.created_at ?? '1970-01-01T00:00:00Z';
+
+      return (
+        new Date(lastActivityB).getTime() - new Date(lastActivityA).getTime()
+      );
+    });
+
+    return (
+      <Stack
+        sx={{
+          width: '100%',
+          maxHeight: '600px',
+          overflowY: 'auto',
+          borderRight: isMobile ? 'none' : '1px solid #000',
+        }}
+      >
+        {sortedConversations.length === 0 ? (
+          <Typography sx={{ padding: 2 }}>
+            Aucune conversation pour le moment
+          </Typography>
+        ) : (
+          sortedConversations.map((conversation) => {
+            const isSelected = conversation.id === selectedConversationId;
+            const lastMessage = lastMessages[conversation.id];
+
+            return (
+              <Stack
+                key={conversation.id}
+                onClick={() => setSelectedConversationId(conversation.id)}
+                sx={{
+                  padding: 2,
+                  cursor: 'pointer',
+                  backgroundColor: isSelected ? '#E0E7FF' : 'transparent',
+                  '&:hover': {
+                    backgroundColor: isSelected ? '#C7D2FE' : '#F3F4F6',
+                  },
+                }}
               >
-                {lastMessage
-                  ? lastMessage.content
-                  : 'Aucun message pour le moment'}
-              </Typography>
-            </Stack>
-          );
-        })
-      )}
-    </Stack>
-  );
+                <Typography fontWeight={600}>
+                  Conversation #{conversation.id}
+                </Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  Livre {conversation.book_id}
+                </Typography>
+                <Typography
+                  variant='body2'
+                  color='text.secondary'
+                  noWrap
+                  sx={{ mt: 0.5 }}
+                >
+                  {lastMessage
+                    ? lastMessage.content
+                    : 'Aucun message pour le moment'}
+                </Typography>
+              </Stack>
+            );
+          })
+        )}
+      </Stack>
+    );
+  };
 
   const renderConversationContent = () =>
     selectedConversationId !== null && (
