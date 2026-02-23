@@ -11,22 +11,29 @@ type Message = {
 type Props = {
   messages?: Message[];
   currentUserId: number;
+  showBackButton?: boolean;
 };
 
-export default function MessageList({ messages, currentUserId }: Props) {
+export default function MessageList({
+  messages,
+  currentUserId,
+  showBackButton = true,
+}: Props) {
   const router = useRouter();
 
   return (
     <>
-      <Button
-        variant='text'
-        color='inherit'
-        onClick={() => {
-          router.push('/conversations');
-        }}
-      >
-        Retour
-      </Button>
+      {showBackButton && (
+        <Button
+          variant='text'
+          color='inherit'
+          onClick={() => {
+            router.push('/conversations');
+          }}
+        >
+          Retour
+        </Button>
+      )}
       <div style={{ padding: '1rem' }}>
         {messages?.map((message) => (
           <div
