@@ -9,7 +9,7 @@ type Message = {
 };
 
 type Props = {
-  messages: Message[];
+  messages?: Message[];
   currentUserId: number;
 };
 
@@ -28,7 +28,7 @@ export default function MessageList({ messages, currentUserId }: Props) {
         Retour
       </Button>
       <div style={{ padding: '1rem' }}>
-        {messages.map((message) => (
+        {messages?.map((message) => (
           <div
             key={message.id}
             style={{
