@@ -1,25 +1,24 @@
 // src/components/messaging/MessageForm.tsx
 import { useState } from 'react';
 import { sendMessage } from '@/lib/services/conversations';
+import { useAuth } from '../../../hooks/useAuth';
 
-type Props = {
+type MessageFormProps = {
   conversationId: number;
-  senderId: number;
   onMessageSent: () => void;
 };
 
-export default function MessageForm({
-  conversationId,
-  senderId,
-  onMessageSent,
-}: Props) {
+const MessageForm = ({ conversationId, onMessageSent }: MessageFormProps) => {
   const [content, setContent] = useState('');
+  const currentUserId = useAuth().userId;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!currentUserId) return;
     if (!content.trim()) return;
 
-    await sendMessage(conversationId, senderId, content);
+    await sendMessage(conversationId, currentUserId, content);
 
     setContent('');
     onMessageSent(); // recharge les messages
@@ -39,4 +38,6 @@ export default function MessageForm({
       <button type='submit'>Envoyer</button>
     </form>
   );
-}
+};
+
+export default MessageForm;

@@ -1,10 +1,14 @@
 'use client';
-import { useEffect, useState } from 'react';
-import { Button, Stack, Typography, useMediaQuery } from '@mui/material';
+import { useEffect, useMemo, useState } from 'react';
+import { Box, Button, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import MessageList from '../../components/MessageList/MessageList';
 import MessageForm from '@/app/components/MessageForm/MessageForm';
 import { getConversations, getMessages } from '@/lib/services/conversations';
+import { Book } from '@/app/types';
+import { getBook } from '@/lib/services/books/getBook';
+import { getUserById, User } from '@/lib/services/users/getUserById';
+import { useAuth } from '../../../hooks/useAuth';
 
 type Message = {
   id: number;
@@ -16,11 +20,14 @@ type Message = {
 type Conversation = {
   id: number;
   book_id: number;
-  user_id: number;
+  borrower_id: number;
+  owner_id: number;
   created_at: string;
 };
 
 const ConversationsPage = () => {
+  const { userId } = useAuth();
+
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [selectedConversationId, setSelectedConversationId] = useState<
     number | null
@@ -29,15 +36,18 @@ const ConversationsPage = () => {
   const [lastMessages, setLastMessages] = useState<
     Record<number, Message | null>
   >({});
+  const [booksById, setBooksById] = useState<Record<number, Book | null>>({});
+  const [usersById, setUsersById] = useState<Record<number, User | null>>({});
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const loadConversations = async () => {
     try {
-      const data: Conversation[] = await getConversations();
+      const data = await getConversations();
       setConversations(data);
-      loadLastMessages(data);
+      await loadLastMessages(data);
+      await getConversationDetails(data);
     } catch (error) {
       console.error(error);
     }
@@ -45,7 +55,7 @@ const ConversationsPage = () => {
 
   const loadMessages = async (conversationId: number) => {
     try {
-      const data: Message[] = await getMessages(conversationId);
+      const data = await getMessages(conversationId);
       setMessages(data);
       setLastMessages((prev) => ({
         ...prev,
@@ -77,9 +87,54 @@ const ConversationsPage = () => {
     }
   };
 
+  const getConversationDetails = async (conversationsList: Conversation[]) => {
+    try {
+      const uniqueBookIds = Array.from(
+        new Set(conversationsList.map((c) => c.book_id)),
+      );
+
+      const bookResults = await Promise.all(
+        uniqueBookIds.map(async (bookId) => {
+          const book = await getBook(bookId);
+          return { bookId, book };
+        }),
+      );
+
+      const nextBooksById: Record<number, Book | null> = {};
+      bookResults.forEach(({ bookId, book }) => {
+        nextBooksById[bookId] = book;
+      });
+      setBooksById(nextBooksById);
+
+      const ownerIds = bookResults
+        .map(({ book }) => book?.user_id)
+        .filter((id): id is number => typeof id === 'number');
+
+      const borrowerIds = conversationsList.map((c) => c.borrower_id);
+
+      const uniqueUserIds = Array.from(new Set([...ownerIds, ...borrowerIds]));
+
+      const userResults = await Promise.all(
+        uniqueUserIds.map(async (userId) => {
+          const user = await getUserById(userId);
+          return { userId, user };
+        }),
+      );
+
+      const nextUsersById: Record<number, User | null> = {};
+      userResults.forEach(({ userId, user }) => {
+        nextUsersById[userId] = user;
+      });
+      setUsersById(nextUsersById);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   useEffect(() => {
+    if (!userId) return;
     loadConversations();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     if (selectedConversationId === null) {
@@ -90,10 +145,20 @@ const ConversationsPage = () => {
     loadMessages(selectedConversationId);
   }, [selectedConversationId]);
 
-  const currentUserId = 1; // TODO: remplacer par l'utilisateur connecté
+  const currentUserId = useAuth().userId;
 
-  const renderConversationList = () => {
-    const sortedConversations = [...conversations].sort((a, b) => {
+  const formatLastMessageDate = (iso: string) => {
+    const date = new Date(iso);
+    if (Number.isNaN(date.getTime())) return '';
+    return new Intl.DateTimeFormat('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+    }).format(date);
+  };
+
+  const sortedConversations = useMemo(() => {
+    return [...conversations].sort((a, b) => {
       const lastMessageA = lastMessages[a.id];
       const lastMessageB = lastMessages[b.id];
 
@@ -106,11 +171,14 @@ const ConversationsPage = () => {
         new Date(lastActivityB).getTime() - new Date(lastActivityA).getTime()
       );
     });
+  }, [conversations, lastMessages]);
 
+  const renderConversationList = () => {
     return (
       <Stack
         sx={{
           width: '100%',
+          height: '100%',
           maxHeight: '600px',
           overflowY: 'auto',
           borderRight: isMobile ? 'none' : '1px solid #000',
@@ -124,6 +192,16 @@ const ConversationsPage = () => {
           sortedConversations.map((conversation) => {
             const isSelected = conversation.id === selectedConversationId;
             const lastMessage = lastMessages[conversation.id];
+            const book = booksById[conversation.book_id];
+
+            const interlocutorId =
+              book && book.user_id === currentUserId
+                ? conversation.borrower_id
+                : (book?.user_id ?? conversation.borrower_id);
+            const interlocutor = usersById[interlocutorId];
+
+            const lastActivityDate =
+              lastMessage?.created_at ?? conversation.created_at;
 
             return (
               <Stack
@@ -138,22 +216,65 @@ const ConversationsPage = () => {
                   },
                 }}
               >
-                <Typography fontWeight={600}>
-                  Conversation #{conversation.id}
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  Livre {conversation.book_id}
-                </Typography>
-                <Typography
-                  variant='body2'
-                  color='text.secondary'
-                  noWrap
-                  sx={{ mt: 0.5 }}
-                >
-                  {lastMessage
-                    ? lastMessage.content
-                    : 'Aucun message pour le moment'}
-                </Typography>
+                <Stack direction='row' spacing={1.5} alignItems='center'>
+                  {book?.image_url ? (
+                    <Box
+                      component='img'
+                      src={book.image_url}
+                      alt={`Couverture de ${book.title}`}
+                      sx={{
+                        width: 44,
+                        height: 64,
+                        objectFit: 'cover',
+                        borderRadius: 1,
+                        flexShrink: 0,
+                        backgroundColor: '#E5E7EB',
+                      }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        width: 44,
+                        height: 64,
+                        borderRadius: 1,
+                        flexShrink: 0,
+                        backgroundColor: '#E5E7EB',
+                      }}
+                    />
+                  )}
+                  <Stack sx={{ minWidth: 0, flex: 1 }}>
+                    <Stack
+                      direction='row'
+                      justifyContent='space-between'
+                      alignItems='baseline'
+                      spacing={1}
+                    >
+                      <Typography fontWeight={600} noWrap sx={{ minWidth: 0 }}>
+                        {book?.title}, {book?.author}
+                      </Typography>
+                      <Typography
+                        variant='caption'
+                        color='text.secondary'
+                        noWrap
+                      >
+                        {formatLastMessageDate(lastActivityDate)}
+                      </Typography>
+                    </Stack>
+                    <Typography variant='body2' color='text.secondary' noWrap>
+                      {interlocutor?.username}
+                    </Typography>
+                    <Typography
+                      variant='body2'
+                      color='text.secondary'
+                      noWrap
+                      sx={{ mt: 0.5 }}
+                    >
+                      {lastMessage
+                        ? lastMessage.content
+                        : 'Aucun message pour le moment'}
+                    </Typography>
+                  </Stack>
+                </Stack>
               </Stack>
             );
           })
@@ -165,14 +286,9 @@ const ConversationsPage = () => {
   const renderConversationContent = () =>
     selectedConversationId !== null && (
       <Stack sx={{ width: '100%' }}>
-        <MessageList
-          messages={messages}
-          currentUserId={currentUserId}
-          showBackButton={false}
-        />
+        <MessageList messages={messages} currentUserId={currentUserId} />
         <MessageForm
           conversationId={selectedConversationId}
-          senderId={currentUserId}
           onMessageSent={() => {
             if (selectedConversationId !== null) {
               loadMessages(selectedConversationId);
@@ -207,25 +323,27 @@ const ConversationsPage = () => {
                 onClick={() => setSelectedConversationId(null)}
                 sx={{ alignSelf: 'flex-start', m: 1 }}
               >
-                {'← Retour aux conversations'}
+                {'← Messagerie'}
               </Button>
               {renderConversationContent()}
             </Stack>
           )}
         </Stack>
       ) : (
-        <Stack
-          direction='row'
-          width='100%'
-          sx={{
-            border: '1px solid #000',
-            borderRadius: '15px',
-            minHeight: '400px',
-            overflow: 'hidden',
-          }}
-        >
-          <Stack width='35%'>{renderConversationList()}</Stack>
-          <Stack width='65%'>{renderConversationContent()}</Stack>
+        <Stack>
+          <Stack
+            direction='row'
+            width='100%'
+            sx={{
+              border: '1px solid #000',
+              borderRadius: '15px',
+              minHeight: '400px',
+              overflow: 'hidden',
+            }}
+          >
+            <Stack width='35%'>{renderConversationList()}</Stack>
+            <Stack width='65%'>{renderConversationContent()}</Stack>
+          </Stack>
         </Stack>
       )}
     </>

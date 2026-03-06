@@ -8,7 +8,7 @@ from api.routers import auth, books, conversations, users
 #We create an instance of FastAPI
 app = FastAPI(docs_url="/api/py/docs")
 
-# app.include_router(users.router)
+app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(books.router)
 app.include_router(conversations.router)
