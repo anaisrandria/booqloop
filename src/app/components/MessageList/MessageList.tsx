@@ -17,7 +17,13 @@ const MessageList = ({ messages, currentUserId }: Props) => {
   console.log('🔵 currentUserId:', currentUserId);
 
   return (
-    <Stack style={{ padding: '1rem' }}>
+    <Stack
+      sx={{
+        padding: '1rem',
+        overflow: 'auto',
+        height: '60vh',
+      }}
+    >
       {messages?.map((message) => (
         <div
           key={message.id}

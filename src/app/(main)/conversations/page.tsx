@@ -1,29 +1,15 @@
 'use client';
 import { useEffect, useMemo, useState } from 'react';
-import { Box, Button, Stack, Typography, useMediaQuery } from '@mui/material';
+import { Button, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import MessageList from '../../components/MessageList/MessageList';
-import MessageForm from '@/app/components/MessageForm/MessageForm';
 import { getConversations, getMessages } from '@/lib/services/conversations';
 import { Book } from '@/app/types';
 import { getBook } from '@/lib/services/books/getBook';
 import { getUserById, User } from '@/lib/services/users/getUserById';
 import { useAuth } from '../../../hooks/useAuth';
-
-type Message = {
-  id: number;
-  content: string;
-  sender_id: number;
-  created_at: string;
-};
-
-type Conversation = {
-  id: number;
-  book_id: number;
-  borrower_id: number;
-  owner_id: number;
-  created_at: string;
-};
+import { Conversation, Message } from './Conversations.types';
+import ConversationList from './ConversationsList';
+import ConversationContent from './ConversationContent';
 
 const ConversationsPage = () => {
   const { userId } = useAuth();
@@ -147,16 +133,6 @@ const ConversationsPage = () => {
 
   const currentUserId = useAuth().userId;
 
-  const formatLastMessageDate = (iso: string) => {
-    const date = new Date(iso);
-    if (Number.isNaN(date.getTime())) return '';
-    return new Intl.DateTimeFormat('fr-FR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
-    }).format(date);
-  };
-
   const sortedConversations = useMemo(() => {
     return [...conversations].sort((a, b) => {
       const lastMessageA = lastMessages[a.id];
@@ -173,130 +149,7 @@ const ConversationsPage = () => {
     });
   }, [conversations, lastMessages]);
 
-  const renderConversationList = () => {
-    return (
-      <Stack
-        sx={{
-          width: '100%',
-          height: '100%',
-          maxHeight: '600px',
-          overflowY: 'auto',
-          borderRight: isMobile ? 'none' : '1px solid #000',
-        }}
-      >
-        {sortedConversations.length === 0 ? (
-          <Typography sx={{ padding: 2 }}>
-            Aucune conversation pour le moment
-          </Typography>
-        ) : (
-          sortedConversations.map((conversation) => {
-            const isSelected = conversation.id === selectedConversationId;
-            const lastMessage = lastMessages[conversation.id];
-            const book = booksById[conversation.book_id];
-
-            const interlocutorId =
-              book && book.user_id === currentUserId
-                ? conversation.borrower_id
-                : (book?.user_id ?? conversation.borrower_id);
-            const interlocutor = usersById[interlocutorId];
-
-            const lastActivityDate =
-              lastMessage?.created_at ?? conversation.created_at;
-
-            return (
-              <Stack
-                key={conversation.id}
-                onClick={() => setSelectedConversationId(conversation.id)}
-                sx={{
-                  padding: 2,
-                  cursor: 'pointer',
-                  backgroundColor: isSelected ? '#E0E7FF' : 'transparent',
-                  '&:hover': {
-                    backgroundColor: isSelected ? '#C7D2FE' : '#F3F4F6',
-                  },
-                }}
-              >
-                <Stack direction='row' spacing={1.5} alignItems='center'>
-                  {book?.image_url ? (
-                    <Box
-                      component='img'
-                      src={book.image_url}
-                      alt={`Couverture de ${book.title}`}
-                      sx={{
-                        width: 44,
-                        height: 64,
-                        objectFit: 'cover',
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        backgroundColor: '#E5E7EB',
-                      }}
-                    />
-                  ) : (
-                    <Box
-                      sx={{
-                        width: 44,
-                        height: 64,
-                        borderRadius: 1,
-                        flexShrink: 0,
-                        backgroundColor: '#E5E7EB',
-                      }}
-                    />
-                  )}
-                  <Stack sx={{ minWidth: 0, flex: 1 }}>
-                    <Stack
-                      direction='row'
-                      justifyContent='space-between'
-                      alignItems='baseline'
-                      spacing={1}
-                    >
-                      <Typography fontWeight={600} noWrap sx={{ minWidth: 0 }}>
-                        {book?.title}, {book?.author}
-                      </Typography>
-                      <Typography
-                        variant='caption'
-                        color='text.secondary'
-                        noWrap
-                      >
-                        {formatLastMessageDate(lastActivityDate)}
-                      </Typography>
-                    </Stack>
-                    <Typography variant='body2' color='text.secondary' noWrap>
-                      {interlocutor?.username}
-                    </Typography>
-                    <Typography
-                      variant='body2'
-                      color='text.secondary'
-                      noWrap
-                      sx={{ mt: 0.5 }}
-                    >
-                      {lastMessage
-                        ? lastMessage.content
-                        : 'Aucun message pour le moment'}
-                    </Typography>
-                  </Stack>
-                </Stack>
-              </Stack>
-            );
-          })
-        )}
-      </Stack>
-    );
-  };
-
-  const renderConversationContent = () =>
-    selectedConversationId !== null && (
-      <Stack sx={{ width: '100%' }}>
-        <MessageList messages={messages} currentUserId={currentUserId} />
-        <MessageForm
-          conversationId={selectedConversationId}
-          onMessageSent={() => {
-            if (selectedConversationId !== null) {
-              loadMessages(selectedConversationId);
-            }
-          }}
-        />
-      </Stack>
-    );
+  if (!currentUserId) return;
 
   return (
     <>
@@ -314,7 +167,16 @@ const ConversationsPage = () => {
           }}
         >
           {selectedConversationId === null ? (
-            renderConversationList()
+            <ConversationList
+              conversations={sortedConversations}
+              lastMessages={lastMessages}
+              booksById={booksById}
+              usersById={usersById}
+              currentUserId={currentUserId}
+              onSelectConversation={setSelectedConversationId}
+              selectedConversationId={selectedConversationId}
+              isMobile={isMobile}
+            />
           ) : (
             <Stack sx={{ width: '100%' }}>
               <Button
@@ -325,7 +187,12 @@ const ConversationsPage = () => {
               >
                 {'← Messagerie'}
               </Button>
-              {renderConversationContent()}
+              <ConversationContent
+                messages={messages}
+                currentUserId={currentUserId}
+                selectedConversationId={selectedConversationId}
+                loadMessages={loadMessages}
+              />
             </Stack>
           )}
         </Stack>
@@ -341,8 +208,26 @@ const ConversationsPage = () => {
               overflow: 'hidden',
             }}
           >
-            <Stack width='35%'>{renderConversationList()}</Stack>
-            <Stack width='65%'>{renderConversationContent()}</Stack>
+            <Stack width='35%'>
+              <ConversationList
+                conversations={sortedConversations}
+                lastMessages={lastMessages}
+                booksById={booksById}
+                usersById={usersById}
+                currentUserId={currentUserId}
+                onSelectConversation={setSelectedConversationId}
+                selectedConversationId={selectedConversationId}
+                isMobile={isMobile}
+              />
+            </Stack>
+            <Stack width='65%'>
+              <ConversationContent
+                messages={messages}
+                currentUserId={currentUserId}
+                selectedConversationId={selectedConversationId}
+                loadMessages={loadMessages}
+              />
+            </Stack>
           </Stack>
         </Stack>
       )}
