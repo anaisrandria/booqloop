@@ -88,6 +88,7 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 sx={{ fontFamily: "Poppins" }}
                 onClick={() => {
                   logout();
+                  router.push('/');
                   toggleOpenMenu(false)();
                 }}
               >
