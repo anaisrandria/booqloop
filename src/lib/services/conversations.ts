@@ -1,6 +1,8 @@
 // Liste des conversations
-export async function getConversations() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conversations`);
+export async function getConversations(userId: number | null) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/conversations/${userId}`,
+  );
   if (!res.ok) {
     throw new Error('Erreur lors du chargement des conversations');
   }

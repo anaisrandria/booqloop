@@ -5,29 +5,22 @@ from api.services import engine
 
 router = APIRouter(prefix='/conversations', tags=['conversations']) 
 
-# --- Liste des conversations ---
-@router.get("/")
-def get_conversations():
-    with Session(engine) as session:
-        conversations = session.exec(
-            select(Conversation).order_by(Conversation.created_at.desc())
-        ).all()
-        return conversations
-
 # --- Liste des conversations de l'utilisateur connecté ---
-# @router.get("/")
-# def get_conversations(user_id: int):
-#     with Session(engine) as session:
-#         statement = (
-#             select(Conversation)
-#             .join(Book, Book.id == Conversation.book_id)
-#             .where(
-#                 (Conversation.borrower_id == user_id) |
-#                 (Book.user_id == user_id)
-#             )
-#         )
-#         conversations = session.exec(statement).all()
-#         return conversations
+@router.get("/{user_id}")
+def get_conversations(user_id: int):
+    with Session(engine) as session:
+        statement = (
+            select(Conversation)
+            .join(Book, Book.id == Conversation.book_id)
+            .where(
+                (Conversation.borrower_id == user_id) |
+                (Book.user_id == user_id)
+            )
+        )
+        conversations = session.exec(statement).all()
+        # if not conversations:
+        #     raise HTTPException(status_code=404, detail="Conversation not found")
+        return conversations
 
 # --- Messages d'une conversation ---
 @router.get("/{conversation_id}/messages")

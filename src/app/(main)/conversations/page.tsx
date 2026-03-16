@@ -30,7 +30,7 @@ const ConversationsPage = () => {
 
   const loadConversations = async () => {
     try {
-      const data = await getConversations();
+      const data = await getConversations(userId);
       setConversations(data);
       await loadLastMessages(data);
       await getConversationDetails(data);
