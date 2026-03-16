@@ -68,10 +68,12 @@ const BookDetail = ({ book }: BookDetailProps) => {
               </Typography>
               <Typography align='justify'>{book.description}</Typography>
             </Stack>
-            {!isMobile && <ContactButtons isMobile={isMobile} />}
+            {!isMobile && (
+              <ContactButtons isMobile={isMobile} bookId={book.id} />
+            )}
           </Stack>
         </Stack>
-        {isMobile && <ContactButtons isMobile={isMobile} />}
+        {isMobile && <ContactButtons isMobile={isMobile} bookId={book.id} />}
       </Container>
     )
   );

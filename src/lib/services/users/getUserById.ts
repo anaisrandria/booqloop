@@ -3,7 +3,9 @@ export type User = {
   username: string;
 };
 
-export const getUserById = async (userId: number): Promise<User | null> => {
+export const getUserById = async (
+  userId: number | undefined,
+): Promise<User | null> => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,

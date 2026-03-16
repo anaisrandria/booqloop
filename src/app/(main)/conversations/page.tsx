@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { Button, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { getConversations, getMessages } from '@/lib/services/conversations';
@@ -10,6 +10,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { Conversation, Message } from './Conversations.types';
 import ConversationList from './ConversationsList';
 import ConversationContent from './ConversationContent';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const ConversationsPage = () => {
   const { userId } = useAuth();
@@ -28,10 +29,16 @@ const ConversationsPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
+  const searchParams = useSearchParams();
+  const conversationId = searchParams.get('conversationId');
+
   const loadConversations = async () => {
     try {
       const data = await getConversations(userId);
       setConversations(data);
+      if (conversationId) {
+        setSelectedConversationId(Number(conversationId));
+      }
       await loadLastMessages(data);
       await getConversationDetails(data);
     } catch (error) {
@@ -92,9 +99,7 @@ const ConversationsPage = () => {
       });
       setBooksById(nextBooksById);
 
-      const ownerIds = bookResults
-        .map(({ book }) => book?.user_id)
-        .filter((id): id is number => typeof id === 'number');
+      const ownerIds = bookResults.map(({ book }) => book?.user.id);
 
       const borrowerIds = conversationsList.map((c) => c.borrower_id);
 
@@ -109,7 +114,7 @@ const ConversationsPage = () => {
 
       const nextUsersById: Record<number, User | null> = {};
       userResults.forEach(({ userId, user }) => {
-        nextUsersById[userId] = user;
+        if (userId) nextUsersById[userId] = user;
       });
       setUsersById(nextUsersById);
     } catch (error) {

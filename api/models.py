@@ -106,6 +106,9 @@ class Conversation(SQLModel, table=True):
     messages: List["Message"] = Relationship(back_populates="conversation")
     statuses: List["ConversationStatus"] = Relationship(back_populates="conversation")
 
+class ConversationCreate(SQLModel):
+    borrower_id: int
+    book_id: int
 
 # -----------------------------
 # REVIEWS

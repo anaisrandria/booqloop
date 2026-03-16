@@ -1,3 +1,26 @@
+// Créer une conversation
+export async function createConversation(borrowerId: number, bookId: number) {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/conversations`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      borrower_id: borrowerId,
+      book_id: bookId,
+    }),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    throw new Error(
+      error.detail || 'Erreur lors de la création de la conversation',
+    );
+  }
+
+  return res.json();
+}
+
 // Liste des conversations
 export async function getConversations(userId: number | null) {
   const res = await fetch(

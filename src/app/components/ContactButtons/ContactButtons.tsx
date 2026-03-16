@@ -1,7 +1,23 @@
 import { Button, Stack } from '@mui/material';
 import { ContactButtonsProps } from './ContactButtons.types';
+import { createConversation } from '../../../lib/services/conversations';
+import { useAuth } from '../../../hooks/useAuth';
+import { useRouter } from 'next/navigation';
 
-const ContactButtons = ({ isMobile }: ContactButtonsProps) => {
+const ContactButtons = ({ isMobile, bookId }: ContactButtonsProps) => {
+  const router = useRouter();
+  const { userId } = useAuth();
+  const handleReservation = async () => {
+    if (!userId) return;
+    try {
+      const response = await createConversation(userId, bookId);
+      // redirection seulement si succès
+      router.push(`/conversations?conversationId=${response.id}`);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Stack
       direction={isMobile ? 'row' : 'column'}
@@ -28,6 +44,7 @@ const ContactButtons = ({ isMobile }: ContactButtonsProps) => {
           width: '100%',
           flex: 1,
         }}
+        onClick={handleReservation}
       >
         Réserver
       </Button>

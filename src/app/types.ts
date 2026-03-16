@@ -7,7 +7,7 @@ export type BookUser = {
   id: number;
   postal_code: number;
   country: string;
-}
+};
 
 export type Book = {
   id: number;

@@ -1,9 +1,40 @@
 from fastapi import APIRouter, HTTPException
 from sqlmodel import SQLModel, Session, select
-from api.models import Book, Message, Conversation, MessageCreate, User
+from api.models import Book, ConversationCreate, Message, Conversation
 from api.services import engine
 
-router = APIRouter(prefix='/conversations', tags=['conversations']) 
+router = APIRouter(prefix='/conversations', tags=['conversations'])
+
+@router.post("/")
+def create_conversation(conversation: ConversationCreate):
+    with Session(engine) as session:
+
+        # Vérifier que le livre existe
+        book = session.get(Book, conversation.book_id)
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+
+        # Vérifier si la conversation existe déjà
+        statement = select(Conversation).where(
+            Conversation.borrower_id == conversation.borrower_id,
+            Conversation.book_id == conversation.book_id
+        )
+        existing_conversation = session.exec(statement).first()
+
+        if existing_conversation:
+            return existing_conversation
+
+        # Création de la conversation
+        new_conversation = Conversation(
+            borrower_id=conversation.borrower_id,
+            book_id=conversation.book_id
+        )
+
+        session.add(new_conversation)
+        session.commit()
+        session.refresh(new_conversation)
+
+        return new_conversation
 
 # --- Liste des conversations de l'utilisateur connecté ---
 @router.get("/{user_id}")
