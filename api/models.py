@@ -37,6 +37,11 @@ class UserLogin(SQLModel):
     email: str
     password: str
 
+class UserPublic(SQLModel):
+    id: int
+    postal_code: int
+    country: str
+
 # -----------------------------
 # BOOKS
 # -----------------------------
@@ -68,6 +73,21 @@ class BookCreate(BookBase):
     user_id: int
     category_id: Optional[int] = None
     availability_status_id: Optional[int] = None
+
+class BookRead(SQLModel):
+    id: int
+    title: str
+    author: str
+    published_year: Optional[int]
+    image_url: str
+    user: UserPublic
+    category_id: int
+    availability_status_id: int
+    created_at: datetime
+
+class BookDetailRead(BookRead):
+    description: str
+
 
 # -----------------------------
 # REQUESTS
