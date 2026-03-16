@@ -87,6 +87,7 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
                 color='inherit'
                 onClick={() => {
                   logout();
+                  router.push('/');
                   toggleOpenMenu(false)();
                 }}
               >

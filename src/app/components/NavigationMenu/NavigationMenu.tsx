@@ -64,13 +64,21 @@ const NavigationMenu = () => {
         sx={{
           '& .MuiMenuItem-root': {
             fontSize: '14px',
+            fontFamily: 'Poppins',
           },
         }}
       >
         <MenuItem onClick={() => router.push('/add-book')}>
           {'Ma bibliothèque'}
         </MenuItem>
-        <MenuItem onClick={logout}>{'Déconnexion'}</MenuItem>
+        <MenuItem
+          onClick={() => {
+            logout();
+            router.push('/');
+          }}
+        >
+          {'Déconnexion'}
+        </MenuItem>
       </Menu>
     </>
   );
