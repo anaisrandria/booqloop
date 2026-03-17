@@ -6,7 +6,9 @@ export type Category = {
 export type BookUser = {
   id: number;
   postal_code: number;
+  address: string;
   country: string;
+  username?: string;
 }
 
 export type Book = {

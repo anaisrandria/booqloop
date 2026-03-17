@@ -44,21 +44,25 @@ const BookDetail = ({ book }: BookDetailProps) => {
             <Stack direction="row" gap={2}>
               <Stack
                 sx={{
-                  border: "1px solid black",
                   borderRadius: "50px",
                   height: "50px",
                   width: "50px",
-                  opacity: 0.5,
-                  backgroundImage:
-                    "url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPHHLCPnASW-uMU5Iun97gCckqqlm6DAh5-Q&s)",
-                  backgroundSize: "cover",
-                  backgroundRepeat: "no-repeat",
-                  overflow: "hidden",
+                  backgroundColor: "lightgray",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-              />
+              >
+                {book.user.username && (
+                  <Typography fontWeight="semibold" fontSize={20}>
+                    {book.user.username[0].toUpperCase()}
+                  </Typography>
+                )}
+              </Stack>
               <Stack sx={{ justifyContent: "center" }}>
-                <Typography fontWeight={"bold"}>Agathe</Typography>
-                <Typography>2 prêts, 3 emprunts</Typography>
+                <Typography fontWeight={"bold"}>
+                  {book.user.username}
+                </Typography>
+                <Typography>{`${book.user.address} (${book.user.postal_code})`}</Typography>
               </Stack>
             </Stack>
             <Stack gap={1} overflow="auto">

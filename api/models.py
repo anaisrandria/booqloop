@@ -40,7 +40,13 @@ class UserLogin(SQLModel):
 class UserPublic(SQLModel):
     id: int
     postal_code: int
+    address: str
     country: str
+    model_config = {"from_attributes": True}
+
+class UserDetailPublic(UserPublic):
+    username: str
+    model_config = {"from_attributes": True}
 
 # -----------------------------
 # BOOKS
@@ -74,19 +80,22 @@ class BookCreate(BookBase):
     category_id: Optional[int] = None
     availability_status_id: Optional[int] = None
 
-class BookRead(SQLModel):
+class BookReadBase(SQLModel):
     id: int
     title: str
     author: str
     published_year: Optional[int]
     image_url: str
-    user: UserPublic
     category_id: int
     availability_status_id: int
     created_at: datetime
 
+class BookRead(BookReadBase):
+    user: UserPublic
+
 class BookDetailRead(BookRead):
     description: str
+    user: UserDetailPublic
 
 
 # -----------------------------
