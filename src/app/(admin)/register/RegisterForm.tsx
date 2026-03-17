@@ -110,7 +110,7 @@ const RegisterForm = () => {
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Adresse"
+              label="Ville"
               name="address"
               variant="standard"
               type="search"

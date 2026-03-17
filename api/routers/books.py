@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, Query
 from sqlmodel import Session, select
 from sqlalchemy.orm import selectinload
-from api.models import Book, BookCreate, BookCategory, BookRead, User
+from api.models import Book, BookCreate, BookCategory, BookDetailRead, BookRead, User
 from api.services import engine
 
 router = APIRouter(tags=['books'])   
@@ -42,10 +42,16 @@ def get_books(
         books = session.exec(statement).all()
         return books
     
-@router.get("/books/{book_id}")
+@router.get("/books/{book_id}", response_model=BookDetailRead)
 def get_book(book_id: int):
     with Session(engine) as session:
-        book = session.get(Book, book_id)
+        statement = (
+            select(Book)
+            .where(Book.id == book_id)
+            .options(selectinload(Book.user))
+        )
+
+        book = session.exec(statement).first()
 
         if not book:
             raise HTTPException(status_code=404, detail="Book not found")

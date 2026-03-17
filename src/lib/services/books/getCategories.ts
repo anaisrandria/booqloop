@@ -1,4 +1,5 @@
 export const getCategories = async () => {
+<<<<<<< HEAD
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/categories`,
@@ -13,3 +14,17 @@ export const getCategories = async () => {
     return null;
   }
 };
+=======
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch categories data");
+      }
+      const categories = await response.json();
+      return categories;
+    } catch (error) {
+      console.error("Error fetching all categories:", error);
+      return null;
+    }
+  };
+>>>>>>> main
