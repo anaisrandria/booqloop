@@ -12,7 +12,6 @@ import { Book } from "@/app/types";
         ? `${process.env.NEXT_PUBLIC_API_URL}/books?${queryString}`
         : `${process.env.NEXT_PUBLIC_API_URL}/books`;
 
-        console.log("URL", url)
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Failed to fetch books data");
