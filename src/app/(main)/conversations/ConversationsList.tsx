@@ -33,10 +33,11 @@ const ConversationList = ({
           const lastMessage = lastMessages[conversation.id];
           const book = booksById[conversation.book_id];
 
+          console.log('book:', book);
           const interlocutorId =
-            book && book.user_id === currentUserId
+            book && book.user.id === currentUserId
               ? conversation.borrower_id
-              : (book?.user_id ?? conversation.borrower_id);
+              : (book?.user.id ?? conversation.borrower_id);
           const interlocutor = usersById[interlocutorId];
 
           const lastActivityDate =
