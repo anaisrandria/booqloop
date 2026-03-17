@@ -23,7 +23,12 @@ const NavigationMenu = () => {
       >
         {'Accueil'}
       </Button>
-      <Button variant='text' color='inherit' sx={{ textTransform: 'none' }}>
+      <Button
+        variant='text'
+        color='inherit'
+        sx={{ textTransform: 'none' }}
+        onClick={() => router.push('/conversations')}
+      >
         {'Messagerie'}
       </Button>
       <Button

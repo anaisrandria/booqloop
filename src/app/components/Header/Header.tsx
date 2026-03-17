@@ -15,7 +15,6 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 const Header = () => {
-  const router = useRouter();
   const { isLoggedIn } = useAuth();
   const { searchQuery, setSearchQuery } = useSearch();
   const pathname = usePathname();

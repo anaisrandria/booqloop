@@ -9,7 +9,7 @@ export type BookUser = {
   address: string;
   country: string;
   username?: string;
-}
+};
 
 export type Book = {
   id: number;
