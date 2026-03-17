@@ -82,41 +82,28 @@ const ConversationsPage = () => {
 
   const getConversationDetails = async (conversationsList: Conversation[]) => {
     try {
-      const uniqueBookIds = Array.from(
-        new Set(conversationsList.map((c) => c.book_id)),
-      );
+      const booksMap: Record<number, Book | null> = {};
+      const usersMap: Record<number, User | null> = {};
 
-      const bookResults = await Promise.all(
-        uniqueBookIds.map(async (bookId) => {
-          const book = await getBook(bookId);
-          return { bookId, book };
-        }),
-      );
+      for (const conversation of conversationsList) {
+        if (!booksMap[conversation.book_id]) {
+          const book = await getBook(conversation.book_id);
+          booksMap[conversation.book_id] = book;
 
-      const nextBooksById: Record<number, Book | null> = {};
-      bookResults.forEach(({ bookId, book }) => {
-        nextBooksById[bookId] = book;
-      });
-      setBooksById(nextBooksById);
+          if (book && !usersMap[book.user?.id]) {
+            const user = await getUserById(book.user?.id);
+            usersMap[book.user?.id] = user;
+          }
+        }
 
-      const ownerIds = bookResults.map(({ book }) => book?.user.id);
+        if (!usersMap[conversation.borrower_id]) {
+          const user = await getUserById(conversation.borrower_id);
+          usersMap[conversation.borrower_id] = user;
+        }
+      }
 
-      const borrowerIds = conversationsList.map((c) => c.borrower_id);
-
-      const uniqueUserIds = Array.from(new Set([...ownerIds, ...borrowerIds]));
-
-      const userResults = await Promise.all(
-        uniqueUserIds.map(async (userId) => {
-          const user = await getUserById(userId);
-          return { userId, user };
-        }),
-      );
-
-      const nextUsersById: Record<number, User | null> = {};
-      userResults.forEach(({ userId, user }) => {
-        if (userId) nextUsersById[userId] = user;
-      });
-      setUsersById(nextUsersById);
+      setBooksById(booksMap);
+      setUsersById(usersMap);
     } catch (error) {
       console.error(error);
     }
