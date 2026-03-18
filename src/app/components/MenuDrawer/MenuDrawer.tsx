@@ -3,6 +3,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { MenuDrawerProps } from './MenuDrawer.types';
 import { useAuth } from '@/hooks/useAuth';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
   const router = useRouter();
@@ -39,7 +40,12 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               textAlign: 'center',
             }}
           >
-            {'booqloop'}
+            <Image
+              src='/booqloop-logo.png'
+              alt='Booqloop'
+              width={150}
+              height={34}
+            />
           </Typography>
         </Stack>
         <Stack
