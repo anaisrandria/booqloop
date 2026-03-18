@@ -1,18 +1,33 @@
 import { Button, Stack } from '@mui/material';
 import { ContactButtonsProps } from './ContactButtons.types';
-import { createConversation } from '../../../lib/services/conversations';
+import {
+  createConversation,
+  sendMessage,
+} from '../../../lib/services/conversations';
 import { useAuth } from '../../../hooks/useAuth';
 import { useRouter } from 'next/navigation';
 
 const ContactButtons = ({ isMobile, bookId }: ContactButtonsProps) => {
   const router = useRouter();
-  const { userId } = useAuth();
+  const { isLoggedIn, userId } = useAuth();
   const handleReservation = async () => {
-    if (!userId) return;
+    if (!userId) {
+      router.push('/login');
+      return;
+    }
     try {
       const response = await createConversation(userId, bookId);
       // redirection seulement si succès
+      if (!isLoggedIn) {
+        router.push('');
+      }
       router.push(`/conversations?conversationId=${response.id}`);
+
+      await sendMessage(
+        response.id,
+        userId,
+        'Bonjour ! Je souhaiterais emprunter ce livre.',
+      );
     } catch (error) {
       console.error(error);
     }
@@ -46,8 +61,26 @@ const ContactButtons = ({ isMobile, bookId }: ContactButtonsProps) => {
         }}
         onClick={handleReservation}
       >
-        Réserver
+        {isLoggedIn ? 'Réserver' : 'Se connecter'}
       </Button>
+      {!isLoggedIn && (
+        <Button
+          variant='contained'
+          color='primary'
+          sx={{
+            backgroundColor: 'black',
+            textTransform: 'none',
+            borderRadius: '10px',
+            width: '100%',
+            flex: 1,
+          }}
+          onClick={() => {
+            router.push('/register');
+          }}
+        >
+          {'Créer un compte'}
+        </Button>
+      )}
     </Stack>
   );
 };
