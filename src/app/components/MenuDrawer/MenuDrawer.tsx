@@ -18,7 +18,7 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
           backgroundColor: "#F7F2EC",
         }}
       >
-        <Stack>
+        <Stack sx={{ alignItems: "center" }}>
           <Stack
             direction="row"
             alignItems="center"
@@ -33,21 +33,12 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <CloseRoundedIcon />
             </IconButton>
           </Stack>
-          <Typography
-            fontSize="20px"
-            sx={{
-              flexGrow: 1,
-              textAlign: "center",
-              fontFamily: "Poppins",
-            }}
-          >
-            <Image
-              src="/booqloop-logo.png"
-              alt="Booqloop"
-              width={150}
-              height={34}
-            />
-          </Typography>
+          <Image
+            src="/booqloop-logo.png"
+            alt="Booqloop"
+            width={150}
+            height={34}
+          />
         </Stack>
         <Stack
           sx={{
@@ -62,29 +53,41 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                onClick={() => {
+                  router.push("/home");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Accueil"}
               </Button>
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                onClick={() => {
+                  router.push("/conversations");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Messagerie"}
               </Button>
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
+                onClick={() => {
+                  router.push("/add-book");
+                  toggleOpenMenu(false)();
+                }}
               >
-                {"Profil"}
+                {"Ajouter un livre"}
               </Button>
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
-                onClick={logout}
+                onClick={() => {
+                  logout();
+                  router.push("/");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Déconnexion"}
               </Button>
@@ -94,16 +97,20 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
-                onClick={() => router.push("/login")}
+                onClick={() => {
+                  router.push("/login");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"Se connecter"}
               </Button>
               <Button
                 variant="text"
                 color="inherit"
-                sx={{ fontFamily: "Poppins" }}
-                onClick={() => router.push("/register")}
+                onClick={() => {
+                  router.push("/register");
+                  toggleOpenMenu(false)();
+                }}
               >
                 {"S'inscrire"}
               </Button>
