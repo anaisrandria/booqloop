@@ -1,9 +1,9 @@
-import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { MenuDrawerProps } from './MenuDrawer.types';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { Button, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { MenuDrawerProps } from "./MenuDrawer.types";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
   const router = useRouter();
@@ -13,20 +13,20 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
     <Drawer open={isMenuOpen} onClose={toggleOpenMenu(false)}>
       <Stack
         sx={{
-          width: '100vw',
-          height: '100%',
-          backgroundColor: '#F7F2EC',
+          width: "100vw",
+          height: "100%",
+          backgroundColor: "#F7F2EC",
         }}
       >
         <Stack>
           <Stack
-            direction='row'
-            alignItems='center'
-            justifyContent='flex-end'
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-end"
             sx={{
-              width: '100%',
-              paddingTop: '1em',
-              paddingRight: '1em',
+              width: "100%",
+              paddingTop: "1em",
+              paddingRight: "1em",
             }}
           >
             <IconButton onClick={toggleOpenMenu(false)}>
@@ -34,15 +34,16 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             </IconButton>
           </Stack>
           <Typography
-            fontSize='20px'
+            fontSize="20px"
             sx={{
               flexGrow: 1,
-              textAlign: 'center',
+              textAlign: "center",
+              fontFamily: "Poppins",
             }}
           >
             <Image
-              src='/booqloop-logo.png'
-              alt='Booqloop'
+              src="/booqloop-logo.png"
+              alt="Booqloop"
               width={150}
               height={34}
             />
@@ -51,74 +52,58 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
         <Stack
           sx={{
             flexGrow: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '2em',
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "2em",
           }}
         >
           {isLoggedIn ? (
             <>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  router.push('/home');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
               >
-                {'Accueil'}
+                {"Accueil"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  router.push('/conversations');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
               >
-                {'Messagerie'}
+                {"Messagerie"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  router.push('/add-book');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
               >
-                {'Ma bibliothèque'}
+                {"Profil"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  logout();
-                  router.push('/');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
+                onClick={logout}
               >
-                {'Déconnexion'}
+                {"Déconnexion"}
               </Button>
             </>
           ) : (
             <>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  router.push('/login');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
+                onClick={() => router.push("/login")}
               >
-                {'Se connecter'}
+                {"Se connecter"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
-                onClick={() => {
-                  router.push('/register');
-                  toggleOpenMenu(false)();
-                }}
+                variant="text"
+                color="inherit"
+                sx={{ fontFamily: "Poppins" }}
+                onClick={() => router.push("/register")}
               >
                 {"S'inscrire"}
               </Button>

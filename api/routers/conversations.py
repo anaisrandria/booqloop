@@ -68,6 +68,7 @@ def get_messages(conversation_id: int):
 # --- Envoyer un message ---
 @router.post("/{conversation_id}/messages")
 def send_message(conversation_id: int, message: dict):
+    print(f"🍎 SEND MESSAGE", conversation_id, message)
     with Session(engine) as session:
         conversation = session.get(Conversation, conversation_id)
         if not conversation:

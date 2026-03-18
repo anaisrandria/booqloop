@@ -1,85 +1,48 @@
-import { useAuth } from '@/hooks/useAuth';
-import { Button, Menu, MenuItem } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 const NavigationMenu = () => {
   const router = useRouter();
   const { logout } = useAuth();
-  const [profileMenu, setProfileMenu] = useState<null | HTMLElement>(null);
-  const open = Boolean(profileMenu);
-
-  const handleCloseProfile = () => {
-    setProfileMenu(null);
-  };
 
   return (
     <>
       <Button
-        variant='text'
-        color='inherit'
-        sx={{ textTransform: 'none' }}
-        onClick={() => router.push('/home')}
+        variant="text"
+        color="inherit"
+        sx={{ textTransform: "none" }}
+        onClick={() => router.push("/home")}
       >
-        {'Accueil'}
+        {"Accueil"}
       </Button>
       <Button
-        variant='text'
-        color='inherit'
-        sx={{ textTransform: 'none' }}
-        onClick={() => router.push('/conversations')}
+        variant="text"
+        color="inherit"
+        sx={{ textTransform: "none" }}
+        onClick={() => router.push("/conversations")}
       >
-        {'Messagerie'}
+        {"Messagerie"}
       </Button>
       <Button
-        variant='text'
-        color='inherit'
-        sx={{ textTransform: 'none' }}
-        id='profile-button'
-        aria-controls={open ? 'profile-menu' : undefined}
-        aria-haspopup='true'
-        aria-expanded={open ? 'true' : undefined}
-        onClick={(e) => setProfileMenu(e.currentTarget)}
+        variant="text"
+        color="inherit"
+        sx={{ textTransform: "none" }}
+        onClick={() => router.push("/add-book")}
       >
-        {'Profil'}
+        {"Ajouter un livre"}
       </Button>
-      <Menu
-        id='profile-menu'
-        anchorEl={profileMenu}
-        open={open}
-        onClose={handleCloseProfile}
-        slotProps={{
-          list: {
-            'aria-labelledby': 'profile-button',
-          },
-        }}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        sx={{
-          '& .MuiMenuItem-root': {
-            fontSize: '14px',
-            fontFamily: 'Poppins',
-          },
+      <Button
+        variant="text"
+        color="inherit"
+        sx={{ textTransform: "none" }}
+        onClick={() => {
+          logout();
+          router.push("/");
         }}
       >
-        <MenuItem onClick={() => router.push('/add-book')}>
-          {'Ma bibliothèque'}
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            logout();
-            router.push('/');
-          }}
-        >
-          {'Déconnexion'}
-        </MenuItem>
-      </Menu>
+        {"Déconnexion"}
+      </Button>
     </>
   );
 };

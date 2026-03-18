@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useAuth } from '@/hooks/useAuth';
-import addBook from '@/lib/services/books/addBook';
+import { useAuth } from "@/hooks/useAuth";
+import addBook from "@/lib/services/books/addBook";
 import {
   Box,
   Button,
@@ -9,24 +9,24 @@ import {
   MenuItem,
   Stack,
   TextField,
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { AddBookFormData } from './AddBookForm.types';
-import { useRouter } from 'next/navigation';
-import { getCategories } from '@/lib/services/books/getCategories';
-import { Category } from '@/app/types';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { AddBookFormData } from "./AddBookForm.types";
+import { useRouter } from "next/navigation";
+import { getCategories } from "@/lib/services/books/getCategories";
+import { Category } from "@/app/types";
 
 const AddBookForm = () => {
   const router = useRouter();
   const { userId } = useAuth();
 
   const [bookForm, setBookForm] = useState({
-    title: '',
-    author: '',
-    description: '',
+    title: "",
+    author: "",
+    description: "",
     published_year: undefined,
     category_id: 1,
-    image_url: '',
+    image_url: "",
   });
   const [categories, setCategories] = useState<Category[]>([]);
 
@@ -59,98 +59,98 @@ const AddBookForm = () => {
         availability_status_id: 1,
       };
       addBook(newBook);
-      router.push('/home');
+      router.push("/home");
     }
   };
 
   return (
     <Container
-      maxWidth='sm'
+      maxWidth="sm"
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
         gap: 5,
         paddingBottom: 15,
       }}
     >
       <Stack
         sx={{
-          justifyContent: 'center',
-          alignItems: 'center',
-          fontSize: '20px',
+          justifyContent: "center",
+          alignItems: "center",
+          fontSize: "20px",
         }}
       >
-        {'Ajouter un livre'}
+        {"Ajouter un livre"}
       </Stack>
 
       <Box
-        component='form'
+        component="form"
         onSubmit={handleSubmit}
         sx={{
           width: {
-            xs: '75%',
-            sm: '60%',
+            xs: "75%",
+            sm: "60%",
           },
         }}
       >
         <Stack spacing={2}>
           <TextField
-            label='Titre'
-            name='title'
+            label="Titre"
+            name="title"
             value={bookForm.title}
             onChange={handleChange}
             required
             fullWidth
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Auteur·ice'
-            name='author'
+            label="Auteur·ice"
+            name="author"
             value={bookForm.author}
             onChange={handleChange}
             required
             fullWidth
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Description'
-            name='description'
+            label="Description"
+            name="description"
             value={bookForm.description}
             onChange={handleChange}
             multiline
             rows={5}
             required
             fullWidth
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           />
 
           <TextField
-            label='Année de publication'
-            name='published_year'
+            label="Année de publication"
+            name="published_year"
             value={bookForm.published_year}
             onChange={handleChange}
             fullWidth
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           />
 
           <TextField
             select
-            label='Catégorie'
-            name='category_id'
+            label="Catégorie"
+            name="category_id"
             value={bookForm.category_id}
             onChange={handleChange}
             required
             fullWidth
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           >
             {categories.map((cat) => (
               <MenuItem key={cat.id} value={cat.id}>
@@ -160,26 +160,26 @@ const AddBookForm = () => {
           </TextField>
 
           <TextField
-            label='URL de l’image'
-            name='image_url'
+            label="URL de l’image"
+            name="image_url"
             value={bookForm.image_url}
             onChange={(e) => {
               handleChange(e);
             }}
-            size='small'
-            type='search'
+            size="small"
+            type="search"
           />
           <Button
-            type='submit'
-            variant='contained'
-            color='primary'
+            type="submit"
+            variant="contained"
+            color="primary"
             sx={{
-              backgroundColor: 'black',
-              textTransform: 'none',
-              borderRadius: '5px',
+              backgroundColor: "black",
+              textTransform: "none",
+              borderRadius: "5px",
             }}
           >
-            {'Ajouter à ma bibliothèque'}
+            {"Ajouter à ma bibliothèque"}
           </Button>
         </Stack>
       </Box>

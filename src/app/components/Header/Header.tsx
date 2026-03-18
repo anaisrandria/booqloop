@@ -11,13 +11,13 @@ import { NavigationMenu } from "../NavigationMenu";
 import { AuthMenu } from "../AuthMenu";
 import { HomeLogo } from "../HomeLogo";
 import { useSearch } from "@/hooks/useSearch";
-import { usePathname } from "next/navigation";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const Header = () => {
   const { isLoggedIn } = useAuth();
   const { searchQuery, setSearchQuery } = useSearch();
   const pathname = usePathname();
+  const router = useRouter();
   const [inputValue, setInputValue] = useState(searchQuery ?? "");
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -47,6 +47,7 @@ const Header = () => {
 
   return (
     <Stack
+      gap={3}
       direction="row"
       sx={{
         width: "100%",
@@ -67,7 +68,7 @@ const Header = () => {
             xs: "100%",
             sm: "50vw",
           },
-          marginRight: "1.5em",
+          // marginRight: "1.5em",
         }}
         variant="standard"
         slotProps={{

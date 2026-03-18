@@ -18,7 +18,7 @@ def register(user_data: UserCreate):
         session.commit()
         session.refresh(new_user)
 
-        token = create_access_token({"sub": new_user.email})
+        token = create_access_token({"sub": new_user.id})
         return {"access_token": token, "token_type": "bearer"}
 
 @router.post('/login', response_model=dict)
