@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { sendMessage } from '@/lib/services/conversations';
 import { useAuth } from '../../../hooks/useAuth';
+import { Button } from '@mui/material';
 
 type MessageFormProps = {
   conversationId: number;
@@ -27,15 +28,27 @@ const MessageForm = ({ conversationId, onMessageSent }: MessageFormProps) => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={{ display: 'flex', gap: '0.5rem', padding: '1rem' }}
+      style={{
+        display: 'flex',
+        gap: '0.5rem',
+        padding: '1rem',
+        height: '70px',
+      }}
     >
       <input
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder='Écrire un message…'
-        style={{ flex: 1 }}
+        style={{
+          flex: 1,
+          borderRadius: '25px',
+          border: '1px solid',
+          padding: '10px',
+        }}
       />
-      <button type='submit'>Envoyer</button>
+      <Button type='submit' variant='outlined'>
+        Envoyer
+      </Button>
     </form>
   );
 };
