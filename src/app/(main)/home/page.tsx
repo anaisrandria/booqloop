@@ -1,14 +1,14 @@
-'use client';
+"use client";
 
-import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
-import { Book, Category } from '../../types';
-import { BookCard } from '@/app/components/BookCard';
-import { getCategories } from '@/lib/services/books/getCategories';
-import { useEffect, useState } from 'react';
-import { getBooks } from '@/lib/services/books/getBooks';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import { PostalCodePopover } from '@/app/components/PostalCodePopover';
-import { useSearch } from '@/hooks/useSearch';
+import { Box, Button, Container, Grid, Stack, Typography } from "@mui/material";
+import { Book, Category } from "../../types";
+import { BookCard } from "@/app/components/BookCard";
+import { getCategories } from "@/lib/services/books/getCategories";
+import { useEffect, useState } from "react";
+import { getBooks } from "@/lib/services/books/getBooks";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { PostalCodePopover } from "@/app/components/PostalCodePopover";
+import { useSearch } from "@/hooks/useSearch";
 
 const Home = () => {
   const { searchQuery } = useSearch();
@@ -59,52 +59,51 @@ const Home = () => {
   }, [selectedCategory, postalCode]);
 
   return (
-    <Container maxWidth='md'>
+    <Container maxWidth="md">
       <Stack spacing={4}>
         <Box
           sx={{
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'scroll',
-            justifyItems: 'center',
-            scrollbarWidth: 'none',
-            '&::-webkit-scrollbar': {
-              display: 'none',
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+            overflow: "scroll",
+            justifyItems: "center",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": {
+              display: "none",
             },
           }}
         >
           <Stack
-            direction='row'
+            direction="row"
             spacing={2}
             sx={{
-              display: 'flex',
-              justifyContent: 'flex-start',
-              alignItems: 'flex-start',
-              width: '100%',
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              width: "100%",
             }}
           >
             <>
               <Button
-                size='small'
-                variant='outlined'
+                size="small"
+                variant="outlined"
                 disableRipple
                 startIcon={<LocationOnIcon />}
                 onClick={(e) => setAnchorEl(anchorEl ? null : e.currentTarget)}
                 sx={{
-                  whiteSpace: 'nowrap',
-                  minWidth: '150px',
-                  textTransform: 'none',
-                  fontFamily: 'Poppins',
+                  whiteSpace: "nowrap",
+                  minWidth: "150px",
+                  textTransform: "none",
                   fontWeight: 600,
-                  borderRadius: '10px',
+                  borderRadius: "10px",
                   flexShrink: 0,
                   backgroundColor:
-                    postalCode && !anchorEl ? 'black' : '#f7f2ec',
-                  color: postalCode && !anchorEl ? '#f7f2ec' : 'black',
+                    postalCode && !anchorEl ? "black" : "#f7f2ec",
+                  color: postalCode && !anchorEl ? "#f7f2ec" : "black",
                 }}
               >
-                {!postalCode || anchorEl ? 'Localisation' : postalCode}
+                {!postalCode || anchorEl ? "Localisation" : postalCode}
               </Button>
               <PostalCodePopover
                 anchorEl={anchorEl}
@@ -119,19 +118,18 @@ const Home = () => {
                   return (
                     <Button
                       key={index}
-                      size='small'
-                      variant='outlined'
+                      size="small"
+                      variant="outlined"
                       onClick={() => handleCategoryClick(category.id)}
                       sx={{
-                        whiteSpace: 'nowrap',
-                        minWidth: '150px',
-                        textTransform: 'none',
-                        fontFamily: 'Poppins',
+                        whiteSpace: "nowrap",
+                        minWidth: "150px",
+                        textTransform: "none",
                         fontWeight: 600,
-                        borderRadius: '10px',
+                        borderRadius: "10px",
                         flexShrink: 0,
-                        backgroundColor: isSelected ? 'black' : '#f7f2ec',
-                        color: isSelected ? '#f7f2ec' : 'black',
+                        backgroundColor: isSelected ? "black" : "#f7f2ec",
+                        color: isSelected ? "#f7f2ec" : "black",
                       }}
                     >
                       {category.name}
@@ -145,11 +143,11 @@ const Home = () => {
         <Stack spacing={2}>
           <Typography
             sx={{
-              fontsize: '14px',
-              fontWeight: '600',
+              fontsize: "14px",
+              fontWeight: "600",
             }}
           >
-            {'Récemment ajoutés'}
+            {"Récemment ajoutés"}
           </Typography>
           <Grid
             container
