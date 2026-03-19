@@ -19,12 +19,12 @@ export const getBooks = async (filters?: {
 
     const response = await fetch(url);
     if (!response.ok) {
-      throw new Error('Failed to fetch books data');
+      throw new Error('Impossible de récupérer les livres');
     }
     const books = await response.json();
     return books;
   } catch (error) {
-    console.error('Error fetching all books:', error);
+    console.error('Erreur lors de la récupération des livres :', error);
     return null;
   }
 };
