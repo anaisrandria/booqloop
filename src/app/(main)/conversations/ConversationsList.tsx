@@ -91,8 +91,15 @@ const ConversationList = ({
                     alignItems='baseline'
                     spacing={1}
                   >
-                    <Typography fontWeight={600} noWrap sx={{ minWidth: 0 }}>
-                      {book?.title}, {book?.author}
+                    <Typography
+                      sx={{
+                        fontSize: '14px',
+                        minWidth: '0px',
+                      }}
+                      noWrap
+                    >
+                      <span style={{ fontWeight: 'bold' }}>{book?.title}</span>,{' '}
+                      {book?.author}
                     </Typography>
                     <Typography
                       sx={{
