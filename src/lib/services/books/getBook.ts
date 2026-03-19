@@ -6,12 +6,12 @@ export const getBook = async (bookId: number): Promise<Book | null> => {
       `${process.env.NEXT_PUBLIC_API_URL}/books/${bookId}`,
     );
     if (!response.ok) {
-      throw new Error('Failed to fetch book data');
+      throw new Error('Impossible de récupérer les données du livre');
     }
     const book = await response.json();
     return book;
   } catch (error) {
-    console.error('Error fetching book:', error);
+    console.error('Erreur lors de la récupération du livre :', error);
     return null;
   }
 };

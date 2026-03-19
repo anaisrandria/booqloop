@@ -11,12 +11,12 @@ export const getUserById = async (
       `${process.env.NEXT_PUBLIC_API_URL}/users/${userId}`,
     );
     if (!response.ok) {
-      throw new Error('Failed to fetch user data');
+      throw new Error("Impossible de récupérer l'utilisateur");
     }
     const user = await response.json();
     return user;
   } catch (error) {
-    console.error('Error fetching user:', error);
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
     return null;
   }
 };
