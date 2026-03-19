@@ -2,7 +2,10 @@
 import { useEffect, useMemo, useReducer, useState } from 'react';
 import { Button, Stack, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import { getConversations, getMessages } from '@/lib/services/conversations';
+import {
+  getConversationsList,
+  getMessagesList,
+} from '@/lib/services/conversations';
 import { Book } from '@/app/types';
 import { getBook } from '@/lib/services/books/getBook';
 import { getUserById, User } from '@/lib/services/users/getUserById';
@@ -10,7 +13,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { Conversation, Message } from './Conversations.types';
 import ConversationList from './ConversationsList';
 import ConversationContent from './ConversationContent';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 const ConversationsPage = () => {
   const { userId } = useAuth();
@@ -34,7 +37,7 @@ const ConversationsPage = () => {
 
   const loadConversations = async () => {
     try {
-      const data = await getConversations(userId);
+      const data = await getConversationsList();
       setConversations(data);
       if (conversationId) {
         setSelectedConversationId(Number(conversationId));
@@ -48,7 +51,7 @@ const ConversationsPage = () => {
 
   const loadMessages = async (conversationId: number) => {
     try {
-      const data = await getMessages(conversationId);
+      const data = await getMessagesList(conversationId);
       setMessages(data);
       setLastMessages((prev) => ({
         ...prev,
@@ -63,7 +66,7 @@ const ConversationsPage = () => {
     try {
       const results = await Promise.all(
         conversationsList.map(async (conversation) => {
-          const data: Message[] = await getMessages(conversation.id);
+          const data: Message[] = await getMessagesList(conversation.id);
           const lastMessage = data.length > 0 ? data[data.length - 1] : null;
           return { conversationId: conversation.id, lastMessage };
         }),

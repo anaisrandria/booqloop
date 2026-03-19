@@ -17,10 +17,10 @@ app.include_router(conversations.router)
 #We define authorizations for middleware components
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'],
+    allow_origins=['http://localhost:3000'], # TODO: add domain name after deployment
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
+    allow_methods=['*'], # TODO: add restrictions
+    allow_headers=['*'], # TODO: add restrictions
 )
 
 #We use a callback to trigger the creation of the table if they don't exist yet

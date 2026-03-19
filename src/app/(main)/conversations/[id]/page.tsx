@@ -1,8 +1,8 @@
-"use client";
-import { useEffect, useState } from "react";
-import MessageList from "@/app/components/MessageList/MessageList";
-import MessageForm from "@/app/components/MessageForm/MessageForm";
-import { getMessages } from "@/lib/services/conversations";
+'use client';
+import { useEffect, useState } from 'react';
+import MessageList from '@/app/components/MessageList/MessageList';
+import MessageForm from '@/app/components/MessageForm/MessageForm';
+import { getMessagesList } from '@/lib/services/conversations';
 
 type Message = {
   id: number;
@@ -21,7 +21,7 @@ export default function ConversationPage({
   const [messages, setMessages] = useState<Message[]>([]);
 
   const loadMessages = async () => {
-    const data = await getMessages(conversationId);
+    const data = await getMessagesList(conversationId);
     setMessages(data);
   };
 

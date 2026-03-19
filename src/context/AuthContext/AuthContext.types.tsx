@@ -3,4 +3,5 @@ export type AuthContextType = {
   login: (token: string) => void;
   logout: () => void;
   userId: number | null;
+  username: string | null;
 };

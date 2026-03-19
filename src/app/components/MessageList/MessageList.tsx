@@ -1,5 +1,5 @@
-import { Button, Stack, Typography } from "@mui/material";
-import { useRouter } from "next/navigation";
+import { Button, Stack, Typography } from '@mui/material';
+import { useRouter } from 'next/navigation';
 
 type Message = {
   id: number;
@@ -17,27 +17,31 @@ const MessageList = ({ messages, currentUserId }: Props) => {
   return (
     <Stack
       sx={{
-        padding: "1rem",
-        overflow: "auto",
-        height: "60vh",
+        padding: '1rem',
+        overflow: 'auto',
+        height: '60vh',
       }}
     >
       {messages?.map((message) => (
         <div
           key={message.id}
           style={{
-            marginBottom: "0.5rem",
-            textAlign: message.sender_id === currentUserId ? "right" : "left",
+            marginBottom: '0.5rem',
+            textAlign:
+              message.sender_id === Number(currentUserId) ? 'right' : 'left',
           }}
         >
           <span
             style={{
-              padding: "0.5rem 1rem",
-              borderRadius: "12px",
+              padding: '0.5rem 1rem',
+              borderRadius: '12px',
               background:
-                message.sender_id === currentUserId ? "#1976d2" : "#e0e0e0",
-              color: message.sender_id === currentUserId ? "white" : "black",
-              display: "inline-block",
+                message.sender_id === Number(currentUserId)
+                  ? '#1976d2'
+                  : '#e0e0e0',
+              color:
+                message.sender_id === Number(currentUserId) ? 'white' : 'black',
+              display: 'inline-block',
             }}
           >
             {message.content}
