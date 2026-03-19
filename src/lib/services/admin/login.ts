@@ -10,7 +10,7 @@ export const loginUser = async (data: LoginFormData) => {
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.detail || "Connection error");
+    throw new Error(error.detail || "Erreur lors de la connexion");
   }
 
   return res.json();

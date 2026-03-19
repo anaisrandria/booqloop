@@ -3,6 +3,7 @@
 import { useAuth } from "@/hooks/useAuth";
 import addBook from "@/lib/services/books/addBook";
 import {
+  Alert,
   Box,
   Button,
   Container,
@@ -29,11 +30,20 @@ const AddBookForm = () => {
     image_url: "",
   });
   const [categories, setCategories] = useState<Category[]>([]);
+  const [error, setError] = useState<string>();
 
   useEffect(() => {
     const loadCategories = async () => {
-      const categoryData: Category[] = await getCategories();
-      setCategories(categoryData);
+      try {
+        const categoryData: Category[] = await getCategories();
+        setCategories(categoryData);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err));
+        }
+      }
     };
     loadCategories();
   }, []);
@@ -45,7 +55,7 @@ const AddBookForm = () => {
     setBookForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (userId) {
       const newBook: AddBookFormData = {
@@ -58,8 +68,16 @@ const AddBookForm = () => {
         user_id: userId,
         availability_status_id: 1,
       };
-      addBook(newBook);
-      router.push("/home");
+      try {
+        await addBook(newBook);
+        router.push("/home");
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError(String(err));
+        }
+      }
     }
   };
 
@@ -160,15 +178,18 @@ const AddBookForm = () => {
           </TextField>
 
           <TextField
-            label="URL de l’image"
+            label="URL de l'image"
             name="image_url"
+            id="image-url"
             value={bookForm.image_url}
             onChange={(e) => {
               handleChange(e);
             }}
             size="small"
             type="search"
+            fullWidth
           />
+
           <Button
             type="submit"
             variant="contained"
@@ -181,6 +202,12 @@ const AddBookForm = () => {
           >
             {"Ajouter à ma bibliothèque"}
           </Button>
+
+          {error && (
+            <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
+              {error}
+            </Alert>
+          )}
         </Stack>
       </Box>
     </Container>

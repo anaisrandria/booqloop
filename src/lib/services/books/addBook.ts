@@ -10,7 +10,7 @@ const addBook = async (data: AddBookFormData) => {
 
   if (!res.ok) {
     const error = await res.json();
-    throw new Error(error.detail || 'Registration error');
+    throw new Error(error.detail || "Erreur lors de l'ajout du livre");
   }
 
   return res.json();
