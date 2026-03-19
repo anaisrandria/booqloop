@@ -17,6 +17,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 60))
 # Init database
 engine = create_engine(DATABASE_URL)
 
+# Test database
+TEST_DATABASE_URL = os.getenv('TEST_DATABASE_URL')
+test_engine = create_engine(TEST_DATABASE_URL) if TEST_DATABASE_URL else None
+
 def init_db():
     SQLModel.metadata.create_all(engine)
 

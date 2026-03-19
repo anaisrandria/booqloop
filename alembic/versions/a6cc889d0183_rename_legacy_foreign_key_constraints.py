@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import text
 
 
 # revision identifiers, used by Alembic.
@@ -18,46 +19,59 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+def constraint_exists(constraint_name: str, table_name: str) -> bool:
+    conn = op.get_bind()
+    result = conn.execute(text(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.table_constraints "
+        "WHERE constraint_name = :c AND table_name = :t)"
+    ), {"c": constraint_name, "t": table_name})
+    return result.scalar()
+
+
 def upgrade() -> None:
     """Upgrade schema."""
-    # conversations.user_id
-    op.execute("""
-        ALTER TABLE conversations
-        RENAME CONSTRAINT requests_user_id_fkey
-        TO conversations_user_id_fkey
-    """)
+    # Ces contraintes n'existent pas en DB de test, on les renomme seulement si elles existent
+    if constraint_exists("requests_user_id_fkey", "conversations"):
+        op.execute("""
+            ALTER TABLE conversations
+            RENAME CONSTRAINT requests_user_id_fkey
+            TO conversations_user_id_fkey
+        """)
 
-    # conversations.book_id
-    op.execute("""
-        ALTER TABLE conversations
-        RENAME CONSTRAINT requests_book_id_fkey
-        TO conversations_book_id_fkey
-    """)
+    if constraint_exists("requests_book_id_fkey", "conversations"):
+        op.execute("""
+            ALTER TABLE conversations
+            RENAME CONSTRAINT requests_book_id_fkey
+            TO conversations_book_id_fkey
+        """)
 
-    # conversation_statuses.conversation_id
-    op.execute("""
-        ALTER TABLE conversation_statuses
-        RENAME CONSTRAINT request_statuses_request_id_fkey
-        TO conversation_statuses_conversation_id_fkey
-    """)
+    if constraint_exists("request_statuses_request_id_fkey", "conversation_statuses"):
+        op.execute("""
+            ALTER TABLE conversation_statuses
+            RENAME CONSTRAINT request_statuses_request_id_fkey
+            TO conversation_statuses_conversation_id_fkey
+        """)
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.execute("""
-        ALTER TABLE conversations
-        RENAME CONSTRAINT conversations_user_id_fkey
-        TO requests_user_id_fkey
-    """)
+    if constraint_exists("conversations_user_id_fkey", "conversations"):
+        op.execute("""
+            ALTER TABLE conversations
+            RENAME CONSTRAINT conversations_user_id_fkey
+            TO requests_user_id_fkey
+        """)
 
-    op.execute("""
-        ALTER TABLE conversations
-        RENAME CONSTRAINT conversations_book_id_fkey
-        TO requests_book_id_fkey
-    """)
+    if constraint_exists("conversations_book_id_fkey", "conversations"):
+        op.execute("""
+            ALTER TABLE conversations
+            RENAME CONSTRAINT conversations_book_id_fkey
+            TO requests_book_id_fkey
+        """)
 
-    op.execute("""
-        ALTER TABLE conversation_statuses
-        RENAME CONSTRAINT conversation_statuses_conversation_id_fkey
-        TO request_statuses_request_id_fkey
-    """)
+    if constraint_exists("conversation_statuses_conversation_id_fkey", "conversation_statuses"):
+        op.execute("""
+            ALTER TABLE conversation_statuses
+            RENAME CONSTRAINT conversation_statuses_conversation_id_fkey
+            TO request_statuses_request_id_fkey
+        """)

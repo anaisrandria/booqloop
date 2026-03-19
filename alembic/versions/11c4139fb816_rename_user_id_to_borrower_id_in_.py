@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import text
 
 
 # revision identifiers, used by Alembic.
@@ -18,8 +19,21 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+def column_exists(table_name: str, column_name: str) -> bool:
+    conn = op.get_bind()
+    result = conn.execute(text(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.columns "
+        "WHERE table_name = :t AND column_name = :c)"
+    ), {"t": table_name, "c": column_name})
+    return result.scalar()
+
+
 def upgrade():
-    op.alter_column('conversations', 'user_id', new_column_name='borrower_id')
+    # En DB de test la colonne s'appelle déjà borrower_id, on ne renomme que si user_id existe
+    if column_exists("conversations", "user_id"):
+        op.alter_column('conversations', 'user_id', new_column_name='borrower_id')
+
 
 def downgrade():
-    op.alter_column('conversations', 'borrower_id', new_column_name='user_id')
+    if column_exists("conversations", "borrower_id"):
+        op.alter_column('conversations', 'borrower_id', new_column_name='user_id')
