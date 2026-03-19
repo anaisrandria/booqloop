@@ -9,7 +9,6 @@ router = APIRouter(prefix='/books', tags=['books'])
 
 @router.post('/')
 def add_book(book: BookCreate, user_id: str=Depends(get_current_user)):
-    
     with Session(engine) as session:
         new_book = Book(
             title=book.title,

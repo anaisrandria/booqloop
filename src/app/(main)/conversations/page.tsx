@@ -10,7 +10,7 @@ import { useAuth } from '../../../hooks/useAuth';
 import { Conversation, Message } from './Conversations.types';
 import ConversationList from './ConversationsList';
 import ConversationContent from './ConversationContent';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 
 const ConversationsPage = () => {
   const { userId } = useAuth();
@@ -34,7 +34,7 @@ const ConversationsPage = () => {
 
   const loadConversations = async () => {
     try {
-      const data = await getConversations(userId);
+      const data = await getConversations();
       setConversations(data);
       if (conversationId) {
         setSelectedConversationId(Number(conversationId));

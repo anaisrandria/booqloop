@@ -12,10 +12,8 @@ security = HTTPBearer()
 
 def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     token = credentials.credentials
-    print('✅ TOKEN', token)
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        print('✅ PAYLOAD:', payload)
         user_id = payload.get("sub")
 
         if user_id is None:
@@ -23,6 +21,5 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
 
         return user_id
 
-    except JWTError as e:
-        print("❌ ERREUR JWT:", e)
+    except JWTError:
         raise HTTPException(status_code=403, detail="Token invalide")

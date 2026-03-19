@@ -18,7 +18,7 @@ def register(user_data: UserCreate):
         session.commit()
         session.refresh(new_user)
 
-        token = create_access_token({"sub": new_user.id})
+        token = create_access_token({"sub": str(new_user.id)})
         return {"access_token": token, "token_type": "bearer"}
 
 @router.post('/login', response_model=dict)
@@ -28,5 +28,5 @@ def login(user_data: UserLogin):
         if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(status_code=401, detail="Invalid email and/or password")
 
-        token = create_access_token({"sub": user.id})
+        token = create_access_token({"sub": str(user.id)})
         return {"access_token": token, "token_type": "bearer"}
