@@ -21,7 +21,13 @@ const HomeLogo = () => {
       }}
       onClick={() => router.push('/home')}
     >
-      <Image src='/booqloop-logo.png' alt='Booqloop' width={150} height={34} />
+      <Image
+        src='/booqloop-logo.png'
+        alt='booqloop'
+        width={150}
+        height={34}
+        priority
+      />
     </Stack>
   );
 };

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { sendMessage } from "@/lib/services/conversations";
-import { useAuth } from "../../../hooks/useAuth";
-import { Button } from "@mui/material";
+import { useState } from 'react';
+import { sendMessage } from '@/lib/services/conversations';
+import { useAuth } from '../../../hooks/useAuth';
+import { Button } from '@mui/material';
 
 type MessageFormProps = {
   conversationId: number;
@@ -9,7 +9,7 @@ type MessageFormProps = {
 };
 
 const MessageForm = ({ conversationId, onMessageSent }: MessageFormProps) => {
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState('');
   const currentUserId = useAuth().userId;
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,9 +18,9 @@ const MessageForm = ({ conversationId, onMessageSent }: MessageFormProps) => {
     if (!currentUserId) return;
     if (!content.trim()) return;
 
-    await sendMessage(conversationId, currentUserId, content);
+    await sendMessage(conversationId, content);
 
-    setContent("");
+    setContent('');
     onMessageSent(); // recharge les messages
   };
 
@@ -28,24 +28,24 @@ const MessageForm = ({ conversationId, onMessageSent }: MessageFormProps) => {
     <form
       onSubmit={handleSubmit}
       style={{
-        display: "flex",
-        gap: "0.5rem",
-        padding: "1rem",
-        height: "70px",
+        display: 'flex',
+        gap: '0.5rem',
+        padding: '1rem',
+        height: '70px',
       }}
     >
       <input
         value={content}
         onChange={(e) => setContent(e.target.value)}
-        placeholder="Écrire un message…"
+        placeholder='Écrire un message…'
         style={{
           flex: 1,
-          borderRadius: "25px",
-          border: "1px solid",
-          padding: "10px",
+          borderRadius: '25px',
+          border: '1px solid',
+          padding: '10px',
         }}
       />
-      <Button type="submit" variant="outlined">
+      <Button type='submit' variant='outlined' sx={{ borderRadius: '25px' }}>
         Envoyer
       </Button>
     </form>
