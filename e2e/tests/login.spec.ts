@@ -17,5 +17,5 @@ test('login échoué affiche une erreur', async ({ page }) => {
   await page.getByLabel('Mot de passe').fill('mauvais_mot_de_passe');
   await page.getByRole('button', { name: 'Se connecter' }).click();
 
-  await expect(page.getByRole('alert')).toBeVisible();
+await expect(page.getByRole('alert').filter({ hasText: 'Invalid email and/or password' })).toBeVisible();
 });

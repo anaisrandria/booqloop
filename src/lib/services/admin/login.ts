@@ -1,10 +1,13 @@
 import { LoginFormData } from "@/app/(admin)/login/LoginForm.types";
 
 export const loginUser = async (data: LoginFormData) => {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(data),
   });
 
@@ -14,4 +17,4 @@ export const loginUser = async (data: LoginFormData) => {
   }
 
   return res.json();
-}
+};

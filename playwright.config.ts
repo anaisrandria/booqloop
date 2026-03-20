@@ -9,13 +9,13 @@ export default defineConfig({
   reporter: 'html',
 
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'http://localhost:3001', // port dédié aux tests
     trace: 'on-first-retry',
   },
 
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    command: 'npm run dev -- --port 3001',
+    url: 'http://localhost:3001',
+    reuseExistingServer: false,
   },
 });

@@ -1,18 +1,21 @@
 import { RegisterFormData } from "@/app/(admin)/register/RegisterForm.types";
 
 export const registerUser = async (data: RegisterFormData) => {
-
-const { postalCode, ...rest } = data;
+  const { postalCode, ...rest } = data;
 
   const payload = {
     ...rest,
     postal_code: Number(postalCode),
   };
 
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers,
     body: JSON.stringify(payload),
   });
 
@@ -22,4 +25,4 @@ const { postalCode, ...rest } = data;
   }
 
   return res.json();
-}
+};

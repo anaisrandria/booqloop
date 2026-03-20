@@ -4,6 +4,7 @@ from fastapi import APIRouter
 from sqlmodel import SQLModel, Session
 from api.services import test_engine, get_password_hash
 from api.models import User, BookCategory, BookAvailability
+from sqlalchemy import text
 
 router = APIRouter(prefix="/_testing", tags=["testing"])
 
@@ -15,6 +16,13 @@ def make_password(plain: str) -> str:
 def reset_db():
     SQLModel.metadata.drop_all(test_engine)
     SQLModel.metadata.create_all(test_engine)
+    # Remet les séquences à 1
+    with Session(test_engine) as session:
+        session.exec(text("ALTER SEQUENCE users_id_seq RESTART WITH 1"))
+        session.exec(text("ALTER SEQUENCE books_id_seq RESTART WITH 1"))
+        session.exec(text("ALTER SEQUENCE book_categories_id_seq RESTART WITH 1"))
+        session.exec(text("ALTER SEQUENCE book_availabilities_id_seq RESTART WITH 1"))
+        session.commit()
     return {"ok": True}
 
 @router.post("/seed")

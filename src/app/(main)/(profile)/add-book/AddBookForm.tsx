@@ -25,8 +25,8 @@ const AddBookForm = () => {
     title: "",
     author: "",
     description: "",
-    published_year: undefined,
-    category_id: 1,
+    published_year: "",
+    category_id: "",
     image_url: "",
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -62,8 +62,8 @@ const AddBookForm = () => {
         title: bookForm.title,
         author: bookForm.author,
         description: bookForm.description,
-        published_year: bookForm.published_year,
-        category_id: bookForm.category_id,
+        published_year: Number(bookForm.published_year),
+        category_id: Number(bookForm.category_id),
         image_url: bookForm.image_url,
         user_id: userId,
         availability_status_id: 1,

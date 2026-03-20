@@ -1,9 +1,13 @@
 import { AddBookFormData } from '../../../app/(main)/(profile)/add-book/AddBookForm.types';
 
 const addBook = async (data: AddBookFormData) => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/books`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers,
     body: JSON.stringify(data),
   });
 

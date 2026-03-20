@@ -23,7 +23,7 @@ if os.getenv("APP_ENV") == "development":
 # Configuration du middleware CORS pour autoriser les requêtes depuis le frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'],
+    allow_origins=['http://localhost:3000', 'http://localhost:3001'],
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
