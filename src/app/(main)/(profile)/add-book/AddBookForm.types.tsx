@@ -4,7 +4,6 @@ export type AddBookFormData = {
   description: string;
   published_year?: number;
   image_url: string;
-  user_id: number;
   category_id: number;
   availability_status_id: number;
 };

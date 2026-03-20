@@ -76,7 +76,6 @@ class Book(BookBase, table=True):
     reviews: List["Review"] = Relationship(back_populates="book")
 
 class BookCreate(BookBase):
-    user_id: int
     category_id: Optional[int] = None
     availability_status_id: Optional[int] = None
 
