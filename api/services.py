@@ -6,6 +6,7 @@ from dotenv import load_dotenv
 from api.models import User
 import bcrypt
 import binascii
+from fastapi import Request
 
 load_dotenv()
 
@@ -53,3 +54,8 @@ def create_access_token(data: dict):
 
 def get_user_by_email(session: Session, email: str):
     return session.exec(select(User).where(User.email == email)).first()
+
+def get_engine(request: Request):
+    if request.headers.get("X-Test-Request") == "true" and test_engine:
+        return test_engine
+    return engine

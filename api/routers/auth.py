@@ -1,13 +1,13 @@
-from fastapi import APIRouter, HTTPException
-from sqlmodel import Session, select
+from fastapi import APIRouter, HTTPException, Request
+from sqlmodel import Session
 from api.models import User, UserCreate, UserLogin
-from api.services import engine, get_password_hash, create_access_token, get_user_by_email, verify_password
+from api.services import get_password_hash, create_access_token, get_user_by_email, verify_password, get_engine
 
 router = APIRouter(prefix='/auth', tags=['users'])
 
 @router.post('/register', response_model=dict)
-def register(user_data: UserCreate):
-    with Session(engine) as session:
+def register(user_data: UserCreate, request: Request):
+    with Session(get_engine(request)) as session:
         user = get_user_by_email(session, user_data.email)
         if user:
             raise HTTPException(status_code=400, detail="User already exists")
@@ -22,8 +22,8 @@ def register(user_data: UserCreate):
         return {"access_token": token, "token_type": "bearer"}
 
 @router.post('/login', response_model=dict)
-def login(user_data: UserLogin):
-    with Session(engine) as session:
+def login(user_data: UserLogin, request: Request):
+    with Session(get_engine(request)) as session:
         user = get_user_by_email(session, user_data.email)
         if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(status_code=401, detail="Invalid email and/or password")
