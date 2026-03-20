@@ -3,6 +3,7 @@ import { Conversation } from './Conversations.types';
 
 import { ConversationListProps } from './Conversations.types';
 import { formatLastMessageDate } from '../../utils/formatDate';
+import { useRouter } from 'next/navigation';
 
 const ConversationList = ({
   conversations,
@@ -14,6 +15,7 @@ const ConversationList = ({
   onSelectConversation,
   isMobile,
 }: ConversationListProps) => {
+  const router = useRouter();
   return (
     <Stack
       sx={{
@@ -72,6 +74,7 @@ const ConversationList = ({
                       flexShrink: 0,
                       backgroundColor: '#E5E7EB',
                     }}
+                    onClick={() => router.push(`/books/${book.id}`)}
                   />
                 ) : (
                   <Box
