@@ -1,4 +1,4 @@
-import { User } from '../../../lib/services/users/getUserById';
+import { User } from '../../../lib/services/users/users';
 import { Book } from '../../types';
 
 export type Message = {

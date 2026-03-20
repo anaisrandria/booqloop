@@ -8,7 +8,7 @@ from api.services import engine
 router = APIRouter(prefix='/books', tags=['books'])   
 
 @router.post('/')
-def add_book(book: BookCreate, user_id: str=Depends(get_current_user)):
+def add_book(book: BookCreate, user_id: int = Depends(get_current_user)):
     with Session(engine) as session:
         new_book = Book(
             title=book.title,
@@ -25,7 +25,6 @@ def add_book(book: BookCreate, user_id: str=Depends(get_current_user)):
         session.refresh(new_book)
         return new_book
     
-
 @router.get('/', response_model=list[BookRead])
 def get_books(
     category_id: int | None = Query(default=None, description="Filter by category ID"),

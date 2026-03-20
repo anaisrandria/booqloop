@@ -14,7 +14,7 @@ import {
 } from '@/lib/services/conversations';
 import { Book } from '@/app/types';
 import { getBook } from '@/lib/services/books/getBook';
-import { getUserById, User } from '@/lib/services/users/getUserById';
+import { getUserById, User } from '@/lib/services/users/users';
 import { useAuth } from '../../../hooks/useAuth';
 import { Conversation, Message } from './Conversations.types';
 import ConversationList from './ConversationsList';

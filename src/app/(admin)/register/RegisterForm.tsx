@@ -6,28 +6,28 @@ import {
   Stack,
   TextField,
   Typography,
-} from "@mui/material";
-import { useRouter } from "next/navigation";
-import { RegisterFormData } from "./RegisterForm.types";
-import { useState } from "react";
-import { registerUser } from "@/lib/services/admin/register";
-import { useAuth } from "@/hooks/useAuth";
+} from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { RegisterFormData } from './RegisterForm.types';
+import { useState } from 'react';
+import { registerUser } from '@/lib/services/admin/register';
+import { useAuth } from '@/hooks/useAuth';
 
 const RegisterForm = () => {
   const router = useRouter();
   const { login } = useAuth();
   const [registerForm, setRegisterForm] = useState<RegisterFormData>({
-    username: "",
-    email: "",
-    password: "",
-    address: "",
-    postalCode: "",
-    country: "",
+    username: '',
+    email: '',
+    password: '',
+    address: '',
+    postalCode: '',
+    country: '',
   });
   const [error, setError] = useState<string>();
 
   const handleRedirect = () => {
-    router.push("/login");
+    router.push('/login');
   };
 
   const handleChange = (key: string, value: string) => {
@@ -36,9 +36,9 @@ const RegisterForm = () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await registerUser(registerForm);
-      login(response.access_token);
-      router.push("/home");
+      await registerUser(registerForm);
+      login(registerForm.email, registerForm.password);
+      router.push('/home');
     } catch (err: unknown) {
       if (err instanceof Error) {
         setError(err.message);
@@ -51,126 +51,126 @@ const RegisterForm = () => {
   return (
     <Box
       sx={{
-        height: "100%",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}
     >
       <Container
-        maxWidth="sm"
+        maxWidth='sm'
         sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
           gap: 5,
           paddingBottom: 6,
         }}
       >
         <Stack
           sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "20px",
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: '20px',
           }}
         >
-          {"booqloop"}
+          {'booqloop'}
         </Stack>
         <Stack
           spacing={5}
           sx={{
             width: {
-              xs: "75%",
-              sm: "60%",
+              xs: '75%',
+              sm: '60%',
             },
           }}
         >
           <Stack spacing={1}>
             <TextField
               label="Nom d'utilisateur"
-              name="username"
-              variant="standard"
-              type="search"
+              name='username'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Email"
-              name="email"
-              variant="standard"
-              type="search"
+              label='Email'
+              name='email'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Mot de passe"
-              name="password"
-              variant="standard"
-              type="search"
+              label='Mot de passe'
+              name='password'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Ville"
-              name="address"
-              variant="standard"
-              type="search"
+              label='Ville'
+              name='address'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Code postal"
-              name="postalCode"
-              variant="standard"
-              type="search"
+              label='Code postal'
+              name='postalCode'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
             <TextField
-              label="Pays"
-              name="country"
-              variant="standard"
-              type="search"
+              label='Pays'
+              name='country'
+              variant='standard'
+              type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
           </Stack>
           <Stack>
             <Button
-              variant="contained"
-              color="primary"
+              variant='contained'
+              color='primary'
               sx={{
-                backgroundColor: "black",
-                textTransform: "none",
-                borderRadius: "10px",
+                backgroundColor: 'black',
+                textTransform: 'none',
+                borderRadius: '10px',
               }}
               onClick={handleSubmit}
             >
-              {"Créer un compte"}
+              {'Créer un compte'}
             </Button>
             {error && (
-              <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
+              <Alert variant='filled' severity='error' sx={{ marginTop: 1 }}>
                 {error}
               </Alert>
             )}
           </Stack>
           <Stack
             spacing={0.5}
-            direction="row"
-            sx={{ justifyContent: "center" }}
+            direction='row'
+            sx={{ justifyContent: 'center' }}
           >
             <Typography
               sx={{
-                fontSize: "14px",
-                textAlign: "center",
+                fontSize: '14px',
+                textAlign: 'center',
               }}
             >
-              {"Vous avez déjà un compte\u00A0? "}
+              {'Vous avez déjà un compte\u00A0? '}
               <Box
-                component="span"
+                component='span'
                 sx={{
-                  textDecoration: "underline",
-                  cursor: "pointer",
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
                 }}
                 onClick={handleRedirect}
               >
-                {"Se\u00A0connecter"}
+                {'Se\u00A0connecter'}
               </Box>
             </Typography>
           </Stack>
