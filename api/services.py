@@ -18,9 +18,19 @@ ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', 60))
 engine = create_engine(DATABASE_URL)
 
 def init_db():
+    """Crée toutes les tables définies dans les modèles SQLModel."""
     SQLModel.metadata.create_all(engine)
 
 def get_password_hash(password: str):
+    """
+    Hache un mot de passe en clair avec bcrypt.
+
+    Args:
+        password: Le mot de passe en clair.
+
+    Returns:
+        Le mot de passe haché sous forme de bytes.
+    """
     # converting password to array of bytes
     bytes = password.encode('utf-8')
 
@@ -32,6 +42,16 @@ def get_password_hash(password: str):
     return hash
 
 def verify_password(password: str, hashed_password: str):
+    """
+    Vérifie qu'un mot de passe en clair correspond au hash stocké en base.
+
+    Args:
+        password: Le mot de passe en clair à vérifier.
+        hashed_password: Le hash hexadécimal stocké en base.
+
+    Returns:
+        True si le mot de passe est correct, False sinon.
+    """
     # converting password to array of bytes
     user_bytes = password.encode('utf-8')
 
@@ -42,6 +62,16 @@ def verify_password(password: str, hashed_password: str):
     return result
 
 def create_access_token(data: dict):
+    """
+    Génère un token JWT signé avec une date d'expiration.
+
+    Args:
+        data: Dictionnaire de claims à inclure dans le payload
+              (ex: {"sub": "42"}).
+
+    Returns:
+        Le token JWT encodé sous forme de chaîne.
+    """
     to_encode = data.copy()
     created_at = datetime.utcnow()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -49,4 +79,14 @@ def create_access_token(data: dict):
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def get_user_by_email(session: Session, email: str):
+    """
+    Recherche un utilisateur par son adresse email.
+
+    Args:
+        session: La session SQLModel active.
+        email: L'adresse email à rechercher.
+
+    Returns:
+        L'utilisateur trouvé, ou None s'il n'existe pas.
+    """
     return session.exec(select(User).where(User.email == email)).first()

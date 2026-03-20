@@ -29,9 +29,9 @@ const LoginForm = () => {
     setLoginForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
-      login(loginForm.email, loginForm.password);
+      await login(loginForm.email, loginForm.password);
       router.push('/home');
     } catch (err: unknown) {
       if (err instanceof Error) {

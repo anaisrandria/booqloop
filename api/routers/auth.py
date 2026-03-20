@@ -1,25 +1,29 @@
 from fastapi import APIRouter, HTTPException, Response
 from sqlmodel import Session
 from api.models import User, UserCreate, UserLogin
+from api.security import set_auth_cookie
 from api.services import engine, get_password_hash, create_access_token, get_user_by_email, verify_password
 
 router = APIRouter(prefix='/auth', tags=['users'])
 
-COOKIE_MAX_AGE = 60 * 60
-
-def set_auth_cookie(response: Response, token: str):
-    """Pose le cookie JWT sur la réponse."""
-    response.set_cookie(
-        key="access_token",
-        value=token,
-        httponly=True,    # inaccessible depuis JavaScript
-        secure=True,      # envoyé uniquement en HTTPS (False en dev, True en prod)
-        samesite="lax",   # protection CSRF de base
-        max_age=COOKIE_MAX_AGE,
-    )
-
 @router.post('/register', response_model=dict)
 def register(user_data: UserCreate, response: Response):
+    """
+    Crée un nouveau compte utilisateur et ouvre une session.
+
+    Vérifie que l'email n'est pas déjà utilisé, hache le mot de passe,
+    crée l'utilisateur en base, puis pose un cookie JWT.
+
+    Args:
+        user_data: Les données d'inscription (username, email, password, etc.).
+        response: L'objet Response FastAPI pour poser le cookie.
+
+    Raises:
+        HTTPException 400: Si l'email est déjà associé à un compte.
+
+    Returns:
+        Un message de confirmation.
+    """
     with Session(engine) as session:
         user = get_user_by_email(session, user_data.email)
         if user:
@@ -37,6 +41,22 @@ def register(user_data: UserCreate, response: Response):
 
 @router.post('/login', response_model=dict)
 def login(user_data: UserLogin, response: Response):
+    """
+    Authentifie un utilisateur et ouvre une session.
+
+    Vérifie l'email et le mot de passe, puis pose un cookie JWT
+    en cas de succès.
+
+    Args:
+        user_data: Les identifiants de connexion (email, password).
+        response: L'objet Response FastAPI pour poser le cookie.
+
+    Raises:
+        HTTPException 401: Si l'email ou le mot de passe est incorrect.
+
+    Returns:
+        Un message de confirmation.
+    """
     with Session(engine) as session:
         user = get_user_by_email(session, user_data.email)
         if not user or not verify_password(user_data.password, user.hashed_password):
@@ -48,5 +68,14 @@ def login(user_data: UserLogin, response: Response):
     
 @router.post('/logout')
 def logout(response: Response):
+    """
+    Déconnecte l'utilisateur en supprimant le cookie JWT.
+
+    Args:
+        response: L'objet Response FastAPI pour supprimer le cookie.
+
+    Returns:
+        Un message de confirmation.
+    """
     response.delete_cookie("access_token")
     return {"message": "Utilisateur déconnecté"}

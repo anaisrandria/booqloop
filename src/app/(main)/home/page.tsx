@@ -63,6 +63,7 @@ const Home = () => {
   return (
     <Container maxWidth='md'>
       <Stack spacing={4}>
+        {username && <Typography>Bienvenue {username} ! </Typography>}
         <Box
           sx={{
             width: '100%',
@@ -143,7 +144,6 @@ const Home = () => {
         </Box>
 
         <Stack spacing={2}>
-          {username && <Typography>Bonjour {username} ! </Typography>}
           <Typography
             sx={{
               fontsize: '14px',
