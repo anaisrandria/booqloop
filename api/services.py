@@ -43,8 +43,9 @@ def verify_password(password: str, hashed_password: str):
 
 def create_access_token(data: dict):
     to_encode = data.copy()
+    created_at = datetime.utcnow()
     expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    to_encode.update({"exp": expire}) # add expiration date to payload
+    to_encode.update({"iat": created_at, "exp": expire}) # add expiration date to payload
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 def get_user_by_email(session: Session, email: str):

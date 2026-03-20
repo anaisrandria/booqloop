@@ -1,15 +1,9 @@
-const getAuthToken = () => {
-  const token = localStorage.getItem('token');
-  if (!token) {
-    throw new Error('Utilisateur non authentifié');
-  }
-  return token;
-};
-
-export const getHeaders = () => {
-  const token = getAuthToken();
-  return {
-    'Content-Type': 'application/json',
-    Authorization: `Bearer ${token}`,
-  };
-};
+export const getDefaultOptions = (
+  method: string = 'GET',
+  body?: object,
+): RequestInit => ({
+  method,
+  credentials: 'include', // envoie le cookie automatiquement
+  headers: { 'Content-Type': 'application/json' },
+  ...(body && { body: JSON.stringify(body) }),
+});

@@ -7,7 +7,7 @@ from api.services import engine
 router = APIRouter(prefix='/conversations', tags=['conversations'])
 
 @router.post("/")
-def create_conversation(conversation: ConversationCreate, user_id: str = Depends(get_current_user)):
+def create_conversation(conversation: ConversationCreate, user_id: int = Depends(get_current_user)):
     with Session(engine) as session:
 
         # Vérifier que le livre existe
@@ -39,14 +39,14 @@ def create_conversation(conversation: ConversationCreate, user_id: str = Depends
 
 # --- Liste des conversations de l'utilisateur connecté ---
 @router.get("/")
-def get_conversations(user_id: str = Depends(get_current_user)):
+def get_conversations(user_id: int = Depends(get_current_user)):
     with Session(engine) as session:
         statement = (
             select(Conversation)
             .join(Book, Book.id == Conversation.book_id)
             .where(
-                (Conversation.borrower_id == int(user_id)) |
-                (Book.user_id == int(user_id))
+                (Conversation.borrower_id == user_id) |
+                (Book.user_id == user_id)
             )
         )
         conversations = session.exec(statement).all()
@@ -56,13 +56,13 @@ def get_conversations(user_id: str = Depends(get_current_user)):
 
 # --- Messages d'une conversation ---
 @router.get("/{conversation_id}/messages")
-def get_messages(conversation_id: int, user_id: str = Depends(get_current_user)):
+def get_messages(conversation_id: int, user_id: int = Depends(get_current_user)):
     with Session(engine) as session:
         conversation = session.get(Conversation, conversation_id)
         if not conversation:
             raise HTTPException(status_code=404, detail="Conversation not found")
         
-        if int(user_id) != conversation.borrower_id and int(user_id) != conversation.book.user_id:
+        if user_id != conversation.borrower_id and user_id != conversation.book.user_id:
             raise HTTPException(status_code=403, detail="Not allowed")
 
         statement = select(Message).where(Message.conversation_id == conversation_id).order_by(Message.created_at)
@@ -71,7 +71,7 @@ def get_messages(conversation_id: int, user_id: str = Depends(get_current_user))
     
 # --- Envoyer un message ---
 @router.post("/{conversation_id}/messages")
-def send_message(conversation_id: int, message: dict, user_id: str = Depends(get_current_user)):
+def send_message(conversation_id: int, message: dict, user_id: int = Depends(get_current_user)):
     with Session(engine) as session:
         conversation = session.get(Conversation, conversation_id)
         if not conversation:
@@ -79,7 +79,7 @@ def send_message(conversation_id: int, message: dict, user_id: str = Depends(get
 
         new_message = Message(
             conversation_id=conversation_id,
-            sender_id=int(user_id),
+            sender_id=user_id,
             content=message["content"]
         )
         session.add(new_message)
