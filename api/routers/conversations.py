@@ -8,6 +8,22 @@ router = APIRouter(prefix='/conversations', tags=['conversations'])
 
 @router.post("/")
 def create_conversation(conversation: ConversationCreate, user_id: int = Depends(get_current_user)):
+    """
+    Crée une nouvelle conversation entre l'utilisateur connecté et le propriétaire d'un livre.
+
+    Si une conversation existe déjà pour ce livre et cet emprunteur,
+    elle est retournée sans en créer une nouvelle.
+
+    Args:
+        conversation: Les données de la conversation (book_id).
+        user_id: L'identifiant de l'emprunteur (extrait du cookie).
+
+    Raises:
+        HTTPException 404: Si le livre n'existe pas.
+
+    Returns:
+        La conversation existante ou nouvellement créée.
+    """
     with Session(engine) as session:
 
         # Vérifier que le livre existe
@@ -40,6 +56,18 @@ def create_conversation(conversation: ConversationCreate, user_id: int = Depends
 # --- Liste des conversations de l'utilisateur connecté ---
 @router.get("/")
 def get_conversations(user_id: int = Depends(get_current_user)):
+    """
+    Retourne toutes les conversations de l'utilisateur connecté.
+
+    Inclut les conversations où l'utilisateur est emprunteur
+    et celles où il est propriétaire du livre.
+
+    Args:
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Returns:
+        La liste des conversations de l'utilisateur.
+    """
     with Session(engine) as session:
         statement = (
             select(Conversation)
@@ -57,6 +85,23 @@ def get_conversations(user_id: int = Depends(get_current_user)):
 # --- Messages d'une conversation ---
 @router.get("/{conversation_id}/messages")
 def get_messages(conversation_id: int, user_id: int = Depends(get_current_user)):
+    """
+    Retourne les messages d'une conversation, triés par date.
+
+    Seuls les participants à la conversation (emprunteur ou propriétaire
+    du livre) peuvent accéder aux messages.
+
+    Args:
+        conversation_id: L'identifiant de la conversation.
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Raises:
+        HTTPException 404: Si la conversation n'existe pas.
+        HTTPException 403: Si l'utilisateur n'est pas participant à la conversation.
+
+    Returns:
+        La liste des messages triés par date de création.
+    """
     with Session(engine) as session:
         conversation = session.get(Conversation, conversation_id)
         if not conversation:
@@ -72,6 +117,20 @@ def get_messages(conversation_id: int, user_id: int = Depends(get_current_user))
 # --- Envoyer un message ---
 @router.post("/{conversation_id}/messages")
 def send_message(conversation_id: int, message: dict, user_id: int = Depends(get_current_user)):
+    """
+    Envoie un message dans une conversation.
+
+    Args:
+        conversation_id: L'identifiant de la conversation.
+        message: Le contenu du message sous forme de dictionnaire {"content": "..."}.
+        user_id: L'identifiant de l'expéditeur (extrait du cookie).
+
+    Raises:
+        HTTPException 404: Si la conversation n'existe pas.
+
+    Returns:
+        Le message créé.
+    """
     with Session(engine) as session:
         conversation = session.get(Conversation, conversation_id)
         if not conversation:

@@ -9,6 +9,16 @@ router = APIRouter(prefix='/books', tags=['books'])
 
 @router.post('/')
 def add_book(book: BookCreate, user_id: int = Depends(get_current_user)):
+    """
+    Ajoute un nouveau livre pour l'utilisateur connecté.
+
+    Args:
+        book: Les données du livre à créer.
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Returns:
+        Le livre créé.
+    """
     with Session(engine) as session:
         new_book = Book(
             title=book.title,
@@ -30,6 +40,16 @@ def get_books(
     category_id: int | None = Query(default=None, description="Filter by category ID"),
     postal_code: int | None = Query(default=None, description="Filter by user postal code")
 ):
+    """
+    Retourne la liste des livres, avec filtres optionnels.
+
+    Args:
+        category_id: Filtre optionnel par identifiant de catégorie.
+        postal_code: Filtre optionnel par code postal de l'utilisateur propriétaire.
+
+    Returns:
+        La liste des livres correspondant aux filtres.
+    """
     with Session(engine) as session:
         statement = select(Book).options(selectinload(Book.user))
 
@@ -44,6 +64,18 @@ def get_books(
     
 @router.get("/{book_id}", response_model=BookDetailRead)
 def get_book(book_id: int):
+    """
+    Retourne le détail d'un livre par son identifiant.
+
+    Args:
+        book_id: L'identifiant du livre.
+
+    Raises:
+        HTTPException 404: Si le livre n'existe pas.
+
+    Returns:
+        Le livre avec ses détails et les informations de son propriétaire.
+    """
     with Session(engine) as session:
         statement = (
             select(Book)
@@ -60,6 +92,12 @@ def get_book(book_id: int):
     
 @router.get('/categories/all')
 def get_categories():
+    """
+    Retourne la liste de toutes les catégories de livres.
+
+    Returns:
+        La liste des catégories disponibles.
+    """
     with Session(engine) as session:
         statement = select(BookCategory)
         categories = session.exec(statement).all()
