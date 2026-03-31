@@ -111,7 +111,7 @@ class Conversation(SQLModel, table=True):
     # Relations
     borrower: User = Relationship(back_populates="conversations")
     book: Book = Relationship(back_populates="conversations")
-    messages: List["Message"] = Relationship(back_populates="conversation")
+    messages: List["Message"] = Relationship(back_populates="conversation", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
     statuses: List["ConversationStatus"] = Relationship(back_populates="conversation")
 
 class ConversationCreate(SQLModel):

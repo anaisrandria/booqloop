@@ -78,9 +78,22 @@ def get_conversations(user_id: int = Depends(get_current_user)):
             )
         )
         conversations = session.exec(statement).all()
-        # if not conversations:
-        #     raise HTTPException(status_code=404, detail="Conversation not found")
         return conversations
+    
+# --- Supprimer une conversation --- #    
+@router.delete("/{conversation_id}")
+def delete_conversation(conversation_id: int, user_id: int = Depends(get_current_user)):
+    with Session(engine) as session:
+        conversation = session.get(Conversation, conversation_id)
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        if user_id != conversation.borrower_id and user_id != conversation.book.user_id:
+            raise HTTPException(status_code=403, detail="Not allowed")
+
+        session.delete(conversation)
+        session.commit()
+        return {"message": "Conversation deleted successfully"}
 
 # --- Messages d'une conversation ---
 @router.get("/{conversation_id}/messages")
