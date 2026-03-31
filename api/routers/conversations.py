@@ -10,7 +10,6 @@ router = APIRouter(prefix='/conversations', tags=['conversations'])
 def create_conversation(conversation: ConversationCreate, user_id: int = Depends(get_current_user)):
     """
     Crée une nouvelle conversation entre l'utilisateur connecté et le propriétaire d'un livre.
-
     Si une conversation existe déjà pour ce livre et cet emprunteur,
     elle est retournée sans en créer une nouvelle.
 
@@ -58,7 +57,6 @@ def create_conversation(conversation: ConversationCreate, user_id: int = Depends
 def get_conversations(user_id: int = Depends(get_current_user)):
     """
     Retourne toutes les conversations de l'utilisateur connecté.
-
     Inclut les conversations où l'utilisateur est emprunteur
     et celles où il est propriétaire du livre.
 
@@ -78,16 +76,43 @@ def get_conversations(user_id: int = Depends(get_current_user)):
             )
         )
         conversations = session.exec(statement).all()
-        # if not conversations:
-        #     raise HTTPException(status_code=404, detail="Conversation not found")
         return conversations
+    
+# --- Supprimer une conversation --- #    
+@router.delete("/{conversation_id}")
+def delete_conversation(conversation_id: int, user_id: int = Depends(get_current_user)):
+    """
+    Supprime une conversation et tous ses messages associés.
+    Seuls le propriétaire du livre ou l'emprunteur peuvent supprimer la conversation.
+
+    Args:
+        conversation_id: L'identifiant de la conversation à supprimer.
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie JWT).
+
+    Raises:
+        HTTPException 404: Si la conversation n'existe pas.
+        HTTPException 403: Si l'utilisateur n'est pas autorisé à supprimer cette conversation.
+
+    Returns:
+        Un message de confirmation de suppression.
+    """
+    with Session(engine) as session:
+        conversation = session.get(Conversation, conversation_id)
+        if not conversation:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        
+        if user_id != conversation.borrower_id and user_id != conversation.book.user_id:
+            raise HTTPException(status_code=403, detail="Not allowed")
+
+        session.delete(conversation)
+        session.commit()
+        return {"message": "Conversation deleted successfully"}
 
 # --- Messages d'une conversation ---
 @router.get("/{conversation_id}/messages")
 def get_messages(conversation_id: int, user_id: int = Depends(get_current_user)):
     """
     Retourne les messages d'une conversation, triés par date.
-
     Seuls les participants à la conversation (emprunteur ou propriétaire
     du livre) peuvent accéder aux messages.
 

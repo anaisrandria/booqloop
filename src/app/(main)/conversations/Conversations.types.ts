@@ -18,11 +18,12 @@ export type Conversation = {
 
 export type ConversationListProps = {
   conversations: Conversation[];
+  setConversations: React.Dispatch<React.SetStateAction<Conversation[]>>;
   lastMessages: Record<number, Message | null>;
   booksById: Record<number, Book | null>;
   usersById: Record<number, User | null>;
   currentUserId: number;
   selectedConversationId?: number | null;
-  onSelectConversation: (id: number) => void;
+  onSelectConversation: (id: number | null) => void;
   isMobile: boolean;
 };

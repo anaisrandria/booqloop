@@ -170,6 +170,7 @@ const ConversationsPage = () => {
           {selectedConversationId === null ? (
             <ConversationList
               conversations={sortedConversations}
+              setConversations={setConversations}
               lastMessages={lastMessages}
               booksById={booksById}
               usersById={usersById}
@@ -212,6 +213,7 @@ const ConversationsPage = () => {
             <Stack width='35%'>
               <ConversationList
                 conversations={sortedConversations}
+                setConversations={setConversations}
                 lastMessages={lastMessages}
                 booksById={booksById}
                 usersById={usersById}

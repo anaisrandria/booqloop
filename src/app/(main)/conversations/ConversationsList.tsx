@@ -1,12 +1,15 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Typography } from '@mui/material';
 import { Conversation } from './Conversations.types';
 
 import { ConversationListProps } from './Conversations.types';
 import { formatLastMessageDate } from '../../utils/formatDate';
 import { useRouter } from 'next/navigation';
+import { Delete } from '@mui/icons-material';
+import { deleteConversation } from '../../../lib/services/conversations';
 
 const ConversationList = ({
   conversations,
+  setConversations,
   lastMessages,
   booksById,
   usersById,
@@ -15,6 +18,21 @@ const ConversationList = ({
   onSelectConversation,
   isMobile,
 }: ConversationListProps) => {
+  const handleDelete = async (conversationId: number) => {
+    try {
+      await deleteConversation(conversationId);
+
+      setConversations((prev) =>
+        prev.filter((conv) => conv.id !== conversationId),
+      );
+      if (selectedConversationId === conversationId) {
+        onSelectConversation(null);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const router = useRouter();
   return (
     <Stack
@@ -61,32 +79,20 @@ const ConversationList = ({
               }}
             >
               <Stack direction='row' spacing={1.5} alignItems='center'>
-                {book?.image_url ? (
-                  <Box
-                    component='img'
-                    src={book.image_url}
-                    alt={book.title}
-                    sx={{
-                      width: 44,
-                      height: 64,
-                      objectFit: 'cover',
-                      borderRadius: 1,
-                      flexShrink: 0,
-                      backgroundColor: '#E5E7EB',
-                    }}
-                    onClick={() => router.push(`/books/${book.id}`)}
-                  />
-                ) : (
-                  <Box
-                    sx={{
-                      width: 44,
-                      height: 64,
-                      borderRadius: 1,
-                      flexShrink: 0,
-                      backgroundColor: '#E5E7EB',
-                    }}
-                  />
-                )}
+                <Box
+                  component='img'
+                  src={book?.image_url}
+                  alt={book?.title}
+                  sx={{
+                    width: 44,
+                    height: 64,
+                    objectFit: 'cover',
+                    borderRadius: 1,
+                    flexShrink: 0,
+                    backgroundColor: '#E5E7EB',
+                  }}
+                  onClick={() => router.push(`/books/${book?.id}`)}
+                />
                 <Stack sx={{ minWidth: 0, flex: 1 }}>
                   <Stack
                     direction='row'
@@ -95,10 +101,7 @@ const ConversationList = ({
                     spacing={1}
                   >
                     <Typography
-                      sx={{
-                        fontSize: '14px',
-                        minWidth: '0px',
-                      }}
+                      sx={{ fontSize: '14px', minWidth: '0px' }}
                       noWrap
                     >
                       <span style={{ fontWeight: 'bold' }}>{book?.title}</span>,{' '}
@@ -114,19 +117,15 @@ const ConversationList = ({
                     >
                       {formatLastMessageDate(lastActivityDate)}
                     </Typography>
+                    <IconButton onClick={() => handleDelete(conversation.id)}>
+                      <Delete sx={{ fontSize: '15px' }} />
+                    </IconButton>
                   </Stack>
-                  <Typography
-                    sx={{
-                      fontSize: '14px',
-                    }}
-                  >
+                  <Typography sx={{ fontSize: '14px' }}>
                     {interlocutor?.username}
                   </Typography>
                   <Typography
-                    sx={{
-                      color: 'text.secondary',
-                      fontSize: '14px',
-                    }}
+                    sx={{ color: 'text.secondary', fontSize: '14px' }}
                     noWrap
                   >
                     {lastMessage

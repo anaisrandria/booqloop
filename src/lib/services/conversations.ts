@@ -27,6 +27,15 @@ export const getConversationsList = async () => {
   return res.json();
 };
 
+export const deleteConversation = async (conversationId: number) => {
+  const url = `${process.env.NEXT_PUBLIC_API_URL}/conversations/${conversationId}`;
+  const res = await fetch(url, getDefaultOptions('DELETE'));
+  if (!res.ok) {
+    throw new Error('Erreur lors de la suppression de la conversations');
+  }
+  return res.json();
+};
+
 export const getMessagesList = async (conversationId: number) => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/conversations/${conversationId}/messages`;
   const res = await fetch(url, getDefaultOptions());
