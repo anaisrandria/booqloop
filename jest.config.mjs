@@ -10,6 +10,7 @@ const customJestConfig = {
     "^@/(.*)$": "<rootDir>/src/$1",
   },
   setupFilesAfterEnv: ["@testing-library/jest-dom"],
+  testPathIgnorePatterns: ["<rootDir>/e2e/"],
 };
 
 export default createJestConfig(customJestConfig);

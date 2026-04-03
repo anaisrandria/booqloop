@@ -9,6 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
+from sqlalchemy import text
 
 
 # revision identifiers, used by Alembic.
@@ -18,54 +19,46 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
+def constraint_exists(constraint_name: str, table_name: str) -> bool:
+    conn = op.get_bind()
+    result = conn.execute(text(
+        "SELECT EXISTS (SELECT 1 FROM information_schema.table_constraints "
+        "WHERE constraint_name = :c AND table_name = :t)"
+    ), {"c": constraint_name, "t": table_name})
+    return result.scalar()
+
+
 def upgrade() -> None:
     """Upgrade schema."""
-    op.drop_constraint(
-        "messages_user_author_id_fkey",
-        "messages",
-        type_="foreignkey"
-    )
-    op.drop_constraint(
-        "messages_request_id_fkey",
-        "messages",
-        type_="foreignkey"
-    )
+    # Ces contraintes n'existent pas en DB de test (les anciennes colonnes n'ont jamais existé)
+    if constraint_exists("messages_user_author_id_fkey", "messages"):
+        op.drop_constraint("messages_user_author_id_fkey", "messages", type_="foreignkey")
+    if constraint_exists("messages_request_id_fkey", "messages"):
+        op.drop_constraint("messages_request_id_fkey", "messages", type_="foreignkey")
 
-    op.create_foreign_key(
-        "messages_sender_id_fkey",
-        "messages",
-        "users",
-        ["sender_id"],
-        ["id"]
-    )
-
-    op.create_foreign_key(
-        "messages_conversation_id_fkey",
-        "messages",
-        "conversations",
-        ["conversation_id"],
-        ["id"]
-    )
-
+    # Ces contraintes n'existent pas encore, on les crée seulement si absentes
+    if not constraint_exists("messages_sender_id_fkey", "messages"):
+        op.create_foreign_key(
+            "messages_sender_id_fkey", "messages", "users", ["sender_id"], ["id"]
+        )
+    if not constraint_exists("messages_conversation_id_fkey", "messages"):
+        op.create_foreign_key(
+            "messages_conversation_id_fkey", "messages", "conversations", ["conversation_id"], ["id"]
+        )
 
 
 def downgrade() -> None:
     """Downgrade schema."""
-    op.drop_constraint("messages_sender_id_fkey", "messages", type_="foreignkey")
-    op.drop_constraint("messages_conversation_id_fkey", "messages", type_="foreignkey")
+    if constraint_exists("messages_sender_id_fkey", "messages"):
+        op.drop_constraint("messages_sender_id_fkey", "messages", type_="foreignkey")
+    if constraint_exists("messages_conversation_id_fkey", "messages"):
+        op.drop_constraint("messages_conversation_id_fkey", "messages", type_="foreignkey")
 
-    op.create_foreign_key(
-        "messages_user_author_id_fkey",
-        "messages",
-        "users",
-        ["sender_id"],
-        ["id"]
-    )
-    op.create_foreign_key(
-        "messages_request_id_fkey",
-        "messages",
-        "conversations",
-        ["conversation_id"],
-        ["id"]
-    )
-
+    if not constraint_exists("messages_user_author_id_fkey", "messages"):
+        op.create_foreign_key(
+            "messages_user_author_id_fkey", "messages", "users", ["sender_id"], ["id"]
+        )
+    if not constraint_exists("messages_request_id_fkey", "messages"):
+        op.create_foreign_key(
+            "messages_request_id_fkey", "messages", "conversations", ["conversation_id"], ["id"]
+        )

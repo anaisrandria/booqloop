@@ -4,27 +4,32 @@ from sqlmodel import Session, select
 from api.services import engine, init_db
 from api.models import *
 from api.routers import auth, books, conversations, users
+import os
 
-#We create an instance of FastAPI
+# Création de l'instance FastAPI
 app = FastAPI(docs_url="/api/py/docs")
 
+# Enregistrement des routers
 app.include_router(users.router)
 app.include_router(auth.router)
 app.include_router(books.router)
 app.include_router(conversations.router)
 
+# Router de test — chargé uniquement en environnement de développement
+if os.getenv("APP_ENV") == "development":
+    from api.routers import testing
+    app.include_router(testing.router)
 
-#We define authorizations for middleware components
+# Configuration du middleware CORS pour autoriser les requêtes depuis le frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:3000'], # TODO: add domain name after deployment
+    allow_origins=['http://localhost:3000', 'http://localhost:3001'],
     allow_credentials=True,
     allow_methods=['*'], # TODO: add restrictions
     allow_headers=['*'], # TODO: add restrictions
 )
 
-#We use a callback to trigger the creation of the table if they don't exist yet
-#When the API is starting
+# Au démarrage de l'API, on crée les tables si elles n'existent pas encore
 @app.on_event('startup')
 def on_startup():
     init_db()

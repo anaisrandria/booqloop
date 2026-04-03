@@ -1,13 +1,13 @@
-from fastapi import APIRouter, HTTPException, Response
+from fastapi import APIRouter, HTTPException, Response, Request
 from sqlmodel import Session
 from api.models import User, UserCreate, UserLogin
 from api.security import set_auth_cookie
-from api.services import engine, get_password_hash, create_access_token, get_user_by_email, verify_password
+from api.services import get_password_hash, create_access_token, get_user_by_email, verify_password, get_engine
 
 router = APIRouter(prefix='/auth', tags=['users'])
 
 @router.post('/register', response_model=dict)
-def register(user_data: UserCreate, response: Response):
+def register(user_data: UserCreate, request: Request, response: Response):
     """
     Crée un nouveau compte utilisateur et ouvre une session.
 
@@ -24,7 +24,7 @@ def register(user_data: UserCreate, response: Response):
     Returns:
         Un message de confirmation.
     """
-    with Session(engine) as session:
+    with Session(get_engine(request)) as session:
         user = get_user_by_email(session, user_data.email)
         if user:
             raise HTTPException(status_code=400, detail="User already exists")
@@ -40,7 +40,7 @@ def register(user_data: UserCreate, response: Response):
         return {"message": "Inscription réussie"}
 
 @router.post('/login', response_model=dict)
-def login(user_data: UserLogin, response: Response):
+def login(user_data: UserLogin, request: Request, response: Response):
     """
     Authentifie un utilisateur et ouvre une session.
 
@@ -57,7 +57,7 @@ def login(user_data: UserLogin, response: Response):
     Returns:
         Un message de confirmation.
     """
-    with Session(engine) as session:
+    with Session(get_engine(request)) as session:
         user = get_user_by_email(session, user_data.email)
         if not user or not verify_password(user_data.password, user.hashed_password):
             raise HTTPException(status_code=401, detail="Invalid email and/or password")
