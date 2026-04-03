@@ -25,8 +25,7 @@ const ContactButtons = ({ isMobile, bookId }: ContactButtonsProps) => {
 
       await sendMessage(
         response.id,
-        userId,
-        'Bonjour ! Je souhaiterais emprunter ce livre.',
+        'Bonjour ! Je souhaite emprunter ce livre. Est-il disponible ?',
       );
     } catch (error) {
       console.error(error);
@@ -65,10 +64,9 @@ const ContactButtons = ({ isMobile, bookId }: ContactButtonsProps) => {
       </Button>
       {!isLoggedIn && (
         <Button
-          variant='contained'
+          variant='outlined'
           color='primary'
           sx={{
-            backgroundColor: 'black',
             textTransform: 'none',
             borderRadius: '10px',
             width: '100%',

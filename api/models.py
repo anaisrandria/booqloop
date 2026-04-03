@@ -76,7 +76,6 @@ class Book(BookBase, table=True):
     reviews: List["Review"] = Relationship(back_populates="book")
 
 class BookCreate(BookBase):
-    user_id: int
     category_id: Optional[int] = None
     availability_status_id: Optional[int] = None
 
@@ -112,7 +111,7 @@ class Conversation(SQLModel, table=True):
     # Relations
     borrower: User = Relationship(back_populates="conversations")
     book: Book = Relationship(back_populates="conversations")
-    messages: List["Message"] = Relationship(back_populates="conversation")
+    messages: List["Message"] = Relationship(back_populates="conversation", sa_relationship_kwargs={"cascade": "all, delete-orphan"})
     statuses: List["ConversationStatus"] = Relationship(back_populates="conversation")
 
 class ConversationCreate(SQLModel):

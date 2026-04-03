@@ -25,8 +25,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=['http://localhost:3000', 'http://localhost:3001'],
     allow_credentials=True,
-    allow_methods=['*'],
-    allow_headers=['*'],
+    allow_methods=['*'], # TODO: add restrictions
+    allow_headers=['*'], # TODO: add restrictions
 )
 
 # Au démarrage de l'API, on crée les tables si elles n'existent pas encore

@@ -1,6 +1,5 @@
 "use client";
 
-import { useAuth } from "@/hooks/useAuth";
 import addBook from "@/lib/services/books/addBook";
 import {
   Alert,
@@ -19,14 +18,13 @@ import { Category } from "@/app/types";
 
 const AddBookForm = () => {
   const router = useRouter();
-  const { userId } = useAuth();
 
   const [bookForm, setBookForm] = useState({
     title: "",
     author: "",
     description: "",
-    published_year: "",
-    category_id: "",
+    published_year: undefined as number | undefined,
+    category_id: 0,
     image_url: "",
   });
   const [categories, setCategories] = useState<Category[]>([]);
@@ -37,6 +35,9 @@ const AddBookForm = () => {
       try {
         const categoryData: Category[] = await getCategories();
         setCategories(categoryData);
+        if (categoryData.length > 0) {
+          setBookForm((prev) => ({ ...prev, category_id: categoryData[0].id }));
+        }
       } catch (err: unknown) {
         if (err instanceof Error) {
           setError(err.message);
@@ -52,31 +53,32 @@ const AddBookForm = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
-    setBookForm((prev) => ({ ...prev, [name]: value }));
+    setBookForm((prev) => ({
+      ...prev,
+      [name]:
+        name === "published_year" ? (value ? Number(value) : undefined) : value,
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (userId) {
-      const newBook: AddBookFormData = {
-        title: bookForm.title,
-        author: bookForm.author,
-        description: bookForm.description,
-        published_year: Number(bookForm.published_year),
-        category_id: Number(bookForm.category_id),
-        image_url: bookForm.image_url,
-        user_id: userId,
-        availability_status_id: 1,
-      };
-      try {
-        await addBook(newBook);
-        router.push("/home");
-      } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
+    const newBook: AddBookFormData = {
+      title: bookForm.title,
+      author: bookForm.author,
+      description: bookForm.description,
+      published_year: bookForm.published_year,
+      category_id: bookForm.category_id,
+      image_url: bookForm.image_url,
+      availability_status_id: 1,
+    };
+    try {
+      await addBook(newBook);
+      router.push("/home");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
       }
     }
   };
@@ -124,7 +126,6 @@ const AddBookForm = () => {
             size="small"
             type="search"
           />
-
           <TextField
             label="Auteur·ice"
             name="author"
@@ -135,7 +136,6 @@ const AddBookForm = () => {
             size="small"
             type="search"
           />
-
           <TextField
             label="Description"
             name="description"
@@ -148,17 +148,15 @@ const AddBookForm = () => {
             size="small"
             type="search"
           />
-
           <TextField
             label="Année de publication"
             name="published_year"
-            value={bookForm.published_year}
+            value={bookForm.published_year ?? ""}
             onChange={handleChange}
             fullWidth
             size="small"
             type="search"
           />
-
           <TextField
             select
             label="Catégorie"
@@ -168,7 +166,6 @@ const AddBookForm = () => {
             required
             fullWidth
             size="small"
-            type="search"
           >
             {categories.map((cat) => (
               <MenuItem key={cat.id} value={cat.id}>
@@ -176,20 +173,15 @@ const AddBookForm = () => {
               </MenuItem>
             ))}
           </TextField>
-
           <TextField
             label="URL de l'image"
             name="image_url"
-            id="image-url"
             value={bookForm.image_url}
-            onChange={(e) => {
-              handleChange(e);
-            }}
+            onChange={handleChange}
             size="small"
             type="search"
             fullWidth
           />
-
           <Button
             type="submit"
             variant="contained"
@@ -202,7 +194,6 @@ const AddBookForm = () => {
           >
             {"Ajouter à ma bibliothèque"}
           </Button>
-
           {error && (
             <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
               {error}
