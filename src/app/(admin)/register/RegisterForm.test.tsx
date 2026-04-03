@@ -109,8 +109,9 @@ describe("RegisterForm - interactions utilisateur", () => {
 
   it("appelle registerUser avec les bonnes données au clic sur Créer un compte", async () => {
     (registerUser as jest.Mock).mockResolvedValue({
-      access_token: "fake-token",
+      message: "Inscription réussie",
     });
+    loginMock.mockResolvedValue(undefined);
     render(<RegisterForm />);
 
     fireEvent.change(screen.getByLabelText(/nom d'utilisateur/i), {
@@ -159,23 +160,34 @@ describe("RegisterForm - inscription réussie", () => {
     jest.clearAllMocks();
   });
 
-  it("appelle login avec le bon token après une inscription réussie", async () => {
+  it("appelle login avec email et password après une inscription réussie", async () => {
     (registerUser as jest.Mock).mockResolvedValue({
-      access_token: "fake-token",
+      message: "Inscription réussie",
     });
+    loginMock.mockResolvedValue(undefined);
     render(<RegisterForm />);
 
+    fireEvent.change(screen.getByLabelText(/email/i), {
+      target: { name: "email", value: "test@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText(/mot de passe/i), {
+      target: { name: "password", value: "monmotdepasse" },
+    });
     fireEvent.click(screen.getByText(/créer un compte/i));
 
     await waitFor(() => {
-      expect(loginMock).toHaveBeenCalledWith("fake-token");
+      expect(loginMock).toHaveBeenCalledWith(
+        "test@example.com",
+        "monmotdepasse",
+      );
     });
   });
 
   it("redirige vers /home après une inscription réussie", async () => {
     (registerUser as jest.Mock).mockResolvedValue({
-      access_token: "fake-token",
+      message: "Inscription réussie",
     });
+    loginMock.mockResolvedValue(undefined);
     render(<RegisterForm />);
 
     fireEvent.click(screen.getByText(/créer un compte/i));

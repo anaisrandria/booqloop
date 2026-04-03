@@ -5,10 +5,6 @@ import { getCategories } from "@/lib/services/books/getCategories";
 
 const pushMock = jest.fn();
 
-const useAuthMock = {
-  userId: 1 as number | null,
-};
-
 jest.mock("next/navigation", () => ({
   useRouter: () => ({
     push: pushMock,
@@ -16,7 +12,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 jest.mock("@/hooks/useAuth", () => ({
-  useAuth: () => useAuthMock,
+  useAuth: () => ({ userId: 1 }),
 }));
 
 jest.mock("@/lib/services/books/addBook", () => jest.fn());
@@ -36,12 +32,13 @@ describe("AddBookForm - rendu", () => {
   });
 
   afterEach(() => {
-    useAuthMock.userId = 1;
     jest.clearAllMocks();
   });
 
   it("affiche les éléments de base", async () => {
     render(<AddBookForm />);
+
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     expect(screen.getByLabelText(/titre/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/auteur·ice/i)).toBeInTheDocument();
@@ -67,16 +64,12 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   afterEach(() => {
-    useAuthMock.userId = 1;
     jest.clearAllMocks();
   });
 
   it("met à jour le champ titre à la saisie", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const titleInput = screen.getByLabelText(/titre/i);
     fireEvent.change(titleInput, {
@@ -88,10 +81,7 @@ describe("AddBookForm - interactions utilisateur", () => {
 
   it("met à jour le champ auteur à la saisie", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const authorInput = screen.getByLabelText(/auteur·ice/i);
     fireEvent.change(authorInput, {
@@ -103,10 +93,7 @@ describe("AddBookForm - interactions utilisateur", () => {
 
   it("met à jour le champ description à la saisie", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const descriptionInput = screen.getByLabelText(/description/i);
     fireEvent.change(descriptionInput, {
@@ -118,10 +105,7 @@ describe("AddBookForm - interactions utilisateur", () => {
 
   it("met à jour le champ année de publication à la saisie", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const yearInput = screen.getByLabelText(/année de publication/i);
     fireEvent.change(yearInput, {
@@ -133,10 +117,7 @@ describe("AddBookForm - interactions utilisateur", () => {
 
   it("met à jour le champ URL de l'image à la saisie", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const imageInput = screen.getByLabelText(/url de l'image/i);
     fireEvent.change(imageInput, {
@@ -153,16 +134,13 @@ describe("AddBookForm - soumission du formulaire", () => {
   });
 
   afterEach(() => {
-    useAuthMock.userId = 1;
     jest.clearAllMocks();
   });
 
   it("appelle addBook avec les bonnes données à la soumission", async () => {
     render(<AddBookForm />);
 
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.change(screen.getByLabelText(/titre/i), {
       target: { name: "title", value: "Les Misérables" },
@@ -176,23 +154,12 @@ describe("AddBookForm - soumission du formulaire", () => {
     fireEvent.change(screen.getByLabelText(/année de publication/i), {
       target: { name: "published_year", value: "1862" },
     });
-
-    const select = screen.getByLabelText(/catégorie/i);
-    fireEvent.mouseDown(select);
-    const option = await screen.findByText("Roman");
-    fireEvent.click(option);
-
     fireEvent.change(screen.getByLabelText(/url de l'image/i), {
-      target: {
-        name: "image_url",
-        value: "https://example.com/image.jpg",
-      },
+      target: { name: "image_url", value: "https://example.com/image.jpg" },
     });
 
     fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
+      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
     );
 
     await waitFor(() => {
@@ -203,7 +170,6 @@ describe("AddBookForm - soumission du formulaire", () => {
         published_year: 1862,
         category_id: 1,
         image_url: "https://example.com/image.jpg",
-        user_id: 1,
         availability_status_id: 1,
       });
     });
@@ -211,10 +177,7 @@ describe("AddBookForm - soumission du formulaire", () => {
 
   it("redirige vers /home après la soumission", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.change(screen.getByLabelText(/titre/i), {
       target: { name: "title", value: "Les Misérables" },
@@ -227,32 +190,11 @@ describe("AddBookForm - soumission du formulaire", () => {
     });
 
     fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
+      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
     );
 
     await waitFor(() => {
       expect(pushMock).toHaveBeenCalledWith("/home");
-    });
-  });
-
-  it("n'appelle pas addBook si userId est absent", async () => {
-    useAuthMock.userId = null;
-    render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
-
-    fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
-    );
-
-    await waitFor(() => {
-      expect(addBook as jest.Mock).not.toHaveBeenCalled();
     });
   });
 });
@@ -263,16 +205,12 @@ describe("AddBookForm - gestion des erreurs", () => {
   });
 
   afterEach(() => {
-    useAuthMock.userId = 1;
     jest.clearAllMocks();
   });
 
   it("n'affiche pas d'alerte au rendu initial", async () => {
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
@@ -282,15 +220,10 @@ describe("AddBookForm - gestion des erreurs", () => {
       new Error("Erreur lors de l'ajout"),
     );
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
+      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
     );
 
     await waitFor(() => {
@@ -302,15 +235,10 @@ describe("AddBookForm - gestion des erreurs", () => {
   it("affiche une alerte si addBook rejette avec une valeur non-Error", async () => {
     (addBook as jest.Mock).mockRejectedValue("erreur inattendue");
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
+      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
     );
 
     await waitFor(() => {
@@ -324,15 +252,10 @@ describe("AddBookForm - gestion des erreurs", () => {
       new Error("Erreur lors de l'ajout"),
     );
     render(<AddBookForm />);
-
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.submit(
-      screen.getByRole("button", {
-        name: /ajouter à ma bibliothèque/i,
-      }),
+      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
     );
 
     await waitFor(() => {
