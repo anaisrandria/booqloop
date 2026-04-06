@@ -9,7 +9,7 @@ const AddBook = () => {
   const router = useRouter();
   const handleSubmit = async (data: BookFormData) => {
     await addBook(data);
-    router.push("/home");
+    router.push("/profile");
   };
 
   return (

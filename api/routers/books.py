@@ -4,6 +4,7 @@ from sqlalchemy.orm import selectinload
 from api.models import Book, BookCreate, BookCategory, BookDetailRead, BookRead, User
 from api.security import get_current_user
 from api.services import get_engine
+from datetime import datetime
 
 router = APIRouter(prefix='/books', tags=['books'])   
 
@@ -113,3 +114,40 @@ def get_categories(request: Request):
     """
     with Session(get_engine(request)) as session:
         return session.exec(select(BookCategory)).all()
+
+@router.put('/{book_id}')
+def update_book(book_id: int, book: BookCreate, request: Request, user_id: int = Depends(get_current_user)):
+    """
+    Met à jour un livre existant.
+
+    Args:
+        book_id: L'identifiant du livre à modifier.
+        book: Les nouvelles données du livre.
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Raises:
+        HTTPException 404: Si le livre n'existe pas.
+        HTTPException 403: Si l'utilisateur n'est pas le propriétaire du livre.
+
+    Returns:
+        Le livre mis à jour.
+    """
+    with Session(get_engine(request)) as session:
+        existing_book = session.get(Book, book_id)
+        if not existing_book:
+            raise HTTPException(status_code=404, detail="Book not found")
+        if existing_book.user_id != user_id:
+            raise HTTPException(status_code=403, detail="Not allowed")
+
+        existing_book.title = book.title
+        existing_book.author = book.author
+        existing_book.description = book.description
+        existing_book.published_year = book.published_year
+        existing_book.image_url = book.image_url
+        existing_book.category_id = book.category_id
+        existing_book.updated_at = datetime.utcnow()
+
+        session.add(existing_book)
+        session.commit()
+        session.refresh(existing_book)
+        return existing_book

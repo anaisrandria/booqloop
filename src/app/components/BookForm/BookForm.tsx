@@ -36,19 +36,30 @@ const BookForm = ({
       try {
         const categoryData: Category[] = await getCategories();
         setCategories(categoryData);
-        if (categoryData.length > 0) {
+        if (categoryData.length > 0 && !initialData) {
+          // ← ajoute && !initialData
           setBookForm((prev) => ({ ...prev, category_id: categoryData[0].id }));
         }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
+        if (err instanceof Error) setError(err.message);
+        else setError(String(err));
       }
     };
     loadCategories();
-  }, []);
+  }, [initialData]);
+
+  useEffect(() => {
+    if (initialData) {
+      setBookForm({
+        title: initialData.title ?? "",
+        author: initialData.author ?? "",
+        description: initialData.description ?? "",
+        published_year: initialData.published_year ?? undefined,
+        category_id: initialData.category_id ?? 0,
+        image_url: initialData.image_url ?? "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
