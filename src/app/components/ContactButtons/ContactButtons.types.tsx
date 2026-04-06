@@ -1,4 +1,4 @@
-export interface ContactButtonsProps {
+export type ContactButtonsProps = {
   isMobile: boolean;
   bookId: number;
-}
+};

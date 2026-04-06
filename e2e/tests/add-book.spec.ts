@@ -10,7 +10,7 @@ test.beforeEach(async ({ page }) => {
 });
 
 test('ajout d\'un livre redirige vers /home', async ({ page }) => {
-  await page.goto('/add-book');
+  await page.goto('/profile');
 
   await page.getByLabel('Titre').fill('Le Seigneur des Anneaux');
   await page.getByLabel('Auteur·ice').fill('J.R.R. Tolkien');
@@ -28,7 +28,7 @@ test('ajout d\'un livre redirige vers /home', async ({ page }) => {
 });
 
 test('ajout d\'un livre échoue sans titre', async ({ page }) => {
-  await page.goto('/add-book');
+  await page.goto('/profile');
 
   // On ne remplit pas le titre (champ required)
   await page.getByLabel('Auteur·ice').fill('J.R.R. Tolkien');
@@ -37,5 +37,5 @@ test('ajout d\'un livre échoue sans titre', async ({ page }) => {
   await page.getByRole('button', { name: 'Ajouter à ma bibliothèque' }).click();
 
   // Le formulaire HTML natif bloque la soumission — on reste sur la page
-  await expect(page).toHaveURL('/add-book');
+  await expect(page).toHaveURL('/profile');
 });

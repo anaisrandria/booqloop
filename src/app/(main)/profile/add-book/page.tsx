@@ -1,6 +1,4 @@
-'use client';
-
-import AddBookForm from './AddBookForm';
+import AddBookForm from "./AddBookForm";
 
 const AddBook = () => {
   return <AddBookForm />;

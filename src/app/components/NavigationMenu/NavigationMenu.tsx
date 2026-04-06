@@ -28,9 +28,9 @@ const NavigationMenu = () => {
         variant="text"
         color="inherit"
         sx={{ textTransform: "none" }}
-        onClick={() => router.push("/add-book")}
+        onClick={() => router.push("/profile")}
       >
-        {"Ajouter un livre"}
+        {"Ma bibliothèque"}
       </Button>
       <Button
         variant="text"

@@ -1,4 +1,4 @@
-import { AddBookFormData } from '../../../app/(main)/(profile)/add-book/AddBookForm.types';
+import { AddBookFormData } from '../../../app/(main)/profile/add-book/AddBookForm.types';
 import { getDefaultOptions } from '../utils';
 
 const addBook = async (data: AddBookFormData) => {

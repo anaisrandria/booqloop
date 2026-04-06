@@ -59,6 +59,25 @@ def get_books(
             statement = statement.where(Book.user.has(User.postal_code == postal_code))
         return session.exec(statement).all()
 
+@router.get('/user/me', response_model=list[BookRead])
+def get_user_books(request: Request, user_id: int = Depends(get_current_user)):
+    """
+    Retourne tous les livres de l'utilisateur connecté.
+
+    Args:
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Returns:
+        La liste des livres appartenant à l'utilisateur connecté.
+    """
+    with Session(get_engine(request)) as session:
+        statement = (
+            select(Book)
+            .where(Book.user_id == user_id)
+            .options(selectinload(Book.user))
+        )
+        return session.exec(statement).all()
+
 @router.get("/{book_id}", response_model=BookDetailRead)
 def get_book(book_id: int, request: Request):
     """
