@@ -1,21 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import AddBookForm from "./AddBookForm";
-import addBook from "@/lib/services/books/addBook";
+import BookForm from "./BookForm";
 import { getCategories } from "@/lib/services/books/getCategories";
-
-const pushMock = jest.fn();
-
-jest.mock("next/navigation", () => ({
-  useRouter: () => ({
-    push: pushMock,
-  }),
-}));
-
-jest.mock("@/hooks/useAuth", () => ({
-  useAuth: () => ({ userId: 1 }),
-}));
-
-jest.mock("@/lib/services/books/addBook", () => jest.fn());
 
 jest.mock("@/lib/services/books/getCategories", () => ({
   getCategories: jest.fn(),
@@ -26,7 +11,9 @@ const mockCategories = [
   { id: 2, name: "Science-fiction" },
 ];
 
-describe("AddBookForm - rendu", () => {
+const mockOnSubmit = jest.fn();
+
+describe("BookForm - rendu", () => {
   beforeEach(() => {
     (getCategories as jest.Mock).mockResolvedValue(mockCategories);
   });
@@ -36,7 +23,13 @@ describe("AddBookForm - rendu", () => {
   });
 
   it("affiche les éléments de base", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
 
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
@@ -50,15 +43,19 @@ describe("AddBookForm - rendu", () => {
   });
 
   it("charge et affiche les catégories", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
 
-    await waitFor(() => {
-      expect(getCategories).toHaveBeenCalled();
-    });
+    await waitFor(() => expect(getCategories).toHaveBeenCalled());
   });
 });
 
-describe("AddBookForm - interactions utilisateur", () => {
+describe("BookForm - interactions utilisateur", () => {
   beforeEach(() => {
     (getCategories as jest.Mock).mockResolvedValue(mockCategories);
   });
@@ -68,7 +65,13 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   it("met à jour le champ titre à la saisie", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const titleInput = screen.getByLabelText(/titre/i);
@@ -80,7 +83,13 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   it("met à jour le champ auteur à la saisie", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const authorInput = screen.getByLabelText(/auteur·ice/i);
@@ -92,7 +101,13 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   it("met à jour le champ description à la saisie", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const descriptionInput = screen.getByLabelText(/description/i);
@@ -104,7 +119,13 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   it("met à jour le champ année de publication à la saisie", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const yearInput = screen.getByLabelText(/année de publication/i);
@@ -116,7 +137,13 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 
   it("met à jour le champ URL de l'image à la saisie", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     const imageInput = screen.getByLabelText(/url de l'image/i);
@@ -128,17 +155,24 @@ describe("AddBookForm - interactions utilisateur", () => {
   });
 });
 
-describe("AddBookForm - soumission du formulaire", () => {
+describe("BookForm - soumission du formulaire", () => {
   beforeEach(() => {
     (getCategories as jest.Mock).mockResolvedValue(mockCategories);
+    mockOnSubmit.mockResolvedValue(undefined);
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it("appelle addBook avec les bonnes données à la soumission", async () => {
-    render(<AddBookForm />);
+  it("appelle onSubmit avec les bonnes données à la soumission", async () => {
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
 
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
@@ -163,7 +197,7 @@ describe("AddBookForm - soumission du formulaire", () => {
     );
 
     await waitFor(() => {
-      expect(addBook).toHaveBeenCalledWith({
+      expect(mockOnSubmit).toHaveBeenCalledWith({
         title: "Les Misérables",
         author: "Victor Hugo",
         description: "Un grand roman.",
@@ -174,32 +208,9 @@ describe("AddBookForm - soumission du formulaire", () => {
       });
     });
   });
-
-  it("redirige vers /home après la soumission", async () => {
-    render(<AddBookForm />);
-    await waitFor(() => expect(getCategories).toHaveBeenCalled());
-
-    fireEvent.change(screen.getByLabelText(/titre/i), {
-      target: { name: "title", value: "Les Misérables" },
-    });
-    fireEvent.change(screen.getByLabelText(/auteur·ice/i), {
-      target: { name: "author", value: "Victor Hugo" },
-    });
-    fireEvent.change(screen.getByLabelText(/description/i), {
-      target: { name: "description", value: "Un grand roman." },
-    });
-
-    fireEvent.submit(
-      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
-    );
-
-    await waitFor(() => {
-      expect(pushMock).toHaveBeenCalledWith("/home");
-    });
-  });
 });
 
-describe("AddBookForm - gestion des erreurs", () => {
+describe("BookForm - gestion des erreurs", () => {
   beforeEach(() => {
     (getCategories as jest.Mock).mockResolvedValue(mockCategories);
   });
@@ -209,17 +220,28 @@ describe("AddBookForm - gestion des erreurs", () => {
   });
 
   it("n'affiche pas d'alerte au rendu initial", async () => {
-    render(<AddBookForm />);
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 
-  it("affiche une alerte si addBook rejette avec une Error", async () => {
-    (addBook as jest.Mock).mockRejectedValue(
-      new Error("Erreur lors de l'ajout"),
+  it("affiche une alerte si onSubmit rejette avec une Error", async () => {
+    mockOnSubmit.mockRejectedValue(new Error("Erreur lors de l'ajout"));
+
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
     );
-    render(<AddBookForm />);
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.submit(
@@ -232,9 +254,16 @@ describe("AddBookForm - gestion des erreurs", () => {
     });
   });
 
-  it("affiche une alerte si addBook rejette avec une valeur non-Error", async () => {
-    (addBook as jest.Mock).mockRejectedValue("erreur inattendue");
-    render(<AddBookForm />);
+  it("affiche une alerte si onSubmit rejette avec une valeur non-Error", async () => {
+    mockOnSubmit.mockRejectedValue("erreur inattendue");
+
+    render(
+      <BookForm
+        title="Ajouter un livre"
+        submitLabel="Ajouter à ma bibliothèque"
+        onSubmit={mockOnSubmit}
+      />,
+    );
     await waitFor(() => expect(getCategories).toHaveBeenCalled());
 
     fireEvent.submit(
@@ -244,22 +273,6 @@ describe("AddBookForm - gestion des erreurs", () => {
     await waitFor(() => {
       expect(screen.getByRole("alert")).toBeInTheDocument();
       expect(screen.getByText(/erreur inattendue/i)).toBeInTheDocument();
-    });
-  });
-
-  it("ne redirige pas vers /home en cas d'erreur", async () => {
-    (addBook as jest.Mock).mockRejectedValue(
-      new Error("Erreur lors de l'ajout"),
-    );
-    render(<AddBookForm />);
-    await waitFor(() => expect(getCategories).toHaveBeenCalled());
-
-    fireEvent.submit(
-      screen.getByRole("button", { name: /ajouter à ma bibliothèque/i }),
-    );
-
-    await waitFor(() => {
-      expect(pushMock).not.toHaveBeenCalled();
     });
   });
 });
