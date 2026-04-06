@@ -1,7 +1,7 @@
 import BookGrid from "@/app/components/BookGrid/BookGrid";
 import { Book } from "@/app/types";
 import { getUserBooks } from "@/lib/services/books/getUserBooks";
-import { Button, Container, Stack } from "@mui/material";
+import { Container, Stack } from "@mui/material";
 import { useEffect, useState } from "react";
 
 const Profile = () => {
