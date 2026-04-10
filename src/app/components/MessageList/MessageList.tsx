@@ -19,34 +19,35 @@ const MessageList = ({ messages, currentUserId }: Props) => {
         padding: '1rem',
         overflow: 'auto',
         height: '60vh',
+        flex: 1,
       }}
     >
-      {messages?.map((message) => (
-        <div
-          key={message.id}
-          style={{
-            marginBottom: '0.5rem',
-            textAlign:
-              message.sender_id === Number(currentUserId) ? 'right' : 'left',
-          }}
-        >
-          <span
+      {messages?.map((message) => {
+        const isCurrentUserSender = message.sender_id === Number(currentUserId);
+        return (
+          <Stack
+            key={message.id}
             style={{
-              padding: '0.5rem 1rem',
-              borderRadius: '12px',
-              background:
-                message.sender_id === Number(currentUserId)
-                  ? '#1976d2'
-                  : '#e0e0e0',
-              color:
-                message.sender_id === Number(currentUserId) ? 'white' : 'black',
-              display: 'inline-block',
+              marginBottom: '0.5rem',
+              alignItems: isCurrentUserSender ? 'flex-end' : 'flex-start',
             }}
           >
-            {message.content}
-          </span>
-        </div>
-      ))}
+            <span
+              style={{
+                padding: '0.5rem 1rem',
+                borderRadius: '12px',
+                background: isCurrentUserSender ? '#1976d2' : '#e0e0e0',
+                color: isCurrentUserSender ? 'white' : 'black',
+                display: 'inline-block',
+                maxWidth: '75%',
+                wordBreak: 'break-word',
+              }}
+            >
+              {message.content}
+            </span>
+          </Stack>
+        );
+      })}
     </Stack>
   );
 };
