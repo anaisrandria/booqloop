@@ -1,6 +1,5 @@
 "use client";
 
-import addBook from "@/lib/services/books/addBook";
 import {
   Alert,
   Box,
@@ -11,21 +10,23 @@ import {
   TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { AddBookFormData } from "./AddBookForm.types";
-import { useRouter } from "next/navigation";
+import { BookFormData, BookFormProps } from "./BookForm.types";
 import { getCategories } from "@/lib/services/books/getCategories";
 import { Category } from "@/app/types";
 
-const AddBookForm = () => {
-  const router = useRouter();
-
+const BookForm = ({
+  initialData,
+  onSubmit,
+  submitLabel,
+  title,
+}: BookFormProps) => {
   const [bookForm, setBookForm] = useState({
-    title: "",
-    author: "",
-    description: "",
-    published_year: undefined as number | undefined,
-    category_id: 0,
-    image_url: "",
+    title: initialData?.title ?? "",
+    author: initialData?.author ?? "",
+    description: initialData?.description ?? "",
+    published_year: initialData?.published_year ?? undefined,
+    category_id: initialData?.category_id ?? 0,
+    image_url: initialData?.image_url ?? "",
   });
   const [categories, setCategories] = useState<Category[]>([]);
   const [error, setError] = useState<string>();
@@ -35,19 +36,29 @@ const AddBookForm = () => {
       try {
         const categoryData: Category[] = await getCategories();
         setCategories(categoryData);
-        if (categoryData.length > 0) {
+        if (categoryData.length > 0 && !initialData) {
           setBookForm((prev) => ({ ...prev, category_id: categoryData[0].id }));
         }
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError(String(err));
-        }
+        if (err instanceof Error) setError(err.message);
+        else setError(String(err));
       }
     };
     loadCategories();
-  }, []);
+  }, [initialData]);
+
+  useEffect(() => {
+    if (initialData) {
+      setBookForm({
+        title: initialData.title ?? "",
+        author: initialData.author ?? "",
+        description: initialData.description ?? "",
+        published_year: initialData.published_year ?? undefined,
+        category_id: initialData.category_id ?? 0,
+        image_url: initialData.image_url ?? "",
+      });
+    }
+  }, [initialData]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -62,7 +73,7 @@ const AddBookForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newBook: AddBookFormData = {
+    const data: BookFormData = {
       title: bookForm.title,
       author: bookForm.author,
       description: bookForm.description,
@@ -72,14 +83,10 @@ const AddBookForm = () => {
       availability_status_id: 1,
     };
     try {
-      await addBook(newBook);
-      router.push("/home");
+      await onSubmit(data);
     } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError(String(err));
-      }
+      if (err instanceof Error) setError(err.message);
+      else setError(String(err));
     }
   };
 
@@ -102,7 +109,7 @@ const AddBookForm = () => {
           fontSize: "20px",
         }}
       >
-        {"Ajouter un livre"}
+        {title}
       </Stack>
 
       <Box
@@ -192,7 +199,7 @@ const AddBookForm = () => {
               borderRadius: "5px",
             }}
           >
-            {"Ajouter à ma bibliothèque"}
+            {submitLabel}
           </Button>
           {error && (
             <Alert variant="filled" severity="error" sx={{ marginTop: 1 }}>
@@ -205,4 +212,4 @@ const AddBookForm = () => {
   );
 };
 
-export default AddBookForm;
+export default BookForm;

@@ -1,9 +1,9 @@
-import { Button, Drawer, IconButton, Stack, Typography } from '@mui/material';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import { MenuDrawerProps } from './MenuDrawer.types';
-import { useAuth } from '@/hooks/useAuth';
-import { useRouter } from 'next/navigation';
-import Image from 'next/image';
+import { Button, Drawer, IconButton, Stack, Typography } from "@mui/material";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { MenuDrawerProps } from "./MenuDrawer.types";
+import { useAuth } from "@/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
   const router = useRouter();
@@ -13,20 +13,20 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
     <Drawer open={isMenuOpen} onClose={toggleOpenMenu(false)}>
       <Stack
         sx={{
-          width: '100vw',
-          height: '100%',
-          backgroundColor: '#F7F2EC',
+          width: "100vw",
+          height: "100%",
+          backgroundColor: "#F7F2EC",
         }}
       >
-        <Stack sx={{ alignItems: 'center' }}>
+        <Stack sx={{ alignItems: "center" }}>
           <Stack
-            direction='row'
-            alignItems='center'
-            justifyContent='flex-end'
+            direction="row"
+            alignItems="center"
+            justifyContent="flex-end"
             sx={{
-              width: '100%',
-              paddingTop: '1em',
-              paddingRight: '1em',
+              width: "100%",
+              paddingTop: "1em",
+              paddingRight: "1em",
             }}
           >
             <IconButton onClick={toggleOpenMenu(false)}>
@@ -34,13 +34,13 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
             </IconButton>
           </Stack>
           <Image
-            src='/booqloop-logo.png'
-            alt='booqloop'
+            src="/booqloop-logo.png"
+            alt="booqloop"
             width={150}
             height={34}
             priority
             onClick={() => {
-              router.push('/home');
+              router.push("/home");
               toggleOpenMenu(false)();
             }}
           />
@@ -48,72 +48,72 @@ const MenuDrawer = ({ isMenuOpen, toggleOpenMenu }: MenuDrawerProps) => {
         <Stack
           sx={{
             flexGrow: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '2em',
+            justifyContent: "center",
+            alignItems: "center",
+            gap: "2em",
           }}
         >
           {isLoggedIn ? (
             <>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
-                  router.push('/home');
+                  router.push("/home");
                   toggleOpenMenu(false)();
                 }}
               >
-                {'Accueil'}
+                {"Accueil"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
-                  router.push('/conversations');
+                  router.push("/conversations");
                   toggleOpenMenu(false)();
                 }}
               >
-                {'Messagerie'}
+                {"Messagerie"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
-                  router.push('/add-book');
+                  router.push("/profile");
                   toggleOpenMenu(false)();
                 }}
               >
-                {'Ajouter un livre'}
+                {"Ma bibliothèque"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
                   logout();
-                  router.push('/');
+                  router.push("/");
                   toggleOpenMenu(false)();
                 }}
               >
-                {'Déconnexion'}
+                {"Déconnexion"}
               </Button>
             </>
           ) : (
             <>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
-                  router.push('/login');
+                  router.push("/login");
                   toggleOpenMenu(false)();
                 }}
               >
-                {'Se connecter'}
+                {"Se connecter"}
               </Button>
               <Button
-                variant='text'
-                color='inherit'
+                variant="text"
+                color="inherit"
                 onClick={() => {
-                  router.push('/register');
+                  router.push("/register");
                   toggleOpenMenu(false)();
                 }}
               >

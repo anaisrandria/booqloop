@@ -1,7 +1,7 @@
-import { AddBookFormData } from '../../../app/(main)/(profile)/add-book/AddBookForm.types';
+import { BookFormData } from "@/app/components/BookForm/BookForm.types";
 import { getDefaultOptions } from '../utils';
 
-const addBook = async (data: AddBookFormData) => {
+const addBook = async (data: BookFormData) => {
   const url = `${process.env.NEXT_PUBLIC_API_URL}/books/`;
   const res = await fetch(url, getDefaultOptions('POST', data));
   console.log(data);

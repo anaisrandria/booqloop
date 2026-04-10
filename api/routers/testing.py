@@ -3,7 +3,7 @@ import binascii
 from fastapi import APIRouter
 from sqlmodel import SQLModel, Session
 from api.services import test_engine, get_password_hash
-from api.models import User, BookCategory, BookAvailability
+from api.models import User, Book, BookCategory, BookAvailability
 from sqlalchemy import text
 
 router = APIRouter(prefix="/_testing", tags=["testing"])
@@ -16,7 +16,6 @@ def make_password(plain: str) -> str:
 def reset_db():
     SQLModel.metadata.drop_all(test_engine)
     SQLModel.metadata.create_all(test_engine)
-    # Remet les séquences à 1
     with Session(test_engine) as session:
         session.exec(text("ALTER SEQUENCE users_id_seq RESTART WITH 1"))
         session.exec(text("ALTER SEQUENCE books_id_seq RESTART WITH 1"))
@@ -64,6 +63,20 @@ def seed_db():
             hashed_password=make_password("password123"),
         )
         session.add(borrower)
+
+        session.flush()
+
+        book = Book(
+            title="Le Seigneur des Anneaux",
+            author="J.R.R. Tolkien",
+            description="Un roman fantastique épique.",
+            published_year=1954,
+            image_url="https://example.com/image.jpg",
+            user_id=owner.id,
+            category_id=1,
+            availability_status_id=1,
+        )
+        session.add(book)
 
         session.commit()
 

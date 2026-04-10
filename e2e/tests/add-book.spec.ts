@@ -9,8 +9,8 @@ test.beforeEach(async ({ page }) => {
   await expect(page).toHaveURL('/home');
 });
 
-test('ajout d\'un livre redirige vers /home', async ({ page }) => {
-  await page.goto('/add-book');
+test('ajout d\'un livre redirige vers /profile', async ({ page }) => {
+  await page.goto('/profile/add-book');
 
   await page.getByLabel('Titre').fill('Le Seigneur des Anneaux');
   await page.getByLabel('Auteur·ice').fill('J.R.R. Tolkien');
@@ -18,24 +18,21 @@ test('ajout d\'un livre redirige vers /home', async ({ page }) => {
   await page.getByLabel('Année de publication').fill('1954');
   await page.getByLabel("URL de l'image").fill('https://example.com/image.jpg');
 
-  // Sélectionne la première catégorie disponible (seedée : Roman)
   await page.getByLabel('Catégorie').click();
   await page.getByRole('option').first().click();
 
   await page.getByRole('button', { name: 'Ajouter à ma bibliothèque' }).click();
 
-  await expect(page).toHaveURL('/home');
+  await expect(page).toHaveURL('/profile');
 });
 
 test('ajout d\'un livre échoue sans titre', async ({ page }) => {
-  await page.goto('/add-book');
+  await page.goto('/profile/add-book');
 
-  // On ne remplit pas le titre (champ required)
   await page.getByLabel('Auteur·ice').fill('J.R.R. Tolkien');
   await page.getByLabel('Description').fill('Un roman fantastique épique.');
 
   await page.getByRole('button', { name: 'Ajouter à ma bibliothèque' }).click();
 
-  // Le formulaire HTML natif bloque la soumission — on reste sur la page
-  await expect(page).toHaveURL('/add-book');
+  await expect(page).toHaveURL('/profile/add-book');
 });
