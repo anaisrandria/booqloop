@@ -7,6 +7,7 @@ const BookCard = ({ book }: BookCardProps) => {
   return (
     book && (
       <Stack
+        data-testid="book-card"
         spacing={1}
         sx={{
           cursor: "pointer",

@@ -37,7 +37,6 @@ const BookForm = ({
         const categoryData: Category[] = await getCategories();
         setCategories(categoryData);
         if (categoryData.length > 0 && !initialData) {
-          // ← ajoute && !initialData
           setBookForm((prev) => ({ ...prev, category_id: categoryData[0].id }));
         }
       } catch (err: unknown) {

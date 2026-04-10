@@ -6,6 +6,7 @@ import {
 } from "../../../lib/services/conversations";
 import { useAuth } from "../../../hooks/useAuth";
 import { useRouter } from "next/navigation";
+import { deleteBook } from "@/lib/services/books/deleteBook";
 
 const ContactButtons = ({
   isMobile,
@@ -33,6 +34,15 @@ const ContactButtons = ({
         response.id,
         "Bonjour ! Je souhaite emprunter ce livre. Est-il disponible ?",
       );
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteBook(bookId);
+      router.push("/profile");
     } catch (error) {
       console.error(error);
     }
@@ -78,7 +88,7 @@ const ContactButtons = ({
               width: "100%",
               flex: 1,
             }}
-            onClick={() => {}}
+            onClick={handleDelete}
           >
             {"Supprimer"}
           </Button>

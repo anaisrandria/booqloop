@@ -151,3 +151,30 @@ def update_book(book_id: int, book: BookCreate, request: Request, user_id: int =
         session.commit()
         session.refresh(existing_book)
         return existing_book
+
+@router.delete('/{book_id}')
+def delete_book(book_id: int, request: Request, user_id: int = Depends(get_current_user)):
+    """
+    Supprime un livre existant.
+
+    Args:
+        book_id: L'identifiant du livre à supprimer.
+        user_id: L'identifiant de l'utilisateur connecté (extrait du cookie).
+
+    Raises:
+        HTTPException 404: Si le livre n'existe pas.
+        HTTPException 403: Si l'utilisateur n'est pas le propriétaire du livre.
+
+    Returns:
+        Un message de confirmation de suppression.
+    """
+    with Session(get_engine(request)) as session:
+        book = session.get(Book, book_id)
+        if not book:
+            raise HTTPException(status_code=404, detail="Book not found")
+        if book.user_id != user_id:
+            raise HTTPException(status_code=403, detail="Not allowed")
+
+        session.delete(book)
+        session.commit()
+        return {"message": "Book deleted successfully"}
