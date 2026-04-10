@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useMemo, useReducer, useState } from 'react';
 import {
   Button,
   Container,
@@ -8,18 +7,8 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
-import {
-  getConversationsList,
-  getMessagesList,
-} from '@/lib/services/conversations';
-import { Book } from '@/app/types';
-import { getBook } from '@/lib/services/books/getBook';
-import { getUserById, User } from '@/lib/services/users/users';
-import { useAuth } from '../../../hooks/useAuth';
-import { Conversation, Message } from './Conversations.types';
-import ConversationList from './ConversationsList';
-import ConversationContent from './ConversationContent';
-import { useSearchParams } from 'next/navigation';
+import ConversationList from '../../components/ConversationsList/ConversationsList';
+import ConversationContent from '../../components/ConversationContent/ConversationContent';
 import { useConversations } from './useConversations';
 
 const ConversationsPage = () => {

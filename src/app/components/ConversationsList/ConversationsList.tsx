@@ -1,7 +1,7 @@
 import { Box, IconButton, Stack, Typography } from '@mui/material';
-import { Conversation } from './Conversations.types';
+import { Conversation } from '../../(main)/conversations/Conversations.types';
 
-import { ConversationListProps } from './Conversations.types';
+import { ConversationListProps } from '../../(main)/conversations/Conversations.types';
 import { formatLastMessageDate } from '../../utils/formatDate';
 import { useRouter } from 'next/navigation';
 import { Delete } from '@mui/icons-material';

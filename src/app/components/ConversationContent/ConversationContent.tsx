@@ -1,7 +1,7 @@
 import { Stack, Typography } from '@mui/material';
-import MessageForm from '../../components/MessageForm/MessageForm';
-import MessageList from '../../components/MessageList/MessageList';
-import { Message } from './Conversations.types';
+import MessageForm from '../MessageForm/MessageForm';
+import MessageList from '../MessageList/MessageList';
+import { Message } from '../../(main)/conversations/Conversations.types';
 
 type ConversationContentProps = {
   messages: Message[];
