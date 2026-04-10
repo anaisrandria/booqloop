@@ -1,7 +1,7 @@
-import { Stack, Typography } from "@mui/material";
-import MessageForm from "../../components/MessageForm/MessageForm";
-import MessageList from "../../components/MessageList/MessageList";
-import { Message } from "./Conversations.types";
+import { Stack, Typography } from '@mui/material';
+import MessageForm from '../../components/MessageForm/MessageForm';
+import MessageList from '../../components/MessageList/MessageList';
+import { Message } from './Conversations.types';
 
 type ConversationContentProps = {
   messages: Message[];
@@ -16,8 +16,10 @@ const ConversationContent = ({
   loadMessages,
 }: ConversationContentProps) => {
   return selectedConversationId ? (
-    <Stack sx={{ width: "100%" }}>
-      <MessageList messages={messages} currentUserId={currentUserId} />
+    <Stack sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      <Stack sx={{ flex: 1, overflowY: 'auto', minHeight: 0 }}>
+        <MessageList messages={messages} currentUserId={currentUserId} />
+      </Stack>
       <MessageForm
         conversationId={selectedConversationId}
         onMessageSent={() => {
@@ -30,10 +32,10 @@ const ConversationContent = ({
   ) : (
     <Stack
       sx={{
-        width: "100%",
-        height: "100%",
-        alignItems: "center",
-        justifyContent: "center",
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <Typography>Retrouvez ici toutes vos demandes de prêt</Typography>

@@ -58,11 +58,19 @@ const ConversationsPage = () => {
         <Stack
           direction={isMobile ? 'column' : 'row'}
           width='100%'
-          height='100%'
+          sx={{
+            width: '100%',
+            height: '70vh',
+          }}
         >
           {/* Liste des conversations — masquée sur mobile quand une conv est ouverte */}
           {(!isMobile || selectedConversationId === null) && (
-            <Stack width={isMobile ? '100%' : '35%'}>
+            <Stack
+              sx={{
+                width: isMobile ? '100%' : '35%',
+                height: '100%',
+              }}
+            >
               <ConversationList
                 conversations={sortedConversations}
                 setConversations={setConversations}
@@ -79,24 +87,32 @@ const ConversationsPage = () => {
 
           {/* Contenu de la conversation sélectionnée */}
           {(!isMobile || selectedConversationId !== null) && (
-            <Stack width={isMobile ? '100%' : '65%'}>
+            <Stack
+              direction='column'
+              sx={{
+                width: isMobile ? '100%' : '65%',
+                height: '100%',
+              }}
+            >
               {/* Bouton retour affiché uniquement sur mobile */}
               {isMobile && selectedConversationId !== null && (
                 <Button
                   variant='text'
                   color='inherit'
                   onClick={() => setSelectedConversationId(null)}
-                  sx={{ alignSelf: 'flex-start', m: 1 }}
+                  sx={{ alignSelf: 'flex-start', flexShrink: 0, m: 1 }}
                 >
                   ← Messagerie
                 </Button>
               )}
-              <ConversationContent
-                messages={messages}
-                currentUserId={currentUserId}
-                selectedConversationId={selectedConversationId}
-                loadMessages={loadMessages}
-              />
+              <Stack sx={{ flex: 1, minHeight: 0 }}>
+                <ConversationContent
+                  messages={messages}
+                  currentUserId={currentUserId}
+                  selectedConversationId={selectedConversationId}
+                  loadMessages={loadMessages}
+                />
+              </Stack>
             </Stack>
           )}
         </Stack>
