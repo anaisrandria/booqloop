@@ -21,7 +21,20 @@ const Home = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const postalCodes = [1, 10001, 75001, 75002, 75003, 75004, 75005];
+  const postalCodes = [
+    75001, 75002, 75003, 75004, 75005, 75006, 75007, 75008, 75009, 75010, 75011,
+    75012, 75013, 75014, 75015, 75016, 75017, 75018, 75019, 75020,
+  ];
+
+  async function rechercherCommunes(nom: string) {
+    const res = await fetch(
+      `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(nom)}&fields=nom,code,codesPostaux,population&boost=population&limit=10`,
+    );
+    const communes = await res.json();
+    return communes;
+  }
+
+  console.log("COMMUNE:", rechercherCommunes("Vincennes"));
 
   const filteredBooks = books?.filter(
     (book) =>

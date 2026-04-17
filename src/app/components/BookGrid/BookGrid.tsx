@@ -5,12 +5,7 @@ import { Book } from "@/app/types";
 import { useRouter } from "next/navigation";
 import AddIcon from "@mui/icons-material/Add";
 
-const BookGrid = ({
-  books,
-  isLoading,
-  header,
-  showEditIcons,
-}: BookGridProps) => {
+const BookGrid = ({ books, isLoading, header, showAddIcon }: BookGridProps) => {
   const router = useRouter();
   return (
     <Stack spacing={2}>
@@ -23,7 +18,7 @@ const BookGrid = ({
         >
           {header}
         </Typography>
-        {showEditIcons && (
+        {showAddIcon && (
           <Tooltip title={"Ajouter un livre"} placement="left-end">
             <IconButton
               size="small"

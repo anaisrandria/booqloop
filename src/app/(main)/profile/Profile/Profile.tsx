@@ -29,7 +29,7 @@ const Profile = () => {
           books={books}
           isLoading={isLoading}
           header={"Ma bibliothèque"}
-          showEditIcons={true}
+          showAddIcon={true}
         />
       </Stack>
     </Container>

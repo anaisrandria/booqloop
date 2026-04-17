@@ -4,5 +4,5 @@ export type BookGridProps = {
   books: Book[];
   isLoading?: boolean;
   header: string;
-  showEditIcons?: boolean;
+  showAddIcon?: boolean;
 };
