@@ -42,7 +42,7 @@ const BookGrid = ({ books, isLoading, header, showAddIcon }: BookGridProps) => {
               </Grid>
             ))
           : !isLoading && (
-              <Typography paddingY={1}>Aucun livre trouvé.</Typography>
+              <Typography paddingY={1}>Aucun livre à afficher.</Typography>
             )}
       </Grid>
     </Stack>

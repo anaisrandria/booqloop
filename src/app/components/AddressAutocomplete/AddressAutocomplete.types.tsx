@@ -3,12 +3,6 @@ export type ApiAddress = {
   codesPostaux: string[];
 };
 
-export type AddressOptions = {
-  name: string;
-  postalCode: string;
-  label: string;
-};
-
 export type AddressAutocompleteProps = {
   onChange: (nom: string, codePostal: string) => void;
 };

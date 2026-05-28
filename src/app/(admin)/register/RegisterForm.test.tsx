@@ -21,6 +21,19 @@ jest.mock("@/lib/services/admin/register", () => ({
   registerUser: jest.fn(),
 }));
 
+jest.mock("@/app/components/AddressAutocomplete", () => ({
+  AddressAutocomplete: ({
+    onChange,
+  }: {
+    onChange: (a: string, p: string) => void;
+  }) => (
+    <input
+      aria-label="Ville"
+      onChange={(e) => onChange(e.target.value, "75001")}
+    />
+  ),
+}));
+
 describe("RegisterForm - rendu", () => {
   it("affiche les éléments de base", () => {
     render(<RegisterForm />);
@@ -29,8 +42,6 @@ describe("RegisterForm - rendu", () => {
     expect(screen.getByLabelText(/email/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/mot de passe/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/ville/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/code postal/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/pays/i)).toBeInTheDocument();
     expect(screen.getByText(/créer un compte/i)).toBeInTheDocument();
     expect(screen.getByText(/se connecter/i)).toBeInTheDocument();
   });
@@ -79,32 +90,10 @@ describe("RegisterForm - interactions utilisateur", () => {
 
     const addressInput = screen.getByLabelText(/ville/i);
     fireEvent.change(addressInput, {
-      target: { name: "address", value: "Paris" },
+      target: { value: "Paris" },
     });
 
     expect(addressInput).toHaveValue("Paris");
-  });
-
-  it("met à jour le champ code postal à la saisie", () => {
-    render(<RegisterForm />);
-
-    const postalCodeInput = screen.getByLabelText(/code postal/i);
-    fireEvent.change(postalCodeInput, {
-      target: { name: "postalCode", value: "75001" },
-    });
-
-    expect(postalCodeInput).toHaveValue("75001");
-  });
-
-  it("met à jour le champ pays à la saisie", () => {
-    render(<RegisterForm />);
-
-    const countryInput = screen.getByLabelText(/pays/i);
-    fireEvent.change(countryInput, {
-      target: { name: "country", value: "France" },
-    });
-
-    expect(countryInput).toHaveValue("France");
   });
 
   it("appelle registerUser avec les bonnes données au clic sur Créer un compte", async () => {
@@ -124,13 +113,7 @@ describe("RegisterForm - interactions utilisateur", () => {
       target: { name: "password", value: "monmotdepasse" },
     });
     fireEvent.change(screen.getByLabelText(/ville/i), {
-      target: { name: "address", value: "Paris" },
-    });
-    fireEvent.change(screen.getByLabelText(/code postal/i), {
-      target: { name: "postalCode", value: "75001" },
-    });
-    fireEvent.change(screen.getByLabelText(/pays/i), {
-      target: { name: "country", value: "France" },
+      target: { value: "Paris" },
     });
     fireEvent.click(screen.getByText(/créer un compte/i));
 

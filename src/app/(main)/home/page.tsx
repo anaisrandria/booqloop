@@ -6,10 +6,11 @@ import { getCategories } from "@/lib/services/books/getCategories";
 import { useEffect, useState } from "react";
 import { getBooks } from "@/lib/services/books/getBooks";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { PostalCodePopover } from "@/app/components/PostalCodePopover";
+import { AddressPopover } from "@/app/components/AddressPopover";
 import { useSearch } from "@/hooks/useSearch";
 import { useAuth } from "../../../hooks/useAuth";
 import BookGrid from "@/app/components/BookGrid/BookGrid";
+import { AddressOption } from "../../types";
 
 const Home = () => {
   const { searchQuery } = useSearch();
@@ -17,30 +18,34 @@ const Home = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [books, setBooks] = useState<Book[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
-  const [postalCode, setPostalCode] = useState<number | null>(null);
+  const [selectedAddresses, setSelectedAddresses] = useState<AddressOption[]>(
+    [],
+  );
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const postalCodes = [
-    75001, 75002, 75003, 75004, 75005, 75006, 75007, 75008, 75009, 75010, 75011,
-    75012, 75013, 75014, 75015, 75016, 75017, 75018, 75019, 75020,
-  ];
+  const truncatedLabel =
+    selectedAddresses.length === 0
+      ? ""
+      : selectedAddresses.length === 1
+        ? selectedAddresses[0].label
+        : `${selectedAddresses[0].label}, +${selectedAddresses.length - 1}`;
 
-  async function rechercherCommunes(nom: string) {
-    const res = await fetch(
-      `https://geo.api.gouv.fr/communes?nom=${encodeURIComponent(nom)}&fields=nom,code,codesPostaux,population&boost=population&limit=10`,
+  const filteredBooks = books
+    ?.filter(
+      (book) =>
+        book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        book.author.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+    .filter((book) =>
+      selectedAddresses.length === 0
+        ? true
+        : selectedAddresses.some(
+            (c) =>
+              c.postalCode === book.user.postal_code.toString() &&
+              c.name === book.user.address,
+          ),
     );
-    const communes = await res.json();
-    return communes;
-  }
-
-  console.log("COMMUNE:", rechercherCommunes("Vincennes"));
-
-  const filteredBooks = books?.filter(
-    (book) =>
-      book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      book.author.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
 
   const handleCategoryClick = (categoryId: number) => {
     setSelectedCategory(selectedCategory === categoryId ? null : categoryId);
@@ -59,7 +64,6 @@ const Home = () => {
       setIsLoading(true);
       const filters: Record<string, number> = {};
       if (selectedCategory !== null) filters.categoryId = selectedCategory;
-      if (postalCode !== null) filters.postalCode = postalCode;
 
       const bookData = await getBooks(
         Object.keys(filters).length ? filters : undefined,
@@ -71,7 +75,7 @@ const Home = () => {
       setIsLoading(false);
     };
     loadBookData();
-  }, [selectedCategory, postalCode]);
+  }, [selectedCategory]);
 
   return (
     <Container maxWidth="md">
@@ -115,18 +119,24 @@ const Home = () => {
                   borderRadius: "10px",
                   flexShrink: 0,
                   backgroundColor:
-                    postalCode && !anchorEl ? "black" : "#f7f2ec",
-                  color: postalCode && !anchorEl ? "#f7f2ec" : "black",
+                    selectedAddresses.length > 0 && !anchorEl
+                      ? "black"
+                      : "#f7f2ec",
+                  color:
+                    selectedAddresses.length > 0 && !anchorEl
+                      ? "#f7f2ec"
+                      : "black",
                 }}
               >
-                {!postalCode || anchorEl ? "Localisation" : postalCode}
+                {selectedAddresses.length === 0 || anchorEl
+                  ? "Localisation"
+                  : truncatedLabel}
               </Button>
-              <PostalCodePopover
+              <AddressPopover
                 anchorEl={anchorEl}
                 setAnchorEl={setAnchorEl}
-                postalCodes={postalCodes}
-                postalCode={postalCode}
-                setPostalCode={setPostalCode}
+                selectedAddresses={selectedAddresses}
+                setSelectedAddresses={setSelectedAddresses}
               />
               {categories &&
                 categories.map((category: Category, index: number) => {

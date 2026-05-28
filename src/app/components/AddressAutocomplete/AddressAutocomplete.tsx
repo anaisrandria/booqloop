@@ -1,62 +1,45 @@
 "use client";
 
 import { Autocomplete, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
-import {
-  ApiAddress,
-  AddressAutocompleteProps,
-  AddressOptions,
-} from "./AddressAutocomplete.types";
+import { AddressAutocompleteProps } from "./AddressAutocomplete.types";
+import { AddressOption } from "@/app/types";
+import { useAddressSearch } from "@/hooks/useAddressSearch";
+import { useState } from "react";
 
-const fetchAddresses = async (query: string): Promise<AddressOptions[]> => {
-  const isNumeric = /^\d+$/.test(query);
-  const param = isNumeric
-    ? `codePostal=${query}`
-    : `nom=${encodeURIComponent(query)}&boost=population`;
-  const res = await fetch(
-    `https://geo.api.gouv.fr/communes?${param}&fields=nom,codesPostaux&limit=10`,
-  );
-  const addresses: ApiAddress[] = await res.json();
-
-  return addresses.flatMap((address) =>
-    address.codesPostaux.map((cp) => ({
-      name: address.nom,
-      postalCode: cp,
-      label: `${address.nom} (${cp})`,
-    })),
-  );
-};
-
-const CommuneAutocomplete = ({ onChange }: AddressAutocompleteProps) => {
-  const [inputValue, setInputValue] = useState("");
-  const [options, setOptions] = useState<AddressOptions[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
-
-  useEffect(() => {
-    setIsTyping(true);
-
-    const timeout = setTimeout(async () => {
-      setIsTyping(false);
-      setIsLoading(true);
-      const results = await fetchAddresses(inputValue);
-      setOptions(results);
-      setIsLoading(false);
-    }, 300);
-
-    return () => clearTimeout(timeout);
-  }, [inputValue]);
+const AddressAutocomplete = ({ onChange }: AddressAutocompleteProps) => {
+  const { inputValue, setInputValue, options, isLoading, isTyping } =
+    useAddressSearch();
+  const [isSelected, setIsSelected] = useState(false);
 
   return (
     <Autocomplete
       options={options}
-      getOptionLabel={(option) => option.label}
+      getOptionLabel={(option: AddressOption) => option.label}
       filterOptions={(x) => x}
-      open={inputValue.length > 0}
-      onInputChange={(_, value) => setInputValue(value)}
+      value={isSelected ? ({ label: inputValue } as AddressOption) : null}
+      inputValue={inputValue}
+      clearOnBlur={false}
+      open={
+        inputValue.length > 0 &&
+        !isSelected &&
+        (options.length > 0 || isTyping || isLoading)
+      }
+      onInputChange={(_, value) => {
+        setInputValue(value);
+        setIsSelected(false);
+      }}
+      onClose={() => {}}
       onChange={(_, value) => {
         if (value) {
-          onChange(value.name, value.postalCode);
+          onChange(
+            (value as AddressOption).name,
+            (value as AddressOption).postalCode,
+          );
+          setInputValue((value as AddressOption).label);
+          setIsSelected(true);
+        } else {
+          setInputValue("");
+          setIsSelected(false);
         }
       }}
       noOptionsText={
@@ -69,4 +52,4 @@ const CommuneAutocomplete = ({ onChange }: AddressAutocompleteProps) => {
   );
 };
 
-export default CommuneAutocomplete;
+export default AddressAutocomplete;

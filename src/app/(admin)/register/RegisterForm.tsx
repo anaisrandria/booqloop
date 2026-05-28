@@ -23,7 +23,7 @@ const RegisterForm = () => {
     password: "",
     address: "",
     postalCode: "",
-    country: "",
+    country: "France",
   });
   const [error, setError] = useState<string>();
 
@@ -132,13 +132,13 @@ const RegisterForm = () => {
               type='search'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             /> */}
-            <TextField
+            {/* <TextField
               label="Pays"
               name="country"
               variant="standard"
               type="search"
               onChange={(e) => handleChange(e.target.name, e.target.value)}
-            />
+            /> */}
           </Stack>
           <Stack>
             <Button
