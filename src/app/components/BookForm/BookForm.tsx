@@ -47,19 +47,6 @@ const BookForm = ({
     loadCategories();
   }, [initialData]);
 
-  useEffect(() => {
-    if (initialData) {
-      setBookForm({
-        title: initialData.title ?? "",
-        author: initialData.author ?? "",
-        description: initialData.description ?? "",
-        published_year: initialData.published_year ?? undefined,
-        category_id: initialData.category_id ?? 0,
-        image_url: initialData.image_url ?? "",
-      });
-    }
-  }, [initialData]);
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
