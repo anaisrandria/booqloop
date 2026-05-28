@@ -36,12 +36,14 @@ const EditBook = () => {
   };
 
   return (
-    <BookForm
-      title="Modifier le livre"
-      submitLabel="Enregistrer les modifications"
-      onSubmit={handleSubmit}
-      initialData={initialData}
-    />
+    initialData && (
+      <BookForm
+        title="Modifier le livre"
+        submitLabel="Enregistrer les modifications"
+        onSubmit={handleSubmit}
+        initialData={initialData}
+      />
+    )
   );
 };
 

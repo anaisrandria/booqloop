@@ -22,3 +22,9 @@ export type Book = {
   availability_status_id: number;
   user: BookUser;
 };
+
+export type AddressOption = {
+  name: string;
+  postalCode: string;
+  label: string;
+};
