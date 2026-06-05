@@ -39,15 +39,13 @@ def add_book(book: BookCreate, request: Request, user_id: int = Depends(get_curr
 @router.get('/', response_model=list[BookRead])
 def get_books(
     request: Request,
-    category_id: int | None = Query(default=None),
-    postal_code: int | None = Query(default=None)
+    category_id: int | None = Query(default=None)
 ):
     """
     Retourne la liste des livres, avec filtres optionnels.
 
     Args:
         category_id: Filtre optionnel par identifiant de catégorie.
-        postal_code: Filtre optionnel par code postal de l'utilisateur propriétaire.
 
     Returns:
         La liste des livres correspondant aux filtres.
@@ -56,8 +54,6 @@ def get_books(
         statement = select(Book).options(selectinload(Book.user))
         if category_id is not None:
             statement = statement.where(Book.category_id == category_id)
-        if postal_code is not None:
-            statement = statement.where(Book.user.has(User.postal_code == postal_code))
         return session.exec(statement).all()
 
 @router.get('/user/me', response_model=list[BookRead])

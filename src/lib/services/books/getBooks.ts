@@ -2,13 +2,10 @@ import { Book } from '@/app/types';
 
 export const getBooks = async (filters?: {
   categoryId?: number;
-  postalCode?: number;
 }): Promise<Book[] | null> => {
   const params = new URLSearchParams();
   if (filters?.categoryId !== undefined)
     params.append('category_id', filters.categoryId.toString());
-  if (filters?.postalCode !== undefined)
-    params.append('postal_code', filters.postalCode.toString());
 
   // Ajoute les params s'il y en a
   const queryString = params.toString();

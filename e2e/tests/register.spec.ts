@@ -31,7 +31,6 @@ test('inscription échouée si email déjà utilisé', async ({ page }) => {
   await page.getByLabel('Email').fill('owner@test.com');
   await page.getByLabel('Mot de passe').fill('password123');
   await page.getByLabel('Ville').fill('Paris');
-  await page.getByRole('option', { name: 'Paris (75001)' }).waitFor();
   await page.getByRole('option', { name: 'Paris (75001)' }).click();
   await page.getByRole('button', { name: 'Créer un compte' }).click();
 
