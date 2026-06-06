@@ -93,7 +93,7 @@ const LoginForm = () => {
               label='Mot de passe'
               name='password'
               variant='standard'
-              type='search'
+              type='password'
               onChange={(e) => handleChange(e.target.name, e.target.value)}
             />
           </Stack>
