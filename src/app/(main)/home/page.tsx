@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { Box, Button, Container, Stack, Typography } from "@mui/material";
-import { Book, Category } from "../../types";
-import { getCategories } from "@/lib/services/books/getCategories";
-import { useEffect, useState } from "react";
-import { getBooks } from "@/lib/services/books/getBooks";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import { AddressPopover } from "@/app/components/AddressPopover";
-import { useSearch } from "@/hooks/useSearch";
-import { useAuth } from "../../../hooks/useAuth";
-import BookGrid from "@/app/components/BookGrid/BookGrid";
-import { AddressOption } from "../../types";
+import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Book, Category } from '../../types';
+import { getCategories } from '@/lib/services/books/getCategories';
+import { useEffect, useState } from 'react';
+import { getBooks } from '@/lib/services/books/getBooks';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import { AddressPopover } from '@/app/components/AddressPopover';
+import { useSearch } from '@/hooks/useSearch';
+import { useAuth } from '../../../hooks/useAuth';
+import BookGrid from '@/app/components/BookGrid/BookGrid';
+import { AddressOption } from '../../types';
 
 const Home = () => {
   const { searchQuery } = useSearch();
@@ -26,7 +26,7 @@ const Home = () => {
 
   const truncatedLabel =
     selectedAddresses.length === 0
-      ? ""
+      ? ''
       : selectedAddresses.length === 1
         ? selectedAddresses[0].label
         : `${selectedAddresses[0].label}, +${selectedAddresses.length - 1}`;
@@ -78,58 +78,62 @@ const Home = () => {
   }, [selectedCategory]);
 
   return (
-    <Container maxWidth="md">
+    <Container maxWidth='md'>
       <Stack spacing={4}>
-        {username && <Typography>Bienvenue {username} ! </Typography>}
+        {username && (
+          <Typography sx={{ fontSize: 28 }}>
+            Bonjour {username?.charAt(0).toUpperCase() + username?.slice(1)} !
+          </Typography>
+        )}
         <Box
           sx={{
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-            overflow: "scroll",
-            justifyItems: "center",
-            scrollbarWidth: "none",
-            "&::-webkit-scrollbar": {
-              display: "none",
+            width: '100%',
+            justifyContent: 'center',
+            alignItems: 'center',
+            overflow: 'scroll',
+            justifyItems: 'center',
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': {
+              display: 'none',
             },
           }}
         >
           <Stack
-            direction="row"
+            direction='row'
             spacing={2}
             sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              width: "100%",
+              display: 'flex',
+              justifyContent: 'flex-start',
+              alignItems: 'flex-start',
+              width: '100%',
             }}
           >
             <>
               <Button
-                size="small"
-                variant="outlined"
+                size='small'
+                variant='outlined'
                 disableRipple
                 startIcon={<LocationOnIcon />}
                 onClick={(e) => setAnchorEl(anchorEl ? null : e.currentTarget)}
                 sx={{
-                  whiteSpace: "nowrap",
-                  minWidth: "150px",
-                  textTransform: "none",
+                  whiteSpace: 'nowrap',
+                  minWidth: '150px',
+                  textTransform: 'none',
                   fontWeight: 600,
-                  borderRadius: "10px",
+                  borderRadius: '10px',
                   flexShrink: 0,
                   backgroundColor:
                     selectedAddresses.length > 0 && !anchorEl
-                      ? "black"
-                      : "#f7f2ec",
+                      ? 'black'
+                      : '#f7f2ec',
                   color:
                     selectedAddresses.length > 0 && !anchorEl
-                      ? "#f7f2ec"
-                      : "black",
+                      ? '#f7f2ec'
+                      : 'black',
                 }}
               >
                 {selectedAddresses.length === 0 || anchorEl
-                  ? "Localisation"
+                  ? 'Localisation'
                   : truncatedLabel}
               </Button>
               <AddressPopover
@@ -144,18 +148,18 @@ const Home = () => {
                   return (
                     <Button
                       key={index}
-                      size="small"
-                      variant="outlined"
+                      size='small'
+                      variant='outlined'
                       onClick={() => handleCategoryClick(category.id)}
                       sx={{
-                        whiteSpace: "nowrap",
-                        minWidth: "150px",
-                        textTransform: "none",
+                        whiteSpace: 'nowrap',
+                        minWidth: '150px',
+                        textTransform: 'none',
                         fontWeight: 600,
-                        borderRadius: "10px",
+                        borderRadius: '10px',
                         flexShrink: 0,
-                        backgroundColor: isSelected ? "black" : "#f7f2ec",
-                        color: isSelected ? "#f7f2ec" : "black",
+                        backgroundColor: isSelected ? 'black' : '#f7f2ec',
+                        color: isSelected ? '#f7f2ec' : 'black',
                       }}
                     >
                       {category.name}
@@ -168,7 +172,7 @@ const Home = () => {
         <BookGrid
           books={filteredBooks}
           isLoading={isLoading}
-          header={"Récemment ajoutés"}
+          header={'Récemment ajoutés'}
         />
       </Stack>
     </Container>
